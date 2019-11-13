@@ -1,5 +1,7 @@
 # Solar Panel Detection (Turing Climate Action Call)
 
+Project code: R-SPES-115 - Enabling worldwide solar PV nowcasting via machine vision and open data
+
 Hut23 issue: https://github.com/alan-turing-institute/Hut23/issues/425
 
 - [Sheffield Solar](https://www.solar.sheffield.ac.uk/)
