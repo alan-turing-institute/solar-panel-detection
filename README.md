@@ -15,3 +15,6 @@ Dan Stowell (Queen Mary) and collaborators are working on using a number of data
 
 Data sources will be from Open Street Maps, which has been tagging solar panels in the UK, as well as other data provided by Sheffield Solar and Open Climate Fix. The REG would be doing most of the data wrangling and machine learning on the project, with the other partners providing data and expertise.
 
+## Data
+
+- OpenStreetMap - [Great Britain download (Geofabrik)](https://download.geofabrik.de/europe/great-britain.html)
