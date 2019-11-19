@@ -7,7 +7,7 @@ Hut23 issue: https://github.com/alan-turing-institute/Hut23/issues/425
 - [Sheffield Solar](https://www.solar.sheffield.ac.uk/)
 - [Open Climate Fix](https://openclimatefix.org/)
 
-## Project Description
+## Main Project Description
 
 Using a combination of AI (machine vision), open data and short term forecasting, the project aims to determine the amount of solar electricity being put into the UK grid at a given time (i.e. right now: "Nowcasting").
 
@@ -17,13 +17,18 @@ Data sources will be from Open Street Maps, which has been tagging solar panels 
 
 ## REG Project
 
-Aggregate the data into a structured format. Dan Stowell says: "Plan A" is to use an instance of the OSM server which Damien (openclimatefix) has spun up, as the primary data warehouse.
+**Goal:** Aggregate UK solar PV data into a structured format, which can be accessed.
 
-This can host the data for us in OSM's native format, while allowing us to add extra metadata that wouldn't normally be in OSM.
+Dan Stowell says: "Plan A" is to use an instance of the OpenStreetMap (OSM) server which Damien (openclimatefix) has spun up, as the primary data warehouse. This can host the data for us in OSM's native format, while allowing us to add the extra metadata that wouldn't normally be in OSM (i.e. that from linked data sources FiT and REPD, see below).
+
+**Challenges:**
+
+1. Link the tagged panels in OSM to the other data sources
+2. Unsure: *Find other solar PV objects in OSM based on other data sources?*
 
 ## Data
 
-- OpenStreetMap - [Great Britain download (Geofabrik)](https://download.geofabrik.de/europe/great-britain.html). Dan Stowell has sent a data file that includes UK solar PV objects for the UK.
+- OpenStreetMap - [Great Britain download (Geofabrik)](https://download.geofabrik.de/europe/great-britain.html). Dan Stowell has sent a data file that includes tagged UK solar PV objects for the UK.
     - [OSM data types](https://wiki.openstreetmap.org/wiki/Elements)
     - [Solar PV tagging](https://wiki.openstreetmap.org/wiki/Tag:generator:source%3Dsolar)
     - Osmium package [pyosmium](https://github.com/osmcode/pyosmium) - `pip install osmium`
