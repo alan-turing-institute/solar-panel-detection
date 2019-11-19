@@ -15,6 +15,16 @@ Dan Stowell (Queen Mary) and collaborators are working on using a number of data
 
 Data sources will be from Open Street Maps, which has been tagging solar panels in the UK, as well as other data provided by Sheffield Solar and Open Climate Fix. The REG would be doing most of the data wrangling and machine learning on the project, with the other partners providing data and expertise.
 
+## REG Project
+
+Aggregate the data into a structured format. Dan Stowell says: "Plan A" is to use an instance of the OSM server which Damien (openclimatefix) has spun up, as the primary data warehouse.
+
+This can host the data for us in OSM's native format, while allowing us to add extra metadata that wouldn't normally be in OSM.
+
 ## Data
 
-- OpenStreetMap - [Great Britain download (Geofabrik)](https://download.geofabrik.de/europe/great-britain.html)
+- OpenStreetMap - [Great Britain download (Geofabrik)](https://download.geofabrik.de/europe/great-britain.html). Dan Stowell has sent a data file that includes UK solar PV objects for the UK.
+    - [OSM data types](https://wiki.openstreetmap.org/wiki/Elements)
+    - [Solar PV tagging](https://wiki.openstreetmap.org/wiki/Tag:generator:source%3Dsolar)
+- [FiT](https://www.ofgem.gov.uk/publications-and-updates/feed-tariff-installation-report-30-september-2019) - Report of installed PV (and other tech including wind). 100,000s entries.
+- [REPD](https://www.gov.uk/government/publications/renewable-energy-planning-database-monthly-extract) - Official UK data from the "renewable energy planning database". Large solar farms only.
