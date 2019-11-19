@@ -27,5 +27,5 @@ This can host the data for us in OSM's native format, while allowing us to add e
     - [OSM data types](https://wiki.openstreetmap.org/wiki/Elements)
     - [Solar PV tagging](https://wiki.openstreetmap.org/wiki/Tag:generator:source%3Dsolar)
     - Osmium package [pyosmium](https://github.com/osmcode/pyosmium) - `pip install osmium`
-- [FiT](https://www.ofgem.gov.uk/publications-and-updates/feed-tariff-installation-report-30-september-2019) - Report of installed PV (and other tech including wind). 100,000s entries.
+- [FiT](https://www.ofgem.gov.uk/environmental-programmes/fit/contacts-guidance-and-resources/public-reports-and-data-fit/installation-reports) - Report of installed PV (and other tech including wind). 100,000s entries.
 - [REPD](https://www.gov.uk/government/publications/renewable-energy-planning-database-monthly-extract) - Official UK data from the "renewable energy planning database". Large solar farms only.
