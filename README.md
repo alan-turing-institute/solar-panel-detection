@@ -6,6 +6,8 @@ Hut23 issue: https://github.com/alan-turing-institute/Hut23/issues/425
 
 - [Sheffield Solar](https://www.solar.sheffield.ac.uk/)
 - [Open Climate Fix](https://openclimatefix.org/)
+- [Open Street Map](https://www.openstreetmap.org)
+- [Open Infrastructure Map](https://openinframap.org)
 
 ## Main Project Description
 
