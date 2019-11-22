@@ -19,6 +19,7 @@ The FiT data contains no primary key at all. The REPD data does have unique iden
 | Location | Post code | :x: | **Postcode**:ballot_box_with_check: (First half only, all entries, also includes other address fields) | **Post Code** :ballot_box_with_check: (Full post code, not all entries, also includes other address fields)|
 | Location | Latitude and Longitude | **lat**, **lon** ✅ | :x: | :x: |
 | Location| X/Y coords (BNG)| :x: | :x: | **X-coordinate**, **Y-coordinate** ✅ |
+| Location | LLSOA (Lower Layer Super Output Area) | :x: | **LLSOA code** ✅ | :x: |
 | Identifier|REPD id | **tag_repd:id** :ballot_box_with_check: (~900 for which this relevant) | :x: | **Ref ID** ✅|
 
 British National Grid X/Y coordinates can be converted to latitude and longitude. Here is a [Python package](https://pypi.org/project/bng-latlon/) for that.
