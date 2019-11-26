@@ -5,7 +5,7 @@ Dan Stowell says:
 
 A word about "primary keys": objects in OSM have identifiers and they're generally stable, though they're not guaranteed persistent (if a user deletes an object and then maps it again as a completely new object, there's not much we can do about that).
 
-The FiT data contains no primary key at all. The REPD data does have unique identifiers (hooray!). For about 900 solar farms in OSM, we've added a tag "repd:id" which allows you to connect an OSM solar farm directly to its corresponding entry in REPD.
+The FiT data contains no primary key at all. The REPD data does have unique identifiers. For about 900 solar farms in OSM, we've added a tag "repd:id" which allows you to connect an OSM solar farm directly to its corresponding entry in REPD.
 
 | Icon | Meaning |
 | ---  | --- |
