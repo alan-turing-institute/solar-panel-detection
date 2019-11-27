@@ -21,8 +21,11 @@ The FiT data contains no primary key at all. The REPD data does have unique iden
 | Location| X/Y coords (BNG)| :x: | :x: | **X-coordinate**, **Y-coordinate** ✅ |
 | Location | LLSOA (Lower Layer Super Output Area) | :x: | **LLSOA code** ✅ | :x: |
 | Identifier|REPD id | **tag_repd:id** :ballot_box_with_check: (~900 for which this relevant) | :x: | **Ref ID** ✅|
+| FiT tariff info | Various | :x: | :ballot_box_with_check: **Tariff code**, **Tariff description**| :ballot_box_with_check: **FiT Tariff (p/kWh)**
 
 British National Grid X/Y coordinates can be converted to latitude and longitude. Here is a [Python package](https://pypi.org/project/bng-latlon/) for that.
+
+Doesn't look easily possible to match on tariff info.
 
 A few more examples that use info that Dan Stowell has calculated (see [compile_osm_solar.py](open-street-maps/solarpv-osm-uk-data-20191117/dan_stowell_osm_analysis/compile_osm_solar.py)) rather than OSM data fields:
 
