@@ -30,3 +30,11 @@ A few more examples that use info that Dan Stowell has calculated (see [compile_
 |---|---|:---:|:---:|:---:|
 | Size| Area | **calc_area** :ballot_box_with_check: (not all entries) | :x:| :x:|
 | Capacity| Capacity | **calc_capacity**:ballot_box_with_check: (not all entries)| **Installed capacity**, **Declared net capacity** ✅ (All entries)| **Installed Capacity (MWelec)** ✅ (All entries) |
+
+
+Example Matches (found manually)
+---------
+
+| OpenStreetMap | FiT | REPD |
+|:---:|:---:|:---:|
+| ✅ **id** = 9537182, **plantref** = relation/9537182, **tag_repd:id** = 6132 | :x: Filtering part 2 of the report spreadsheet by **Postcode** = UB2 and **Local authority** = Hounslow gives 22 results | ✅**Ref ID** = 6132 |
