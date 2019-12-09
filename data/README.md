@@ -48,12 +48,27 @@ Example Matches (found manually)
 | **OSM** | id | 9537182 | 684035481| | | |
 |  | plant:output:electricity |  | 18.8 MW| | | |
 |  | repd:id  | 6132 |2143 | | | |
-| OSM derived | lat |  | 51.935457| | | |
+| | timestamp |  |2019-05-03T21:41:29Z | | | |
+|  | lat |  | 51.935457| | | |
 | | lon |  |0.93541 | | | |
 | **REPD** | Ref ID  | 6132 | 2143| | | |
 |  | Installed Capacity (MWelec)  |  | 18.8| | | |
+|  | Post Code |  | CO4 5NW| | | |
+|  | Planning Permission Granted |  |15/09/2014 | | | |
+|  | Under Construction |  |26/11/2014 | | | |
+|  | Operational | | 19/03/2015 | | | |
+|  | Record Last Updated (dd/mm/yyyy) |  |14/08/2015 | | | |
+|  | FiT Tariff (p/kWh) |  |1.4 | | | |
 |  | X-coordinate  |  |601,454 | | | |
 |  | Y-coordinate  |  |231,228 | | | |
 | REPD derived | lat  |  | 51.943065| | | |
 | | lon  |  |0.929579 | | | |
-| **FiT**|   |  | | | | |
+| **FiT**| Installed capacity  |  | 18| | | |
+| | Declared net capacity  |  | 18| | | |
+| | Postcode  |  | CO4| | | |
+| | Application date | | 07/09/2015| | | |
+| | Commissioning date  |  | 27/07/2015| | | |
+| | Tariff code |  | PV/10-50/06H-1| | | |
+| | Tariff description |  | PV (>10Âª50kW)-2015/16 - Degression - H| | | |
+| | Installation type | | Non Domestic (Commercial)| |
+| | LLSOA code | | E01021668 | | | |
