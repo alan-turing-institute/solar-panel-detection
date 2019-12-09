@@ -42,3 +42,18 @@ Example Matches (found manually)
 |:---:|:---:|:---:|
 | ✅ **id** = 9537182, **plantref** = relation/9537182, **tag_repd:id** = 6132 | :x: Filtering part 2 of the report spreadsheet by **Postcode** = UB2 and **Local authority** = Hounslow gives 22 results | ✅**Ref ID** = 6132 |
 | ✅ **id** = 684035481, **plantref** = way/684035481, **tag_repd:id** = 2143, **calc_capacity** = 18,800| :ballot_box_with_check: Possible match - Row 73582 (feed-in_tariff_installation_report_30_september_2019_-_part_1.xlsx) **Installed capacity** = 18, **Postcode** = CO4| ✅ **Ref ID** = 2143, **Installed Capacity (MWelec)** = 18.8, **Post Code** = CO4 5NW|
+
+| |  | I | II | III | IV | V |
+|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| **OSM** | id | 9537182 | 684035481| | | |
+|  | plant:output:electricity |  | 18.8 MW| | | |
+|  | repd:id  | 6132 |2143 | | | |
+| OSM derived | lat |  | 51.935457| | | |
+| | lon |  |0.93541 | | | |
+| **REPD** | Ref ID  | 6132 | 2143| | | |
+|  | Installed Capacity (MWelec)  |  | 18.8| | | |
+|  | X-coordinate  |  |601,454 | | | |
+|  | Y-coordinate  |  |231,228 | | | |
+| REPD derived | lat  |  | 51.943065| | | |
+| | lon  |  |0.929579 | | | |
+| **FiT**|   |  | | | | |
