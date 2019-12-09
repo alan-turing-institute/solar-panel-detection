@@ -45,26 +45,26 @@ Example Matches (found manually)
 
 | |  | I | II | III | IV | V |
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| **OSM** | id | 9537182 | 684035481| | | |
-|  | plant:output:electricity | 1.7 MW | 18.8 MW| | | |
-|  | repd:id  | 6132 |2143 | | | |
-| | timestamp | 2019-05-02T20:52:30Z |2019-05-03T21:41:29Z | | | |
-|  | lat | 51.496088 | 51.935457| | | |
-| | lon | -0.407339 |0.93541 | | | |
-| **REPD** | Ref ID  | 6132 | 2143| | | |
-|  | Installed Capacity (MWelec)  | 1.7 | 18.8| | | |
-|  | Post Code | UB2 5XU | CO4 5NW| | | |
-|  | Planning Application Submitted | 28/07/2015|16/06/2014	 | |
-|  | Planning Permission Granted | 14/09/2015 |15/09/2014 | | | |
-|  | Under Construction | 19/04/2016 |26/11/2014 | | | |
-|  | Operational |19/05/2016 | 19/03/2015 | | | |
-|  | Record Last Updated (dd/mm/yyyy) | 31/05/2016 |14/08/2015 | | | |
-|  | FiT Tariff (p/kWh) | N/A |1.4 | | | |
-|  | Address | Western International Market, Hayes Road, Southall, London |Langham, Colchester | | | |
-|  | X-coordinate  | 510,606 |601,454 | | | |
-|  | Y-coordinate  | 178,655 |231,228 | | | |
-| REPD derived | lat  | 51.496026 | 51.943065| | | |
-| | lon  | -0.408078 |0.929579 | | | |
+| **OSM** | id | 9537182 | 684035481| 10304120| 10305610|10298564 |
+|  | plant:output:electricity | 1.7 MW | 18.8 MW| 3.5 MW| 1 MW| 5 MW|
+|  | repd:id  | 6132 |2143 |5207 |1994 | 5834|
+| | timestamp | 2019-05-02T20:52:30Z |2019-05-03T21:41:29Z |2019-11-16T14:03:13Z | 2019-11-16T21:30:41Z| 2019-11-14T22:35:13Z|
+|  | lat | 51.496088 | 51.935457| 51.558094|52.019079 | 52.89991|
+| | lon | -0.407339 |0.93541 | -2.655681| -0.011644|-3.015247 |
+| **REPD** | Ref ID  | 6132 | 2143| 5207| 1994| 5834|
+|  | Installed Capacity (MWelec)  | 1.7 | 18.8| 3.5| 1| 5|
+|  | Post Code | UB2 5XU | CO4 5NW| BS35 4NL| SG8 8AZ| :x:|
+|  | Planning Application Submitted | 28/07/2015|16/06/2014	 |13/04/2015 |24/11/2013 | 23/09/2015|
+|  | Planning Permission Granted | 14/09/2015 |15/09/2014 | 01/09/2015| 03/12/2013| 23/12/2015|
+|  | Under Construction | 19/04/2016 |26/11/2014 | 28/02/2015| :x:| 12/12/2016|
+|  | Operational |19/05/2016 | 19/03/2015 | 31/03/2016| 08/03/2014| 15/02/2017|
+|  | Record Last Updated (dd/mm/yyyy) | 31/05/2016 |14/08/2015 |17/06/2016 | 26/08/2014| 04/12/2017|
+|  | FiT Tariff (p/kWh) | :x: |1.4 |:x: | :x:| :x:|
+|  | Address | Western International Market, Hayes Road, Southall, London |Langham, Colchester | Land adjacent to Church Road and the M49, Severn Beach, Bristol| Hatchpen Farm, Reed, Royston|Land At, Rhosygadfa, Gobowen, Oswestry |
+|  | X-coordinate  | 510,606 |601,454 | 354,510| 536,397|331,810 |
+|  | Y-coordinate  | 178,655 |231,228 | 184,911| 237,730|334,117 |
+| REPD derived | lat  | 51.496026 | 51.943065| 51.561233|52.02123 | 52.900149|
+| | lon  | -0.408078 |0.929579 | -2.657613| -0.013603|-3.01518 |
 | **FiT**| Installed capacity  |  | 18| | | |
 | | Declared net capacity  |  | 18| | | |
 | | Postcode  |  | CO4| | | |
