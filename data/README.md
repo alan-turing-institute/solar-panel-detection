@@ -46,26 +46,29 @@ Example Matches (found manually)
 | |  | I | II | III | IV | V |
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|
 | **OSM** | id | 9537182 | 684035481| | | |
-|  | plant:output:electricity |  | 18.8 MW| | | |
+|  | plant:output:electricity | 1.7 MW | 18.8 MW| | | |
 |  | repd:id  | 6132 |2143 | | | |
-| | timestamp |  |2019-05-03T21:41:29Z | | | |
-|  | lat |  | 51.935457| | | |
-| | lon |  |0.93541 | | | |
+| | timestamp | 2019-05-02T20:52:30Z |2019-05-03T21:41:29Z | | | |
+|  | lat | 51.496088 | 51.935457| | | |
+| | lon | -0.407339 |0.93541 | | | |
 | **REPD** | Ref ID  | 6132 | 2143| | | |
-|  | Installed Capacity (MWelec)  |  | 18.8| | | |
-|  | Post Code |  | CO4 5NW| | | |
-|  | Planning Permission Granted |  |15/09/2014 | | | |
-|  | Under Construction |  |26/11/2014 | | | |
-|  | Operational | | 19/03/2015 | | | |
-|  | Record Last Updated (dd/mm/yyyy) |  |14/08/2015 | | | |
-|  | FiT Tariff (p/kWh) |  |1.4 | | | |
-|  | X-coordinate  |  |601,454 | | | |
-|  | Y-coordinate  |  |231,228 | | | |
-| REPD derived | lat  |  | 51.943065| | | |
-| | lon  |  |0.929579 | | | |
+|  | Installed Capacity (MWelec)  | 1.7 | 18.8| | | |
+|  | Post Code | UB2 5XU | CO4 5NW| | | |
+|  | Planning Application Submitted | 28/07/2015|16/06/2014	 | |
+|  | Planning Permission Granted | 14/09/2015 |15/09/2014 | | | |
+|  | Under Construction | 19/04/2016 |26/11/2014 | | | |
+|  | Operational |19/05/2016 | 19/03/2015 | | | |
+|  | Record Last Updated (dd/mm/yyyy) | 31/05/2016 |14/08/2015 | | | |
+|  | FiT Tariff (p/kWh) | N/A |1.4 | | | |
+|  | Address | Western International Market, Hayes Road, Southall, London |Langham, Colchester | | | |
+|  | X-coordinate  | 510,606 |601,454 | | | |
+|  | Y-coordinate  | 178,655 |231,228 | | | |
+| REPD derived | lat  | 51.496026 | 51.943065| | | |
+| | lon  | -0.408078 |0.929579 | | | |
 | **FiT**| Installed capacity  |  | 18| | | |
 | | Declared net capacity  |  | 18| | | |
 | | Postcode  |  | CO4| | | |
+| | Constituency | | Colchester | | | |
 | | Application date | | 07/09/2015| | | |
 | | Commissioning date  |  | 27/07/2015| | | |
 | | Tariff code |  | PV/10-50/06H-1| | | |
