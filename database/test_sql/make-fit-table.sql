@@ -1,5 +1,5 @@
 drop table if exists solar.fit;
-create table solar.fit (
+create table temp_table (
   extension char(1),
   postcode_stub varchar(7),
   technology varchar(24),
@@ -21,5 +21,16 @@ create table solar.fit (
   comm_school varchar(40),
   llsoa_code varchar(20)
 );
-copy solar.fit
+copy temp_table
 from '/Users/echalstrey/projects/solar-panel-detection/data/raw/feed-in_tariff_installation_report_30_september_2019.csv' delimiter ',' header csv;
+select distinct *
+into solar.fit
+from temp_table;
+select count(*) from temp_table;
+select count(*) from solar.fit;
+drop table if exists temp_table;
+alter table if exists solar.fit add primary key (postcode_stub, local_authority, tariff_description, installed_capacity, commissioning_date);
+select postcode_stub, local_authority, tariff_code, installation_type, installed_capacity, declared_net_capacity, application_date, commissioning_date, mcs_issue_date, export_status, mpan_prefix, constituency, accreditation_route, comm_school, llsoa_code, extension, count(*)
+from solar.fit
+group by postcode_stub, local_authority, tariff_code, installation_type, installed_capacity, declared_net_capacity, application_date, commissioning_date, mcs_issue_date, export_status, mpan_prefix, constituency, accreditation_route, comm_school, llsoa_code, extension
+having count(*) > 1; 
