@@ -7,7 +7,8 @@ create table solar.mv (
   iso_code char(6),
   attribution varchar(50),
   longitude float,
-  latitude float
+  latitude float,
+  primary key (latitude, longitude)
 );
 copy solar.mv
 from '/Users/echalstrey/projects/solar-panel-detection/data/raw/machine_vision.csv' delimiter ',' header csv;
