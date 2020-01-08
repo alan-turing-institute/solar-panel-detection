@@ -25,6 +25,8 @@ create table solar.repd (
   old_repd_id varchar(15),
   repd_id integer,
   record_last_updated date,
+  operator varchar(100),
+  site_name varchar(100),
   tech_type varchar(40),
   storage_type varchar(40),
   co_location_repd_id varchar(10),
@@ -39,6 +41,7 @@ create table solar.repd (
   mounting_type varchar(10),
   dev_status varchar(40),
   dev_status_short varchar(30),
+  address varchar(300),
   county varchar(30),
   region varchar(20),
   country varchar (20),
@@ -46,6 +49,7 @@ create table solar.repd (
   x varchar(10),
   y varchar(10),
   planning_authority varchar(70),
+  planning_application_reference varchar(50),
   appeal_reference varchar(50),
   sec_state_ref varchar(50),
   type_sec_state_intervention varchar(20),
@@ -107,7 +111,7 @@ create table solar.fit (
 
 -- Upload data
 -- The subdir data/raw/ should be a symbolic link to the actual data on the shared space
-\copy solar.repd from 'data/raw/repd_modified.csv' delimiter ',' csv header;
+\copy solar.repd from 'data/raw/repd_modified.csv' delimiter ',' csv header encoding 'windows-1251';
 \copy solar.osm from 'data/raw/osm_compile_processed_PV_objects_modified.csv' delimiter ',' csv header;
 \copy solar.mv from 'data/raw/machine_vision.csv' delimiter ',' csv header;
 \copy solar.fit from 'data/raw/feed-in_tariff_installation_report_30_september_2019.csv' delimiter ',' csv header;
