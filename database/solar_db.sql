@@ -3,7 +3,7 @@ create schema if not exists solar;
 drop table if exists solar.osm;
 create table solar.osm (
   objtype varchar(8),
-  id bigint,
+  osm_id bigint,
   username varchar(60),
   time_created date,
   latitude float,
@@ -15,9 +15,9 @@ create table solar.osm (
   orientation varchar(10),
   plantref varchar(20),
   tag_power varchar(15),
-  repd_id varchar(20), -- should be int, but some rows have multiple separated by semicolon
+  repd_id_str varchar(20),
   tag_start_date varchar(20), -- for some reason "2008" is invalid input for type date, but also, some are like "before 2012-02-19"
-  primary key (id)
+  primary key (osm_id)
 );
 
 drop table if exists solar.repd;
@@ -115,3 +115,11 @@ create table solar.fit (
 \copy solar.osm from 'data/raw/osm_compile_processed_PV_objects_modified.csv' delimiter ',' csv header;
 \copy solar.mv from 'data/raw/machine_vision.csv' delimiter ',' csv header;
 \copy solar.fit from 'data/raw/feed-in_tariff_installation_report_30_september_2019.csv' delimiter ',' csv header;
+
+-- Create table that has each repd_id that an osm_id has
+
+drop table if exists solar.osm_repd_id_mapping;
+select solar.osm.osm_id, x.repd_id
+into solar.osm_repd_id_mapping
+from solar.osm, unnest(string_to_array(repd_id_str, ';')) with ordinality as x(repd_id)
+order by solar.osm.osm_id, x.repd_id;
