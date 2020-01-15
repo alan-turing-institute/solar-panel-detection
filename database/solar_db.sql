@@ -29,11 +29,11 @@ create table solar.repd (
   site_name varchar(100),
   tech_type varchar(40),
   storage_type varchar(40),
-  co_location_repd_id varchar(10),
+  co_location_repd_id float, -- can't make this int as csv contains NaN
   capacity varchar(8),
   chp_enabled varchar(3),
   ro_banding varchar(10),
-  fit_tariff varchar(10),
+  fit_tariff float,
   cfd_capacity varchar(10),
   turbine_capacity varchar(10),
   num_turbines varchar(10),
@@ -53,7 +53,7 @@ create table solar.repd (
   appeal_reference varchar(50),
   sec_state_ref varchar(50),
   type_sec_state_intervention varchar(20),
-  judicial_review integer,
+  judicial_review float,
   offshore_wind_round varchar(10),
   planning_application_submitted date,
   planning_application_withdrawn date,
@@ -111,7 +111,7 @@ create table solar.fit (
 
 -- Upload data
 -- The subdir data/raw/ should be a symbolic link to the actual data on the shared space
-\copy solar.repd from 'data/raw/repd_modified.csv' delimiter ',' csv header encoding 'windows-1251';
+\copy solar.repd from 'data/raw/repd_modified_processed.csv' delimiter ',' csv header;
 \copy solar.osm from 'data/raw/osm_compile_processed_PV_objects_modified.csv' delimiter ',' csv header;
 \copy solar.mv from 'data/raw/machine_vision.csv' delimiter ',' csv header;
 \copy solar.fit from 'data/raw/feed-in_tariff_installation_report_30_september_2019.csv' delimiter ',' csv header;
