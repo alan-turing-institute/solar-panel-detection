@@ -87,6 +87,7 @@ create table solar.mv (
 
 drop table if exists solar.fit;
 create table solar.fit (
+  row_id int,
   extension char(1),
   postcode_stub varchar(7),
   technology varchar(24),
@@ -104,7 +105,7 @@ create table solar.fit (
   govt_office_region varchar(40),
   constituency varchar(60),
   accreditation_route varchar(6),
-  mpan_prefix int,
+  mpan_prefix float,
   comm_school varchar(40),
   llsoa_code varchar(20)
 );
@@ -114,7 +115,7 @@ create table solar.fit (
 \copy solar.repd from 'data/data/raw/repd_modified_processed.csv' delimiter ',' csv header;
 \copy solar.osm from 'data/data/raw/osm_compile_processed_PV_objects_modified.csv' delimiter ',' csv header;
 \copy solar.mv from 'data/data/raw/machine_vision.csv' delimiter ',' csv header;
-\copy solar.fit from 'data/data/raw/feed-in_tariff_installation_report_30_september_2019.csv' delimiter ',' csv header;
+\copy solar.fit from 'data/data/raw/feed-in_tariff_installation_report_30_september_2019_processed.csv' delimiter ',' csv header;
 
 -- Create table that has each repd_id that an osm_id has
 
