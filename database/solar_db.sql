@@ -111,10 +111,10 @@ create table solar.fit (
 
 -- Upload data
 -- The subdir data/raw/ should be a symbolic link to the actual data on the shared space
-\copy solar.repd from 'data/raw/repd_modified_processed.csv' delimiter ',' csv header;
-\copy solar.osm from 'data/raw/osm_compile_processed_PV_objects_modified.csv' delimiter ',' csv header;
-\copy solar.mv from 'data/raw/machine_vision.csv' delimiter ',' csv header;
-\copy solar.fit from 'data/raw/feed-in_tariff_installation_report_30_september_2019.csv' delimiter ',' csv header;
+\copy solar.repd from 'data/data/raw/repd_modified_processed.csv' delimiter ',' csv header;
+\copy solar.osm from 'data/data/raw/osm_compile_processed_PV_objects_modified.csv' delimiter ',' csv header;
+\copy solar.mv from 'data/data/raw/machine_vision.csv' delimiter ',' csv header;
+\copy solar.fit from 'data/data/raw/feed-in_tariff_installation_report_30_september_2019.csv' delimiter ',' csv header;
 
 -- Create table that has each repd_id that an osm_id has
 
