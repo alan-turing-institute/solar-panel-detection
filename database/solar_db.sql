@@ -1,6 +1,6 @@
 create schema if not exists solar;
 
-drop table if exists solar.osm;
+drop table if exists solar.osm; -- call these raw.osm etc
 create table solar.osm (
   objtype varchar(8),
   osm_id bigint,
@@ -10,13 +10,13 @@ create table solar.osm (
   longitude float,
   area float,
   capacity float,
-  modules int,
+  modules float,
   located varchar(20),
   orientation varchar(10),
   plantref varchar(20),
   tag_power varchar(15),
   repd_id_str varchar(20),
-  tag_start_date varchar(20), -- for some reason "2008" is invalid input for type date, but also, some are like "before 2012-02-19"
+  tag_start_date date,
   primary key (osm_id)
 );
 
@@ -113,7 +113,7 @@ create table solar.fit (
 -- Upload data
 -- The subdir data/raw/ should be a symbolic link to the actual data on the shared space
 \copy solar.repd from 'data/data/raw/repd_modified_processed.csv' delimiter ',' csv header;
-\copy solar.osm from 'data/data/raw/osm_compile_processed_PV_objects_modified.csv' delimiter ',' csv header;
+\copy solar.osm from 'data/data/raw/osm_compile_processed_PV_objects_modified_processed.csv' delimiter ',' csv header;
 \copy solar.mv from 'data/data/raw/machine_vision.csv' delimiter ',' csv header;
 \copy solar.fit from 'data/data/raw/feed-in_tariff_installation_report_30_september_2019_processed.csv' delimiter ',' csv header;
 
