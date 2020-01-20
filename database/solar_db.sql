@@ -1,5 +1,7 @@
 create schema if not exists solar;
 
+create extension postgis;
+
 drop table if exists solar.osm; -- call these raw.osm etc
 create table solar.osm (
   objtype varchar(8),
@@ -69,6 +71,8 @@ create table solar.repd (
   planning_permission_expired date,
   under_construction date,
   operational date,
+  latitude float,
+  longitude float,
   primary key (repd_id)
 );
 
