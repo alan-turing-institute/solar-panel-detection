@@ -1,23 +1,23 @@
 create schema if not exists solar;
 
-drop table if exists solar.osm;
+drop table if exists solar.osm; -- call these raw.osm etc
 create table solar.osm (
   objtype varchar(8),
-  id bigint,
+  osm_id bigint,
   username varchar(60),
   time_created date,
   latitude float,
   longitude float,
   area float,
   capacity float,
-  modules int,
+  modules float,
   located varchar(20),
   orientation varchar(10),
   plantref varchar(20),
   tag_power varchar(15),
-  repd_id varchar(20), -- should be int, but some rows have multiple separated by semicolon
-  tag_start_date varchar(20), -- for some reason "2008" is invalid input for type date, but also, some are like "before 2012-02-19"
-  primary key (id)
+  repd_id_str varchar(20),
+  tag_start_date date,
+  primary key (osm_id)
 );
 
 drop table if exists solar.repd;
@@ -29,11 +29,11 @@ create table solar.repd (
   site_name varchar(100),
   tech_type varchar(40),
   storage_type varchar(40),
-  co_location_repd_id varchar(10),
+  co_location_repd_id float, -- can't make this int as csv contains NaN
   capacity varchar(8),
   chp_enabled varchar(3),
   ro_banding varchar(10),
-  fit_tariff varchar(10),
+  fit_tariff float,
   cfd_capacity varchar(10),
   turbine_capacity varchar(10),
   num_turbines varchar(10),
@@ -46,14 +46,14 @@ create table solar.repd (
   region varchar(20),
   country varchar (20),
   postcode varchar(15),
-  x varchar(10),
-  y varchar(10),
+  x float,
+  y float,
   planning_authority varchar(70),
   planning_application_reference varchar(50),
   appeal_reference varchar(50),
   sec_state_ref varchar(50),
   type_sec_state_intervention varchar(20),
-  judicial_review integer,
+  judicial_review float,
   offshore_wind_round varchar(10),
   planning_application_submitted date,
   planning_application_withdrawn date,
@@ -87,6 +87,7 @@ create table solar.mv (
 
 drop table if exists solar.fit;
 create table solar.fit (
+  row_id int,
   extension char(1),
   postcode_stub varchar(7),
   technology varchar(24),
@@ -104,14 +105,22 @@ create table solar.fit (
   govt_office_region varchar(40),
   constituency varchar(60),
   accreditation_route varchar(6),
-  mpan_prefix int,
+  mpan_prefix float,
   comm_school varchar(40),
   llsoa_code varchar(20)
 );
 
 -- Upload data
 -- The subdir data/raw/ should be a symbolic link to the actual data on the shared space
-\copy solar.repd from 'data/raw/repd_modified.csv' delimiter ',' csv header encoding 'windows-1251';
-\copy solar.osm from 'data/raw/osm_compile_processed_PV_objects_modified.csv' delimiter ',' csv header;
-\copy solar.mv from 'data/raw/machine_vision.csv' delimiter ',' csv header;
-\copy solar.fit from 'data/raw/feed-in_tariff_installation_report_30_september_2019.csv' delimiter ',' csv header;
+\copy solar.repd from 'data/data/raw/repd_modified_processed.csv' delimiter ',' csv header;
+\copy solar.osm from 'data/data/raw/osm_compile_processed_PV_objects_modified_processed.csv' delimiter ',' csv header;
+\copy solar.mv from 'data/data/raw/machine_vision.csv' delimiter ',' csv header;
+\copy solar.fit from 'data/data/raw/feed-in_tariff_installation_report_30_september_2019_processed.csv' delimiter ',' csv header;
+
+-- Create table that has each repd_id that an osm_id has
+
+drop table if exists solar.osm_repd_id_mapping;
+select solar.osm.osm_id, x.repd_id
+into solar.osm_repd_id_mapping
+from solar.osm, unnest(string_to_array(repd_id_str, ';')) with ordinality as x(repd_id)
+order by solar.osm.osm_id, x.repd_id;
