@@ -22,6 +22,9 @@ create table solar.osm (
   primary key (osm_id)
 );
 
+alter table solar.osm add column geom geometry(Point, 4326);
+update solar.osm set geom = ST_SetSRID(ST_MakePoint(longitude, latitude), 4326);
+
 drop table if exists solar.repd;
 create table solar.repd (
   old_repd_id varchar(15),
@@ -75,6 +78,9 @@ create table solar.repd (
   longitude float,
   primary key (repd_id)
 );
+
+alter table solar.repd add column geom geometry(Point, 4326);
+update solar.repd set geom = ST_SetSRID(ST_MakePoint(longitude, latitude), 4326);
 
 drop table if exists solar.mv;
 create table solar.mv (
