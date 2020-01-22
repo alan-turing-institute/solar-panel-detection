@@ -1,5 +1,7 @@
--- SELECT ST_DistanceSphere(st_makepoint(-115, 40), st_makepoint(-118, 38)) As dist_meters
--- FROM
--- 	(SELECT ST_GeomFromText('LINESTRING(-118.584 38.374,-118.583 38.5)', 4326)) as foo;
-
-select solar.osm.osm_id, solar.osm.repd_id_str, solar.repd.repd_id from solar.osm, solar.repd where solar.osm.repd_id_str = '1285' order by ST_Distance(solar.osm.geom, solar.repd.geom) ASC LIMIT 1;
+-- I think this shows the nearest osm entry to the repd entry with repd_id 1285
+-- Using nearest neighbour search
+select solar.osm.osm_id, solar.osm_repd_id_mapping.repd_id, solar.repd.repd_id
+from solar.osm, solar.repd, solar.osm_repd_id_mapping
+where solar.osm_repd_id_mapping.repd_id = 1285 and solar.osm.osm_id = solar.osm_repd_id_mapping.osm_id
+order by ST_Distance(solar.osm.geom, solar.repd.geom)
+ASC LIMIT 1;
