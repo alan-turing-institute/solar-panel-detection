@@ -1,1 +1,0 @@
-OSM: OpenStreetMap solar PV objects for the UK. Approx 120,000 small-scale PV and 900 solar farms. The data is in OSM's pbf format, and it's extracted from OSM database as of 2019-11-17. It's structured data. Also included an XML version.

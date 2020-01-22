@@ -28,7 +28,30 @@ Dan Stowell says: "Plan A" is to use an instance of the OpenStreetMap (OSM) serv
 1. Link the tagged panels in OSM to the other data sources
 2. Unsure: *Find other solar PV objects in OSM based on other data sources?*
 
+## Overview of the directory structure
+
+```
+.
+|-- admin            -- project process and planning docs
+|-- data
+|   |-- as_received  -- symbolic link
+|   |-- raw          -- symbolic link
+|-- database
+`-- notebooks
+```
+
+
 ## Data
+
+Data is held in two directories: `as_received` contains the data precisely as
+downloaded from its original source, in its original format; `raw` contains all
+the data used by the project in a format suitable for use by software in the
+project (for example, as `csv` files ready for upload to a database). Between
+`as_received` and `raw` there may be some non-automated transformations (eg,
+saving an Excel file as `csv`). No non-automated transformation is permitted
+after `raw`. 
+
+The following sources of data are used:
 
 - OpenStreetMap - [Great Britain download (Geofabrik)](https://download.geofabrik.de/europe/great-britain.html). Dan Stowell has sent a data file that includes tagged UK solar PV objects for the UK.
     - [OSM data types](https://wiki.openstreetmap.org/wiki/Elements)
