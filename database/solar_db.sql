@@ -1,6 +1,6 @@
 create schema if not exists solar;
 
-create extension postgis;
+create extension if not exists postgis;
 
 drop table if exists solar.osm; -- call these raw.osm etc
 create table solar.osm (
@@ -21,9 +21,6 @@ create table solar.osm (
   tag_start_date date,
   primary key (osm_id)
 );
-
-alter table solar.osm add column geom geometry(Point, 4326);
-update solar.osm set geom = ST_SetSRID(ST_MakePoint(longitude, latitude), 4326);
 
 drop table if exists solar.repd;
 create table solar.repd (
@@ -79,9 +76,6 @@ create table solar.repd (
   primary key (repd_id)
 );
 
-alter table solar.repd add column geom geometry(Point, 4326);
-update solar.repd set geom = ST_SetSRID(ST_MakePoint(longitude, latitude), 4326);
-
 drop table if exists solar.mv;
 create table solar.mv (
   area float,
@@ -134,3 +128,11 @@ select solar.osm.osm_id, x.repd_id
 into solar.osm_repd_id_mapping
 from solar.osm, unnest(string_to_array(repd_id_str, ';')) with ordinality as x(repd_id)
 order by solar.osm.osm_id, x.repd_id;
+alter table solar.osm_repd_id_mapping
+alter column repd_id type int using repd_id::integer;
+
+alter table solar.osm add column geom geometry(Point, 4326);
+update solar.osm set geom = ST_SetSRID(ST_MakePoint(longitude, latitude), 4326);
+
+alter table solar.repd add column geom geometry(Point, 4326);
+update solar.repd set geom = ST_SetSRID(ST_MakePoint(longitude, latitude), 4326);
