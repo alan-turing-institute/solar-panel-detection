@@ -1,5 +1,8 @@
 # Notes on the data sources
 
+NOTE: The subdirectories `as_received` and `raw` should be set up to be symbolic links to those
+directories on the shared drive.
+
 ## Feed-in Tariff (FiT)
 
 Latest data taken from: https://www.ofgem.gov.uk/publications-and-updates/feed-tariff-installation-report-30-september-2019
