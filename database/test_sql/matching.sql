@@ -37,3 +37,10 @@ select count(repd_id_str) from solar.osm; -- 893
 
 
 -- Out of those, how to make
+
+-- This was very slow, trying to find matches within 100m
+select solar.osm.osm_id, solar.osm_repd_id_mapping.repd_id as repd_id_in_osm,
+solar.repd.repd_id as closest_geo_match_from_repd_repd_id,
+solar.repd.co_location_repd_id as closest_geo_match_from_repd_co_location_repd_id
+from solar.osm, solar.repd, solar.osm_repd_id_mapping
+WHERE ST_DWithin(solar.osm.geom, solar.repd.geom, 100);
