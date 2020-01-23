@@ -121,6 +121,10 @@ create table solar.fit (
 \copy solar.mv from 'data/raw/machine_vision.csv' delimiter ',' csv header;
 \copy solar.fit from 'data/processed/fit-2019-09.csv' delimiter ',' csv header;
 
+-- Change floats to ints
+alter table solar.repd
+alter column co_location_repd_id type int using co_location_repd_id::integer;
+
 -- Create table that has each repd_id that an osm_id has
 
 drop table if exists solar.osm_repd_id_mapping;
