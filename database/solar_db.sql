@@ -1,5 +1,7 @@
 create schema if not exists solar;
 
+create extension if not exists postgis;
+
 drop table if exists solar.osm; -- call these raw.osm etc
 create table solar.osm (
   objtype varchar(8),
@@ -69,6 +71,8 @@ create table solar.repd (
   planning_permission_expired date,
   under_construction date,
   operational date,
+  latitude float,
+  longitude float,
   primary key (repd_id)
 );
 
@@ -117,6 +121,10 @@ create table solar.fit (
 \copy solar.mv from 'data/raw/machine_vision.csv' delimiter ',' csv header;
 \copy solar.fit from 'data/processed/fit-2019-09.csv' delimiter ',' csv header;
 
+-- Change floats to ints
+alter table solar.repd
+alter column co_location_repd_id type int using co_location_repd_id::integer;
+
 -- Create table that has each repd_id that an osm_id has
 
 drop table if exists solar.osm_repd_id_mapping;
@@ -124,3 +132,13 @@ select solar.osm.osm_id, x.repd_id
 into solar.osm_repd_id_mapping
 from solar.osm, unnest(string_to_array(repd_id_str, ';')) with ordinality as x(repd_id)
 order by solar.osm.osm_id, x.repd_id;
+alter table solar.osm_repd_id_mapping
+alter column repd_id type int using repd_id::integer;
+
+-- Create geometry columns for geographical comparison/matching
+
+alter table solar.osm add column geom geometry(Point, 4326);
+update solar.osm set geom = ST_SetSRID(ST_MakePoint(longitude, latitude), 4326);
+
+alter table solar.repd add column geom geometry(Point, 4326);
+update solar.repd set geom = ST_SetSRID(ST_MakePoint(longitude, latitude), 4326);
