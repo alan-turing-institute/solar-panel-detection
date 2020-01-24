@@ -10,8 +10,8 @@ REPD and OSM matching count table
 | REPD total | 5,686 |
 |---|---|
 | OSM without REPD id | 126,046|
-| OSM with REPD id not in REPD | |
-| OSM with REPD id in REPD | |
+| OSM with REPD id not in REPD | 0|
+| OSM with REPD id in REPD |893 |
 |---|---|
 | REPD with id in OSM | 893 |
 | REPD with id not in OSM |4793 |
