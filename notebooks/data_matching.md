@@ -21,8 +21,21 @@ REPD and OSM matching count table
 Latitude/Longitude coordinate matching
 ------
 
+**Distances from OSM with REPD id to matching REPD:**
+
+| | Distance (meters) |
+|---|---|
+| Min | 6|
+| 1st Q. | 89|
+| Med |251 |
+| Mean | 747|
+| 3rd Q. | 542|
+| Max | 149,610|
+
 | Query | Result |
 |---|---|
-| OSM rows | 126,939|
-| OSM rows with repd_id | 893 |
-| OSM rows with repd_id with closest geographical match in REPD having that repd_id | |
+| OSM total| 126,939|
+| OSM with REPD id | 893 |
+| OSM with REPD id with closest geographical match in REPD having that repd_id | |
+| OSM with REPD id with closest geographical match in REPD having different repd_id | |
+| OSM without REPD id within Xm of REPD installation | |
