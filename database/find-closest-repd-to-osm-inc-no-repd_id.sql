@@ -10,9 +10,9 @@ CROSS JOIN LATERAL
   (SELECT
      solar.repd.repd_id,
      solar.repd.co_location_repd_id,
-     solar.osm.geom::geography <-> solar.repd.geom::geography as distance_meters
+     solar.osm.location::geography <-> solar.repd.location::geography as distance_meters
      FROM solar.repd
-     ORDER BY solar.osm.geom::geography <-> solar.repd.geom::geography
+     ORDER BY solar.osm.location::geography <-> solar.repd.location::geography
    LIMIT 1) AS closest_pt;
 
 

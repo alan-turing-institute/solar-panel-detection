@@ -137,8 +137,8 @@ alter column repd_id type int using repd_id::integer;
 
 -- Create geometry columns for geographical comparison/matching
 
-alter table solar.osm add column geom geometry(Point, 4326);
-update solar.osm set geom = ST_SetSRID(ST_MakePoint(longitude, latitude), 4326);
+alter table solar.osm add column location geometry(Point, 4326);
+update solar.osm set location = ST_SetSRID(ST_MakePoint(longitude, latitude), 4326);
 
-alter table solar.repd add column geom geometry(Point, 4326);
-update solar.repd set geom = ST_SetSRID(ST_MakePoint(longitude, latitude), 4326);
+alter table solar.repd add column location geometry(Point, 4326);
+update solar.repd set location = ST_SetSRID(ST_MakePoint(longitude, latitude), 4326);
