@@ -30,8 +30,7 @@ REPD and OSM matching
 - `*` OSM object types: https://wiki.openstreetmap.org/wiki/Elements
 - `**` including those within the same OSM entry and any that are not genuine REPD ids (found in REPD)
 
-Latitude/Longitude coordinate matching
-------
+### Latitude/Longitude coordinate matching
 
 **Distances from OSM with REPD id to matching REPD:**
 
@@ -48,15 +47,21 @@ Latitude/Longitude coordinate matching
 
 |  | Counts |
 |---|---|
-| OSM total| 126,939|
-| OSM with REPD id | 893 |
-| REPD ids present in OSM  | 933 |
-|---|---|
 | OSM with REPD id with closest geographical match in REPD having that repd_id | 765|
 | OSM with REPD id with closest geographical match in REPD being co-located repd_id | 3|
 | OSM with REPD id with closest geographical match in REPD being non-matching/ non-co-located| 165|
-|---|---|
-| Additional OSM tagged with REPD id by **Match Rule 1**  |   |
 
-- **Match Rule 1:** If a geo match is closer than 250m
-- **Match Rule 2:** If a geo match is closer than 250m and second closest > 1000m and that OSM entry not already tagged with another REPD id, tag with this REPD
+**Matching results:**
+
+| Match rule | Result |
+|---|---|
+| 1a  | 3982 |
+| 1b  | 442 |
+| 1c  | 3425 |
+| 1d  | 115  |
+
+1. **Match Rule 1a:** If a geo match is closer than 250m and that OSM entry not already tagged with REPD id
+  - **Match Rule 1b:** 1a and OSM objtype = "node"
+  - **Match Rule 1c:** 1a and OSM objtype = "way"
+  - **Match Rule 1d:** 1b and OSM objtype = "relation"
+2. **Match Rule 2:** If a geo match is closer than 250m and that OSM entry not already tagged with REPD id and second closest > 1000m
