@@ -70,4 +70,4 @@ REPD and OSM matching
 
 | Match rule | Name | OSM id | REPD id | Notes |
 |---|---|---|---|---|
-|1a/c|Marchington Solar Farm|746116910|2036|Checked with OSM and gmaps|
+|1a/c|Marchington Solar Farm|746116910 to 746116917|2036|Checked with OSM and gmaps|
