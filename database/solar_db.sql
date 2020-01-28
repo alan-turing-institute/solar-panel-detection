@@ -31,7 +31,7 @@ create table solar.repd (
   site_name varchar(100),
   tech_type varchar(40),
   storage_type varchar(40),
-  co_location_repd_id float, -- can't make this int as csv contains NaN
+  co_location_repd_id float, -- can't make this int as csv contains NaN, but this is fixed below
   capacity varchar(8),
   chp_enabled varchar(3),
   ro_banding varchar(10),
