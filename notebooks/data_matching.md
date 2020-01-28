@@ -65,3 +65,9 @@ REPD and OSM matching
   - **Match Rule 1c:** 1a and OSM objtype = "way"
   - **Match Rule 1d:** 1b and OSM objtype = "relation"
 2. **Match Rule 2:** If a geo match is closer than 250m and that OSM entry not already tagged with REPD id and second closest > 1000m
+
+**Example matches that appear correct:**
+
+| Match rule | Name | OSM id | REPD id | Notes |
+|---|---|---|---|---|
+|1a/c|Marchington Solar Farm|746116910|2036|Checked with OSM and gmaps|
