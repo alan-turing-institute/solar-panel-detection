@@ -61,12 +61,13 @@ REPD and OSM matching
 | 1b  | 158 |
 | 1c  | 2979 |
 | 1d  | 18  |
+| 2   | 15  |
 
 1. **Match Rule 1a:** If a geo match is closer than 250m and that OSM entry not already tagged with REPD id
   - **Match Rule 1b:** 1a and OSM objtype = "node"
   - **Match Rule 1c:** 1a and OSM objtype = "way"
   - **Match Rule 1d:** 1b and OSM objtype = "relation"
-2. **Match Rule 2:** TODO: add additional constraint that rules out the non-novel matches found by rule 1
+2. **Match Rule 2:** Match rule 1 + OSM tag_power = "plant" (ignores some correct matches found by rule 1)
 
 **Match Rule 1 Example matches that appear correct:**
 
@@ -81,3 +82,9 @@ REPD and OSM matching
 
 1. There is an REPD tagged "way" that has a 2nd associated "way" without the REPD id. Both of these have many associated "node"s, which are already filtered out from the data loaded from Dan Stowell's processed csv (present in xml). However, looking at OSM (solar data instance) this particular "node"  appears to be located separately from the "way"s, but within Walton WTW. They have the same capacity, but different timestamp (7 year diff), which suggests some de-duplication of the OSM data may be required.
 2. Seems like this one wasn't picked up by OSM editors as a likely REPD because it is not a solar farm, rather a collection of rooftop solar panels. Makes sense that these are all under "John Lennon Airport Scheme" and therefore are what this REPD id refers to. They are in an estate(s) near the airport and there is no alternative solar farm to which the REPD entry could refer nearby on the OSM map.
+
+**Match Rule 2 Example matches that appear correct:**
+
+| Match rule | REPD Site Name| REPD id  | OSM id | OSM objtype |OSM "plantref" |OSM "tag_power"| Notes | Novel match find |
+|---|---|---|---|---|---|---|---|---|
+|
