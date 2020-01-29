@@ -8,7 +8,7 @@ REPD and OSM matching
 
 1. "Location" OSM field probably shouldn't be "roof" for REPD installations (these are large solar farms)
 2. Consider OSM object types: https://wiki.openstreetmap.org/wiki/Elements - perhaps may geographical matches will result from "nodes" that are not currently tagged with an REPD id but the equivalent "way" or "relation" does already have the REPD id
-3. Dan Stowell has already done some work to combine OSM entries from the same solar plant with the "plantref" column, however it may not be useful to use this for matching if we ultimately want to use OSM data directly, rather than Dan's processing csv. Could be useful for validation purposes?
+3. Dan Stowell has already done some work to combine OSM entries from the same solar plant with the "plantref" column, however it may not be useful to use this for matching if we ultimately want to use OSM data directly, rather than Dan's processing csv. Could be useful for validation purposes? (see data/as_received/solarpv-osm-uk-data-2019-11-17/dan_stowell_analysis/compile_osm_solar.py)
 4. Since REPD contains things other than Solar panels, be sure to filter on Technology Type = Solar Photovoltaics
 
 |  | Counts |
@@ -68,9 +68,14 @@ REPD and OSM matching
   - **Match Rule 1d:** 1b and OSM objtype = "relation"
 2. **Match Rule 2:** If a geo match is closer than 250m and that OSM entry not already tagged with REPD id and second closest > 1000m
 
-**Example matches that appear correct:**
+**Match Rule 1 Example matches that appear correct:**
 
-| Match rule | REPD Site Name| REPD id  | OSM id | OSM objtype |"plantref" column filled? |OSM tag_power| Notes |
+| Match rule | REPD Site Name| REPD id  | OSM id | OSM objtype |OSM "plantref" |OSM "tag_power"| Notes |
 |---|---|---|---|---|---|---|---|
-|1a/c|Marchington Solar Farm|2036|746116910 to 746116917|way|:x:|generator|Checked with OSM and gmaps|
+|1a/c|Marchington Solar Farm|2036|746116910 to 746116917|way|:x:|generator|Checked with OSM (solar data instance) and gmaps|
 | 1a/d | Bumpers Farm Phase 1 | 2186|4483073|relation|relation/4476342|generator|The OSM id 4476342 (tag_power=plant) does already have the same REPD id tagged. |
+| 1a/b|Walton WTW PV|2388|2189625035|node|:x:|generator|See notes below 1.|
+
+**Match Rule 1 Example match notes:**
+
+1. There is an REPD tagged "way" that has a 2nd associated "way" without the REPD id. Both of these have many associated "node"s, which are already filtered out from the data loaded from Dan Stowell's processed csv (present in xml). However, looking at OSM (solar data instance) this particular "node"  appears to be located separately from the "way"s, but within Walton WTW, so it probably does make sense to also tag this "node" with the REPD id as metadata
