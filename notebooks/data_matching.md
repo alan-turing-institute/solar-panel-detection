@@ -8,6 +8,7 @@ REPD and OSM matching
 
 1. "Location" OSM field probably shouldn't be "roof" for REPD installations (these are large solar farms)
 2. Consider OSM object types: https://wiki.openstreetmap.org/wiki/Elements - perhaps may geographical matches will result from "nodes" that are not currently tagged with an REPD id but the equivalent "way" or "relation" does already have the REPD id
+3. Dan Stowell has already done some work to combine OSM entries from the same solar plant with the "plantref" column, however it may not be useful to use this for matching if we ultimately want to use OSM data directly, rather than Dan's processing csv. Could be useful for validation purposes?
 
 |  | Counts |
 |---|---|
@@ -68,6 +69,7 @@ REPD and OSM matching
 
 **Example matches that appear correct:**
 
-| Match rule | Name | OSM id | REPD id | Notes |
-|---|---|---|---|---|
-|1a/c|Marchington Solar Farm|746116910 to 746116917|2036|Checked with OSM and gmaps|
+| Match rule | REPD Site Name| REPD id  | OSM id | OSM objtype |"plantref" column filled? |OSM tag_power| Notes |
+|---|---|---|---|---|---|---|---|
+|1a/c|Marchington Solar Farm|2036|746116910 to 746116917|way|:x:|generator|Checked with OSM and gmaps|
+| 1a/d | Bumpers Farm Phase 1 | 2186|4483073|relation|relation/4476342|generator|The OSM id 4476342 (tag_power=plant) does already have the same REPD id tagged. |
