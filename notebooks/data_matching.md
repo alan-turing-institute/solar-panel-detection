@@ -66,16 +66,18 @@ REPD and OSM matching
   - **Match Rule 1b:** 1a and OSM objtype = "node"
   - **Match Rule 1c:** 1a and OSM objtype = "way"
   - **Match Rule 1d:** 1b and OSM objtype = "relation"
-2. **Match Rule 2:** If a geo match is closer than 250m and that OSM entry not already tagged with REPD id and second closest > 1000m
+2. **Match Rule 2:** TODO: add additional constraint that rules out the non-novel matches found by rule 1
 
 **Match Rule 1 Example matches that appear correct:**
 
-| Match rule | REPD Site Name| REPD id  | OSM id | OSM objtype |OSM "plantref" |OSM "tag_power"| Notes |
-|---|---|---|---|---|---|---|---|
-|1a/c|Marchington Solar Farm|2036|746116910 to 746116917|way|:x:|generator|Checked with OSM (solar data instance) and gmaps|
-| 1a/d | Bumpers Farm Phase 1 | 2186|4483073|relation|relation/4476342|generator|The OSM id 4476342 (tag_power=plant) does already have the same REPD id tagged. |
-| 1a/b|Walton WTW PV|2388|2189625035|node|:x:|generator|See notes below 1.|
+| Match rule | REPD Site Name| REPD id  | OSM id | OSM objtype |OSM "plantref" |OSM "tag_power"| Notes | Novel match find |
+|---|---|---|---|---|---|---|---|---|
+| 1a/b|Walton WTW PV|2388|2189625035|node|:x:|generator|See notes below 1.|:x:|
+| 1a/b|John Lennon Airport Scheme|6750|6601390246 (and many other clustered nodes)|node|:x:|generator|See notes below 2.|✅|
+|1a/c|Marchington Solar Farm|2036|746116910 to 746116917|way|:x:|generator|Checked with OSM (solar data instance) and gmaps|✅|
+| 1a/d | Bumpers Farm Phase 1 | 2186|4483073|relation|relation/4476342|generator|The OSM id 4476342 (tag_power=plant) does already have the same REPD id tagged. |:x:|
 
 **Match Rule 1 Example match notes:**
 
 1. There is an REPD tagged "way" that has a 2nd associated "way" without the REPD id. Both of these have many associated "node"s, which are already filtered out from the data loaded from Dan Stowell's processed csv (present in xml). However, looking at OSM (solar data instance) this particular "node"  appears to be located separately from the "way"s, but within Walton WTW. They have the same capacity, but different timestamp (7 year diff), which suggests some de-duplication of the OSM data may be required.
+2. Seems like this one wasn't picked up by OSM editors as a likely REPD because it is not a solar farm, rather a collection of rooftop solar panels. Makes sense that these are all under "John Lennon Airport Scheme" and therefore are what this REPD id refers to. They are in an estate(s) near the airport and there is no alternative solar farm to which the REPD entry could refer nearby on the OSM map.

@@ -20,7 +20,12 @@ select
   temp_table.osm_repd_id,
   temp_table.closest_geo_match_from_repd_repd_id,
   temp_table.distance_meters,
-  solar.osm.objtype
+  solar.osm.objtype,
+  solar.osm.plantref,
+  solar.osm.tag_power,
+  solar.osm.time_created,
+  solar.osm.area,
+  solar.osm.capacity
 into match_rule_1_results
 from temp_table, solar.osm
 where temp_table.osm_id = solar.osm.osm_id
