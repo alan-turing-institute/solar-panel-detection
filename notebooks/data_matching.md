@@ -75,16 +75,14 @@ REPD and OSM matching
 
 **Example matches that appear correct:**
 
-| Match rule | REPD Site Name| REPD id  |REPD id in OSM| OSM id | OSM objtype |OSM "plantref" |OSM "tag_power"| Notes | Novel match find |
-|---|---|---|---|---|---|---|---|---|---|
-| 1a/b|Walton WTW PV|2388||2189625035|node|:x:|generator|See notes below 1.|:x:|
-| 1a/b|John Lennon Airport Scheme|6750||6601390246 (and many other clustered nodes)|node|:x:|generator|See notes below 2.|✅|
-|1a/c|Marchington Solar Farm|2036||746116910 to 746116917|way|:x:|generator|Checked with OSM (solar data instance) and gmaps|✅|
-| 1a/d | Bumpers Farm Phase 1 | 2186||4483073|relation|relation/4476342|generator|The OSM id 4476342 (tag_power=plant) does already have the same REPD id tagged. |:x:|
-| 2  |Crannaford Solar Farm|1984||290068926|way|way/290068926|plant|See notes below 3.|✅|
-| 2  |Bishop's Waltham Solar Farm | 1325|| 10221632|relation|relation/10221632|plant|There are 15 entries, including this one, in the OSM XML that have k="site" v="solar_farm"|✅|
-|3a| Building ONE (Science museum group)/ Wroughton Airfield Solar Park|7252|1735|455150879||||What looks to be the case here is that 2 adjacent installments are tagged as being the same thing in OSM|:x:|
-|3a/b| Bronwylfa Reservoir|1520|4734|722350032||||The tagged REPD id clearly a mistake and looking at OSM map the macthed REPD is correct|✅|
+| Match rule | REPD Site Name| REPD id  | OSM id | OSM objtype |OSM "plantref" |OSM "tag_power"| Notes | Novel match find |
+|---|---|---|---|---|---|---|---|---|
+| 1a/b|Walton WTW PV|2388|2189625035|node|:x:|generator|See notes below 1.|:x:|
+| 1a/b|John Lennon Airport Scheme|6750|6601390246 (and many other clustered nodes)|node|:x:|generator|See notes below 2.|✅|
+|1a/c|Marchington Solar Farm|2036|746116910 to 746116917|way|:x:|generator|Checked with OSM (solar data instance) and gmaps|✅|
+| 1a/d | Bumpers Farm Phase 1 | 2186|4483073|relation|relation/4476342|generator|The OSM id 4476342 (tag_power=plant) does already have the same REPD id tagged. |:x:|
+| 2  |Crannaford Solar Farm|1984|290068926|way|way/290068926|plant|See notes below 3.|✅|
+| 2  |Bishop's Waltham Solar Farm | 1325| 10221632|relation|relation/10221632|plant|There are 15 entries, including this one, in the OSM XML that have k="site" v="solar_farm"|✅|
 
 **Example match notes:**
 
@@ -93,3 +91,11 @@ These refer to the table above.
 1. There is an REPD tagged "way" that has a 2nd associated "way" without the REPD id. Both of these have many associated "node"s, which are already filtered out from the data loaded from Dan Stowell's processed csv (present in xml). However, looking at OSM (solar data instance) this particular "node"  appears to be located separately from the "way"s, but within Walton WTW. They have the same capacity, but different timestamp (7 year diff), which suggests some de-duplication of the OSM data may be required.
 2. Seems like this one wasn't picked up by OSM editors as a likely REPD because it is not a solar farm, rather a collection of rooftop solar panels. Makes sense that these are all under "John Lennon Airport Scheme" and therefore are what this REPD id refers to. They are in an estate(s) near the airport and there is no alternative solar farm to which the REPD entry could refer nearby on the OSM map.
 3. This also has the name of the farm already in OSM (but not the OSM csv), which looks like another field that can easily be used to match between OSM and REPD, it just isn't present for most OSM (but is for ~500). Note, it's very close to 2 other farms (but perhaps >250m away). There are nearby points in OSM that form part of the farm, linked by Dan's "plantref" attribute. This result, plus the one for Marchington solar farm, suggests we can use "plantref" to add repd_id to linked OSM entries, but that not all tag_power=plant OSM entries already have an repd_id.
+
+| Match rule | REPD Site Name| REPD id  |REPD id in OSM| OSM id | Distance (m) OSM to matched REPD |Distance (m) OSM to tagged REPD | Notes | Novel match find |
+|---|---|---|---|---|---|---|---|---|
+|3a| Building ONE (Science museum group)/ Wroughton Airfield Solar Park|7252|1735|455150879|||What looks to be the case here is that 2 adjacent installments are tagged as being the same thing in OSM|:x:|
+|3a/b| Bronwylfa Reservoir|1520|4734|722350032|||The tagged REPD id clearly a mistake and looking at OSM map the macthed REPD is correct|✅|
+|3a|Newton Margate/Margate Solar Farm|5079|4878|746155615|311|398|See 1. below|?|
+
+1. Looking at OSM, there is only one farm in the vicinity, so perhaps the other is missing. Unclear whether to trust the tagged REPD id in this instance. Doesn't look to be a duplicate in REPD because capacity (1.5 and 3 MWelec) and postcode (PL31 1HF and PL31 1HE) vary. Suggests that filtering on capacity can resolve.
