@@ -84,6 +84,7 @@ REPD and OSM matching
 | 2  |Crannaford Solar Farm|1984||290068926|way|way/290068926|plant|See notes below 3.|✅|
 | 2  |Bishop's Waltham Solar Farm | 1325|| 10221632|relation|relation/10221632|plant|There are 15 entries, including this one, in the OSM XML that have k="site" v="solar_farm"|✅|
 |3a| Building ONE (Science museum group)/ Wroughton Airfield Solar Park|7252|1735|455150879||||What looks to be the case here is that 2 adjacent installments are tagged as being the same thing in OSM|:x:|
+|3a/b| Bronwylfa Reservoir|1520|4734|722350032||||The tagged REPD id clearly a mistake and looking at OSM map the macthed REPD is correct|✅|
 
 **Example match notes:**
 
