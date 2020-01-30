@@ -62,23 +62,28 @@ REPD and OSM matching
 | 1c  | 2979 |
 | 1d  | 18  |
 | 2   | 15  |
+| 3a   | 110 |
+|3b    | 50  |
 
-1. **Match Rule 1a:** If a geo match is closer than 250m and that OSM entry not already tagged with REPD id
+1. **Match Rule 1a:** If the closest REPD point to an OSM point is <250m away and that OSM entry not already tagged with REPD id
   - **Match Rule 1b:** 1a and OSM objtype = "node"
   - **Match Rule 1c:** 1a and OSM objtype = "way"
   - **Match Rule 1d:** 1b and OSM objtype = "relation"
 2. **Match Rule 2:** Match rule 1 + OSM tag_power = "plant" (ignores most matches found by rule 1)
+3. **Match Rule 3a:** If the closest REPD point to an OSM point is closer than REPD id already tagged for that OSM.
+  - **Match Rule 3b:** 3a but only those where closest REPD point is <250m
 
 **Example matches that appear correct:**
 
-| Match rule | REPD Site Name| REPD id  | OSM id | OSM objtype |OSM "plantref" |OSM "tag_power"| Notes | Novel match find |
-|---|---|---|---|---|---|---|---|---|
-| 1a/b|Walton WTW PV|2388|2189625035|node|:x:|generator|See notes below 1.|:x:|
-| 1a/b|John Lennon Airport Scheme|6750|6601390246 (and many other clustered nodes)|node|:x:|generator|See notes below 2.|✅|
-|1a/c|Marchington Solar Farm|2036|746116910 to 746116917|way|:x:|generator|Checked with OSM (solar data instance) and gmaps|✅|
-| 1a/d | Bumpers Farm Phase 1 | 2186|4483073|relation|relation/4476342|generator|The OSM id 4476342 (tag_power=plant) does already have the same REPD id tagged. |:x:|
-| 2  |Crannaford Solar Farm|1984|290068926|way|way/290068926|plant|See notes below 3.|✅|
-| 2  |Bishop's Waltham Solar Farm | 1325| 10221632|relation|relation/10221632|plant|There are 15 entries, including this one, in the OSM XML that have k="site" v="solar_farm"|✅|
+| Match rule | REPD Site Name| REPD id  |REPD id in OSM| OSM id | OSM objtype |OSM "plantref" |OSM "tag_power"| Notes | Novel match find |
+|---|---|---|---|---|---|---|---|---|---|
+| 1a/b|Walton WTW PV|2388||2189625035|node|:x:|generator|See notes below 1.|:x:|
+| 1a/b|John Lennon Airport Scheme|6750||6601390246 (and many other clustered nodes)|node|:x:|generator|See notes below 2.|✅|
+|1a/c|Marchington Solar Farm|2036||746116910 to 746116917|way|:x:|generator|Checked with OSM (solar data instance) and gmaps|✅|
+| 1a/d | Bumpers Farm Phase 1 | 2186||4483073|relation|relation/4476342|generator|The OSM id 4476342 (tag_power=plant) does already have the same REPD id tagged. |:x:|
+| 2  |Crannaford Solar Farm|1984||290068926|way|way/290068926|plant|See notes below 3.|✅|
+| 2  |Bishop's Waltham Solar Farm | 1325|| 10221632|relation|relation/10221632|plant|There are 15 entries, including this one, in the OSM XML that have k="site" v="solar_farm"|✅|
+|3a| Building ONE (Science museum group)/ Wroughton Airfield Solar Park|7252|1735|455150879||||What looks to be the case here is that 2 adjacent installments are tagged as being the same thing in OSM|:x:|
 
 **Example match notes:**
 
