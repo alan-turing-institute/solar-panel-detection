@@ -65,6 +65,7 @@ REPD and OSM matching
 | 2   | 15  |
 | 3a   | 110 |
 |3b    | 50  |
+|4     | 6281|
 
 0. **Match Rule 0:** If the closest REPD point to an OSM point is <250m away
 1. **Match Rule 1a:** If the closest REPD point to an OSM point is <250m away and that OSM entry not already tagged with REPD id
@@ -74,8 +75,8 @@ REPD and OSM matching
 2. **Match Rule 2:** Match rule 1 + OSM tag_power = "plant" (ignores most matches found by rule 1)
 3. **Match Rule 3a:** If the closest REPD point to an OSM point is closer than REPD id already tagged for that OSM.
   - **Match Rule 3b:** 3a but only those where closest REPD point is <250m
-  - **Match Rule 3c:** TODO: filter with capacity?
-4. **Match Rule 4:**
+4. **Match Rule 4:** If the closest REPD point to an OSM point is <500m away
+5. **Match Rule 5:** TODO: filter with capacity?
 
 **Example matches that appear correct:**
 
@@ -103,3 +104,8 @@ These refer to the table above.
 |3a|Newton Margate/Margate Solar Farm|5079|4878|746155615|311|398|See 1. below|?|
 
 1. Looking at OSM, there is only one farm in the vicinity, so perhaps the other is missing. Unclear whether to trust the tagged REPD id in this instance. Doesn't look to be a duplicate in REPD because capacity (1.5 and 3 MWelec) and postcode (PL31 1HF and PL31 1HE) vary. Suggests that filtering on capacity can resolve.
+
+| Match rule | REPD Site Name| REPD id  | OSM id | Distance (m) OSM to matched REPD |OSM capacity (MW)|REPD capacity (MW)| Notes | Correct |
+|---|---|---|---|---|---|---|---|---|
+|4  |Crossness Sewage Works PV|2385|2189686633|493|1.5|1.5|Validated looking at OSM XML: <tag k="description" v="Large solar PV array at Crossness Sewage Works"/> |✅|
+|4  |Ernesettle Solar Farm|5395|6767581041|499|?|5 |Looking at OSM map, there is an estate with many rooftop solar panels, of which this is one, close to the solar farm|:x:|
