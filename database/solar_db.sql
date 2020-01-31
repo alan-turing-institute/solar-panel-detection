@@ -31,7 +31,7 @@ create table solar.repd (
   site_name varchar(100),
   tech_type varchar(40),
   storage_type varchar(40),
-  co_location_repd_id float, -- can't make this int as csv contains NaN
+  co_location_repd_id float, -- can't make this int as csv contains NaN, but this is fixed below
   capacity varchar(8),
   chp_enabled varchar(3),
   ro_banding varchar(10),
@@ -137,8 +137,8 @@ alter column repd_id type int using repd_id::integer;
 
 -- Create geometry columns for geographical comparison/matching
 
-alter table solar.osm add column geom geometry(Point, 4326);
-update solar.osm set geom = ST_SetSRID(ST_MakePoint(longitude, latitude), 4326);
+alter table solar.osm add column location geometry(Point, 4326);
+update solar.osm set location = ST_SetSRID(ST_MakePoint(longitude, latitude), 4326);
 
-alter table solar.repd add column geom geometry(Point, 4326);
-update solar.repd set geom = ST_SetSRID(ST_MakePoint(longitude, latitude), 4326);
+alter table solar.repd add column location geometry(Point, 4326);
+update solar.repd set location = ST_SetSRID(ST_MakePoint(longitude, latitude), 4326);
