@@ -10,6 +10,7 @@ REPD and OSM matching
 2. Consider OSM object types: https://wiki.openstreetmap.org/wiki/Elements - perhaps may geographical matches will result from "nodes" that are not currently tagged with an REPD id but the equivalent "way" or "relation" does already have the REPD id
 3. Dan Stowell has already done some work to combine OSM entries from the same solar plant with the "plantref" column, however it may not be useful to use this for matching if we ultimately want to use OSM data directly, rather than Dan's processing csv. Could be useful for validation purposes? (see data/as_received/solarpv-osm-uk-data-2019-11-17/dan_stowell_analysis/compile_osm_solar.py)
 4. Since REPD contains things other than Solar panels, be sure to filter on Technology Type = Solar Photovoltaics
+5. Looks like most of the OSM entries with "capacity" are those taken directly from REPD (already have a tagged REPD id), so not sure how useful capacity will be for matching
 
 |  | Counts |
 |---|---|
@@ -18,9 +19,9 @@ REPD and OSM matching
 |---|---|
 | OSM without REPD id | 126,046|
 | OSM with REPD id | 893|
-| OSM with REPD id and objtype = node | 0|
-| OSM with REPD id and objtype = way | 727|
-| OSM with REPD id and objtype = relation | 166|
+| OSM with REPD id and objtype = node `*`| 0|
+| OSM with REPD id and objtype = way `*`|| 727|
+| OSM with REPD id and objtype = relation `*`|| 166|
 | REPD ids present in OSM `**` | 933 |
 | OSM with REPD id not in REPD | 1 (one of the OSM entries appears to have the repd_id `0`)|
 | OSM with REPD id in REPD |892 |
@@ -28,6 +29,10 @@ REPD and OSM matching
 | Unique REPD ids in OSM | 924 |
 | REPD ids in OSM inc. duplicates | 932 |
 | REPD with id not in OSM |4,762|
+|---|---|
+| OSM with recorded capacity |1116 |
+| OSM with recorded capacity and REPD id |872 |
+| OSM with recorded capacity without REPD id | 244|
 
 - `*` OSM object types: https://wiki.openstreetmap.org/wiki/Elements
 - `**` including those within the same OSM entry and any that are not genuine REPD ids (found in REPD)
@@ -76,7 +81,7 @@ REPD and OSM matching
 3. **Match Rule 3a:** If the closest REPD point to an OSM point is closer than REPD id already tagged for that OSM.
   - **Match Rule 3b:** 3a but only those where closest REPD point is <250m
 4. **Match Rule 4:** If the closest REPD point to an OSM point is <500m away
-5. **Match Rule 5:** TODO: filter with capacity?
+5. **Match Rule 5:** TODO: filter by location != roof?
 
 **Example matches that appear correct:**
 
