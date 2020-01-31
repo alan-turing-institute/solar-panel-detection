@@ -57,6 +57,7 @@ REPD and OSM matching
 
 | Match rule | Result |
 |---|---|
+| 0   | 3655 |
 | 1a  | 3155 |
 | 1b  | 158 |
 | 1c  | 2979 |
@@ -65,6 +66,7 @@ REPD and OSM matching
 | 3a   | 110 |
 |3b    | 50  |
 
+0. **Match Rule 0:** If the closest REPD point to an OSM point is <250m away
 1. **Match Rule 1a:** If the closest REPD point to an OSM point is <250m away and that OSM entry not already tagged with REPD id
   - **Match Rule 1b:** 1a and OSM objtype = "node"
   - **Match Rule 1c:** 1a and OSM objtype = "way"
@@ -72,6 +74,8 @@ REPD and OSM matching
 2. **Match Rule 2:** Match rule 1 + OSM tag_power = "plant" (ignores most matches found by rule 1)
 3. **Match Rule 3a:** If the closest REPD point to an OSM point is closer than REPD id already tagged for that OSM.
   - **Match Rule 3b:** 3a but only those where closest REPD point is <250m
+  - **Match Rule 3c:** TODO: filter with capacity?
+4. **Match Rule 4:**
 
 **Example matches that appear correct:**
 
