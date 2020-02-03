@@ -75,7 +75,8 @@ REPD and OSM matching
 | 3a   | 110 |
 |3b    | 50  |
 |4     | 6281|
-|5     | 5231|
+|5a     | 5231|
+|5b    |224|
 
 0. **Match Rule 0:** If the closest REPD point to an OSM point is <250m away
 1. **Match Rule 1a:** If the closest REPD point to an OSM point is <250m away and that OSM entry not already tagged with REPD id
@@ -86,7 +87,8 @@ REPD and OSM matching
 3. **Match Rule 3a:** If the closest REPD point to an OSM point is closer than REPD id already tagged for that OSM.
   - **Match Rule 3b:** 3a but only those where closest REPD point is <250m
 4. **Match Rule 4:** If the closest REPD point to an OSM point is <500m away
-5. **Match Rule 5:** Match rule 4 + filter by location is either "ground", "surface" or not labeled
+5. **Match Rule 5a:** Match rule 4 + filter by location is either "ground", "surface" or not labeled
+  - **Match Rule 5b:** 5a, but only those where "plantref" isn't already filled in
 
 **Example matches that appear correct:**
 
