@@ -6,7 +6,7 @@ REPD and OSM matching
 
 **Notes:**
 
-1. "Location" OSM field probably shouldn't be "roof" for REPD installations (these are large solar farms)
+1. "location" OSM field shouldn't be "roof" for REPD installations (these are large solar farms). All those with a current REPD tag have "location" of "ground" or "surface".
 2. Consider OSM object types: https://wiki.openstreetmap.org/wiki/Elements - perhaps may geographical matches will result from "nodes" that are not currently tagged with an REPD id but the equivalent "way" or "relation" does already have the REPD id
 3. Dan Stowell has already done some work to combine OSM entries from the same solar plant with the "plantref" column, however it may not be useful to use this for matching if we ultimately want to use OSM data directly, rather than Dan's processing csv. Could be useful for validation purposes? (see data/as_received/solarpv-osm-uk-data-2019-11-17/dan_stowell_analysis/compile_osm_solar.py)
 4. Since REPD contains things other than Solar panels, be sure to filter on Technology Type = Solar Photovoltaics
@@ -33,6 +33,10 @@ REPD and OSM matching
 | OSM with recorded capacity |1116 |
 | OSM with recorded capacity and REPD id |872 |
 | OSM with recorded capacity without REPD id | 244|
+|---|---|
+| OSM with REPD id and location = 'roof' | 0|
+| OSM with REPD id and location = 'ground' | 22|
+| OSM with REPD id and location = 'surface' | 9|
 
 - `*` OSM object types: https://wiki.openstreetmap.org/wiki/Elements
 - `**` including those within the same OSM entry and any that are not genuine REPD ids (found in REPD)
@@ -71,6 +75,7 @@ REPD and OSM matching
 | 3a   | 110 |
 |3b    | 50  |
 |4     | 6281|
+|5     | 5231|
 
 0. **Match Rule 0:** If the closest REPD point to an OSM point is <250m away
 1. **Match Rule 1a:** If the closest REPD point to an OSM point is <250m away and that OSM entry not already tagged with REPD id
@@ -81,7 +86,7 @@ REPD and OSM matching
 3. **Match Rule 3a:** If the closest REPD point to an OSM point is closer than REPD id already tagged for that OSM.
   - **Match Rule 3b:** 3a but only those where closest REPD point is <250m
 4. **Match Rule 4:** If the closest REPD point to an OSM point is <500m away
-5. **Match Rule 5:** TODO: filter by location != roof?
+5. **Match Rule 5:** Match rule 4 + filter by location is either "ground", "surface" or not labeled
 
 **Example matches that appear correct:**
 
