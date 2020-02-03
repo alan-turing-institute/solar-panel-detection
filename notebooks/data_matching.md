@@ -37,6 +37,10 @@ REPD and OSM matching
 | OSM with REPD id and location = 'roof' | 0|
 | OSM with REPD id and location = 'ground' | 22|
 | OSM with REPD id and location = 'surface' | 9|
+|---|---|
+| OSM with "plantref"| 7056|
+| OSM with "plantref" and REPD id |845 |
+| OSM with "plantref" and no REPD id | 6211|
 
 - `*` OSM object types: https://wiki.openstreetmap.org/wiki/Elements
 - `**` including those within the same OSM entry and any that are not genuine REPD ids (found in REPD)
