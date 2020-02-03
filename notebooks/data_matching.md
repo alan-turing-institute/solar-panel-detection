@@ -20,8 +20,8 @@ REPD and OSM matching
 | OSM without REPD id | 126,046|
 | OSM with REPD id | 893|
 | OSM with REPD id and objtype = node `*`| 0|
-| OSM with REPD id and objtype = way `*`|| 727|
-| OSM with REPD id and objtype = relation `*`|| 166|
+| OSM with REPD id and objtype = way `*`| 727|
+| OSM with REPD id and objtype = relation `*`|166|
 | REPD ids present in OSM `**` | 933 |
 | OSM with REPD id not in REPD | 1 (one of the OSM entries appears to have the repd_id `0`)|
 | OSM with REPD id in REPD |892 |
