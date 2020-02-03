@@ -117,7 +117,11 @@ These refer to the table above.
 
 1. Looking at OSM, there is only one farm in the vicinity, so perhaps the other is missing. Unclear whether to trust the tagged REPD id in this instance. Doesn't look to be a duplicate in REPD because capacity (1.5 and 3 MWelec) and postcode (PL31 1HF and PL31 1HE) vary. Suggests that filtering on capacity can resolve.
 
-| Match rule | REPD Site Name| REPD id  | OSM id | Distance (m) OSM to matched REPD |OSM capacity (MW)|REPD capacity (MW)| Notes | Correct |
-|---|---|---|---|---|---|---|---|---|
-|4  |Crossness Sewage Works PV|2385|2189686633|493|1.5|1.5|Validated looking at OSM XML: <tag k="description" v="Large solar PV array at Crossness Sewage Works"/> |✅|
-|4  |Ernesettle Solar Farm|5395|6767581041|499|?|5 |Looking at OSM map, there is an estate with many rooftop solar panels, of which this is one, close to the solar farm|:x:|
+| Match rule | REPD Site Name| REPD id  | OSM id | Distance (m) OSM to matched REPD |OSM capacity (MW)|REPD capacity (MW)| OSM location | OSM plantref |Notes | Correct |
+|---|---|---|---|---|---|---|---|---|---|---|
+|4  |Crossness Sewage Works PV|2385|2189686633|493|1.5|1.5|||Validated looking at OSM XML: <tag k="description" v="Large solar PV array at Crossness Sewage Works"/> |✅|
+|4  |Ernesettle Solar Farm|5395|6767581041|499||5 |roof||Looking at OSM map, there is an estate with many rooftop solar panels, of which this is one, close to the solar farm|:x:|
+| 5a | Grange Farm Solar Farm | 2120 | 634025632 |500||4.9||way/550883524|Checked with OSM map. The OSM with id=550883524 has the correct REPD id already.|✅|
+| 5b | Lower Easton Farm | 1849 | 701370103 |496||13.5|||Checked with OSM map.|✅|
+
+TODO: Can we add an SQL query that gets the repd_id for the OSM id of the plantref?
