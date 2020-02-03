@@ -38,9 +38,14 @@ REPD and OSM matching
 | OSM with REPD id and location = 'ground' | 22|
 | OSM with REPD id and location = 'surface' | 9|
 |---|---|
-| OSM with "plantref"| 7056|
+| OSM with "plantref"| 7,056|
 | OSM with "plantref" and REPD id |845 |
-| OSM with "plantref" and no REPD id | 6211|
+| OSM with "plantref" and no REPD id | 6,211|
+|---|---|
+| OSM with tag_power = 'plant'| 917|
+| OSM with tag_power = 'generator'| 126,022|
+| OSM with tag_power = 'plant' and REPD id| 837|
+| OSM with tag_power = 'generator' and REPD id| 56|
 
 - `*` OSM object types: https://wiki.openstreetmap.org/wiki/Elements
 - `**` including those within the same OSM entry and any that are not genuine REPD ids (found in REPD)
