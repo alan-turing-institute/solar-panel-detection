@@ -77,6 +77,7 @@ REPD and OSM matching
 |4     | 6281|
 |5a     | 5231|
 |5b    |224|
+|5c    |189|
 
 0. **Match Rule 0:** If the closest REPD point to an OSM point is <250m away
 1. **Match Rule 1a:** If the closest REPD point to an OSM point is <250m away and that OSM entry not already tagged with REPD id
@@ -89,6 +90,7 @@ REPD and OSM matching
 4. **Match Rule 4:** If the closest REPD point to an OSM point is <500m away
 5. **Match Rule 5a:** Match rule 4 + filter by location is either "ground", "surface" or not labeled
   - **Match Rule 5b:** 5a, but only those where "plantref" isn't already filled in
+  - **Match Rule 5c:** 5b, but only the novel matches (those where the closest REPD point is not already correctly tagged as the REPD id for that OSM)
 
 **Example matches that appear correct:**
 
@@ -119,9 +121,9 @@ These refer to the table above.
 
 | Match rule | REPD Site Name| REPD id  | OSM id | Distance (m) OSM to matched REPD |OSM capacity (MW)|REPD capacity (MW)| OSM location | OSM plantref |Notes | Correct |
 |---|---|---|---|---|---|---|---|---|---|---|
-|4  |Crossness Sewage Works PV|2385|2189686633|493|1.5|1.5|||Validated looking at OSM XML: <tag k="description" v="Large solar PV array at Crossness Sewage Works"/> |✅|
+|4 (and 5b) |Crossness Sewage Works PV|2385|2189686633|493|1.5|1.5|||Validated looking at OSM XML: <tag k="description" v="Large solar PV array at Crossness Sewage Works"/> |✅|
 |4  |Ernesettle Solar Farm|5395|6767581041|499||5 |roof||Looking at OSM map, there is an estate with many rooftop solar panels, of which this is one, close to the solar farm|:x:|
 | 5a | Grange Farm Solar Farm | 2120 | 634025632 |500||4.9||way/550883524|Checked with OSM map. The OSM with id=550883524 has the correct REPD id already.|✅|
 | 5b | Lower Easton Farm | 1849 | 701370103 |496||13.5|||Checked with OSM map.|✅|
 
-TODO: Can we add an SQL query that gets the repd_id for the OSM id of the plantref?
+TODO: Can we add an SQL query that gets the repd_id for the OSM id of the plantref? This can be represented in the osm_repd_id of the match result, so we can see ignore those where the REPD id is already found.

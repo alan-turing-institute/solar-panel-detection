@@ -44,3 +44,5 @@ or solar.osm.located = 'surface');
 drop table temp_table;
 
 select count(*) from match_rule_5_results;
+select count(*) from match_rule_5_results where plantref is null;
+select count(*) from match_rule_5_results where plantref is null and (osm_repd_id is null or osm_repd_id != repd_id);
