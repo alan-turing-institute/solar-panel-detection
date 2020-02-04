@@ -75,18 +75,20 @@ REPD and OSM matching
 
 | Match rule | Result |
 |---|---|
-| 0   | 3655 |
-| 1a  | 3155 |
+| 0   | 3,655 |
+| 1a  | 3,155 |
 | 1b  | 158 |
-| 1c  | 2979 |
+| 1c  | 2,979 |
 | 1d  | 18  |
 | 2   | 15  |
 | 3a   | 110 |
 |3b    | 50  |
-|4     | 6281|
-|5a     | 5231|
+|4     | 6,281|
+|5a     | 5,231|
 |5b    |224|
 |5c    |189|
+|6    | 5,675|
+|7   | 4,389|
 
 0. **Match Rule 0:** If the closest REPD point to an OSM point is <250m away
 1. **Match Rule 1a:** If the closest REPD point to an OSM point is <250m away and that OSM entry not already tagged with REPD id
@@ -97,9 +99,12 @@ REPD and OSM matching
 3. **Match Rule 3a:** If the closest REPD point to an OSM point is closer than REPD id already tagged for that OSM.
   - **Match Rule 3b:** 3a but only those where closest REPD point is <250m
 4. **Match Rule 4:** If the closest REPD point to an OSM point is <500m away
-5. **Match Rule 5a:** Match rule 4 + filter by location is either "ground", "surface" or not labeled
+5. **Match Rule 5a:** Match rule 4 + filter by location is either "ground", "surface" or not labeled (note, this ignores matches like John Lennon Airport, see below)
   - **Match Rule 5b:** 5a, but only those where "plantref" isn't already filled in
   - **Match Rule 5c:** 5b, but only the novel matches (those where the closest REPD point is not already correctly tagged as the REPD id for that OSM)
+6. **Match Rule 6:** Match rule 4, but only the novel matches (those where the closest REPD point is not already correctly tagged as the REPD id for that OSM)
+7. **Match Rule 7:** Match rule 6, but also removing those where the OSM linked by "plantref" (the master way or relation) has the correct REPD id already.
+8. TODO: Truly novel matches? - also removing those that have a plantref id that isn't their own osm id.
 
 **Example matches that appear correct:**
 
