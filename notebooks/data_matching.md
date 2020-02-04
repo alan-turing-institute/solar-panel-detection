@@ -126,7 +126,7 @@ These refer to the table above.
 |3a/b| Bronwylfa Reservoir|1520|4734|722350032|||The tagged REPD id clearly a mistake and looking at OSM map the macthed REPD is correct|✅|
 |3a|Newton Margate/Margate Solar Farm|5079|4878|746155615|311|398|See 1. below|?|
 
-1. Looking at OSM, there is only one farm in the vicinity, so perhaps the other is missing. Unclear whether to trust the tagged REPD id in this instance. Doesn't look to be a duplicate in REPD because capacity (1.5 and 3 MWelec) and postcode (PL31 1HF and PL31 1HE) vary. Suggests that filtering on capacity can resolve.
+1. Looking at OSM, there is only one farm in the vicinity, so perhaps the other is missing. Unclear whether to trust the tagged REPD id in this instance. Doesn't look to be a duplicate in REPD because capacity (1.5 and 3 MWelec) and postcode (PL31 1HF and PL31 1HE) vary. No point filtering on capacity if the capacity in OSM comes from REPD.
 
 | Match rule | REPD Site Name| REPD id  | OSM id | Distance (m) OSM to matched REPD |OSM capacity (MW)|REPD capacity (MW)| OSM location | OSM plantref |Notes | Correct |
 |---|---|---|---|---|---|---|---|---|---|---|
@@ -136,3 +136,17 @@ These refer to the table above.
 | 5b | Lower Easton Farm | 1849 | 701370103 |496||13.5|||Checked with OSM map.|✅|
 
 TODO: Can we add an SQL query that gets the repd_id for the OSM id of the plantref? This can be represented in the osm_repd_id of the match result, so we can see ignore those where the REPD id is already found.
+
+Matching 0.1 Conclusions
+=======================
+
+For a first attempt at proximity matching OSM data entries to REPD (via distance between lat/lon coordinate points), I've simply taken the closest match in meters for all REPD-OSM, excluding those beyond a threshold (e.g. 250m, 500m). At first glance this appears to work very well; I struggled to find example matches by checking manually in OSM or gmaps that looked wrong. It has however revealed several important features of the data, relevant to the ultimate goal of creating a dataset with one entry per solar PV installation:
+
+1. Currently in the OSM solar dataset, there is a lack of consistency in how solar farms are represented. With some having a "relation" and others having a "way" that other "way"s and "node"s (in OSM terminology) are related to. In some cases, the relation id in the OSM data already links all OSM objects that are part of the same farm/plant, and in others, Dan has already (via Python script) linked objects via the OSM id of one of the farm objects. The distance matching did reveal cases where additional OSM objects (those not already linked to a master "relation" or "way" of a solar farm) matched to an REPD id, but by manually checking the OSM instance we have set up with the solar data, these additional objects appear to be part of the same solar farm. So I need to put some thought into how best to further de-duplicate the OSM data, to reduce false positives in proximity matching to REPD.
+2. It was tempting when matching to REPD to rule out OSM "node" objects, since all of the OSM data already labeled with an REPD id are a "way" or "relation" and also to rule out objects where the location is designated "roof", since all the current labeled ones are "ground" or "surface". The proximity matching has revealed one interesting case that shows we can't be this strict. A large number of rooftop solar panels are present on an estate next to John Lennon Airport, which are <500m from the geolocation of "John Lennon Airport Scheme" in REPD. Looking at OSM, there are no solar farms nearby and the fact that it's a scheme suggests this is a correct match. A quick look through the REPD site names reveals there are a lot containing the word "Scheme", suggesting this is not an edge case. I need to think further how best to factor this in to proximity matching and how to infer the boundaries for areas of clustered "node"s that represent a single REPD entry (and not miss those at the edge of these areas or include those that are external). The capacity value in REPD will presumably apply to the cluster of solar panels taken as a whole.
+3. There are some cases I've found where REPD farms are in close proximity and so distance matching alone won't guarantee that an OSM entry gets matched to the correct one. So a next step could be to filter these ambiguous cases by installation date or other data fields from REPD/OSM. I'm not certain filtering on capacity will be helpful since most of the OSM entries with a capacity value are likely to have been taken from OSM directly (of 1,116 OSM entries with recorded capacity, 872 also had an REPD id).
+
+It's difficult to assess at this stage how many of the 5,686 REPD farms are already represented in OSM, but after de-duplication of the OSM entries belonging to the same farms and subsequent matching attempts to REPD, we should then be able to also tell which (if any) REPD entries are missing from OSM entirely.
+
+Things to use in next round of matching
+=======================================
