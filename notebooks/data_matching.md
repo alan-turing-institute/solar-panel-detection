@@ -89,6 +89,7 @@ REPD and OSM matching
 |5c    |189|
 |6    | 5,675|
 |7   | 4,389|
+|8   | 139|
 
 0. **Match Rule 0:** If the closest REPD point to an OSM point is <250m away
 1. **Match Rule 1a:** If the closest REPD point to an OSM point is <250m away and that OSM entry not already tagged with REPD id
@@ -104,7 +105,7 @@ REPD and OSM matching
   - **Match Rule 5c:** 5b, but only the novel matches (those where the closest REPD point is not already correctly tagged as the REPD id for that OSM)
 6. **Match Rule 6:** Match rule 4, but only the novel matches (those where the closest REPD point is not already correctly tagged as the REPD id for that OSM)
 7. **Match Rule 7:** Match rule 6, but also removing those where the OSM linked by "plantref" (the master way or relation) has the correct REPD id already.
-8. TODO: Truly novel matches? - also removing those that have a plantref id that isn't their own osm id.
+8. **Match Rule 8:** Match rule 6, but only those that have a plantref master OSM id that is their own OSM id.
 
 **Example matches that appear correct:**
 
