@@ -188,3 +188,4 @@ Match rule ideas
     - Work out how to infer the boundaries for clustered node installations like John Lennon Airport Scheme
 2. Check OSM `tag_start_date` against REPD `operational`. Only 46 have these filled but "Crannaford Solar Farm" shows that these can match even when not taken from REPD (this is a known distance match, see above) and at the "Trickey Warren" REPD for instance, could we use this field to differentiate from neighbouring solar farms?
 3. Could postcode could be used as a sanity check for distance matching? This would require some kind of rough conversion of postcode to geolocation?
+4. The machine vision polygons, we can probably just use these to sanity check the OSM-REPD-FiT combined dataset towards the end, maybe by ruling out things that aren't present in the MV dataset if the OSM/REPD date is old (could have been removed)
