@@ -135,10 +135,45 @@ order by raw.osm.osm_id, x.repd_id;
 alter table osm_repd_id_mapping
 alter column repd_id type int using repd_id::integer;
 
+-- Create osm table
+
+drop table if exists osm_plantref_mapping;
+select
+  osm_id,
+  (string_to_array(plantref, '/'))[2] as master_osm_id
+into osm_plantref_mapping
+from solar.osm;
+
+alter table osm_plantref_mapping
+alter column master_osm_id type bigint using master_osm_id::bigint;
+
+drop table if exists osm;
+select
+  raw.osm.objtype,
+  raw.osm.osm_id,
+  raw.osm.username,
+  raw.osm.time_created,
+  raw.osm.latitude,
+  raw.osm.longitude,
+  raw.osm.area,
+  raw.osm.capacity,
+  raw.osm.modules,
+  raw.osm.located,
+  raw.osm.orientation,
+  osm_plantref_mapping.master_osm_id,
+  raw.osm.tag_power,
+  raw.osm.repd_id_str,
+  raw.osm.tag_start_date
+into osm
+from raw.osm
+left join osm_plantref_mapping on osm_plantref_mapping.osm_id = raw.osm.osm_id
+where osm_plantref_mapping.osm_id = osm_plantref_mapping.master_osm_id
+or raw.osm.plantref is null;
+
 -- Create geometry columns for geographical comparison/matching
 
-alter table raw.osm add column location geometry(Point, 4326);
-update raw.osm set location = ST_SetSRID(ST_MakePoint(longitude, latitude), 4326);
+alter table osm add column location geometry(Point, 4326);
+update osm set location = ST_SetSRID(ST_MakePoint(longitude, latitude), 4326);
 
 alter table repd add column location geometry(Point, 4326);
 update repd set location = ST_SetSRID(ST_MakePoint(longitude, latitude), 4326);

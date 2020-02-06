@@ -1,4 +1,4 @@
-Data matching ideas
+Data matching first (v0.1) round
 ===================
 
 REPD and OSM matching
@@ -46,6 +46,8 @@ REPD and OSM matching
 | OSM with tag_power = 'generator'| 126,022|
 | OSM with tag_power = 'plant' and REPD id| 837|
 | OSM with tag_power = 'generator' and REPD id| 56|
+|---|---|
+|OSM with
 
 - `*` OSM object types: https://wiki.openstreetmap.org/wiki/Elements
 - `**` including those within the same OSM entry and any that are not genuine REPD ids (found in REPD)
@@ -143,7 +145,7 @@ These refer to the table above.
 
 TODO: Can we add an SQL query that gets the repd_id for the OSM id of the plantref? This can be represented in the osm_repd_id of the match result, so we can see ignore those where the REPD id is already found.
 
-Matching 0.1 Conclusions
+Matching first (v0.1) round Conclusions
 =======================
 
 For a first attempt at proximity matching OSM data entries to REPD (via distance between lat/lon coordinate points), I've simply taken the closest match in meters for all REPD-OSM, excluding those beyond a threshold (e.g. 250m, 500m). At first glance this appears to work very well; I struggled to find example matches by checking manually in OSM or gmaps that looked wrong. It has however revealed several important features of the data, relevant to the ultimate goal of creating a dataset with one entry per solar PV installation:
@@ -161,5 +163,13 @@ It's difficult to assess at this stage how many of the 5,686 REPD farms are alre
 2. Do geo matching within OSM to find ones that are super close and check them out manually
 3. De-duplicate on geography as necessary
 
-Things to use in next round of matching
+Data matching round 2 (v1.0)
 =======================================
+
+OSM De-duplication
+----
+
+|  | OSM Counts |
+|---|---|
+| Total | 126,939|
+| Total minus those with a "plantref" id that is not the same as its OSM id (links to another)|120,800 |
