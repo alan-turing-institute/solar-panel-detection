@@ -7,14 +7,14 @@ drop table if exists temp_table;
 
 select
   osm_repd_closest.osm_id,
-  solar.osm_repd_id_mapping.repd_id as osm_repd_id,
+  osm_repd_id_mapping.repd_id as osm_repd_id,
   osm_repd_closest.closest_geo_match_from_repd_repd_id,
   osm_repd_closest.closest_geo_match_from_repd_co_location_repd_id,
   osm_repd_closest.site_name,
   osm_repd_closest.distance_meters
 into temp_table
 from osm_repd_closest
-left join solar.osm_repd_id_mapping on osm_repd_closest.osm_id = solar.osm_repd_id_mapping.osm_id
+left join osm_repd_id_mapping on osm_repd_closest.osm_id = osm_repd_id_mapping.osm_id
 where osm_repd_closest.distance_meters < 250;
 
 select
@@ -24,16 +24,16 @@ select
   temp_table.closest_geo_match_from_repd_co_location_repd_id as co_repd,
   temp_table.site_name as repd_name,
   temp_table.distance_meters,
-  solar.osm.objtype,
-  solar.osm.plantref,
-  solar.osm.time_created,
-  solar.osm.area,
-  solar.osm.capacity,
-  solar.osm.latitude as lat,
-  solar.osm.longitude as lon
+  raw.osm.objtype,
+  raw.osm.plantref,
+  raw.osm.time_created,
+  raw.osm.area,
+  raw.osm.capacity,
+  raw.osm.latitude as lat,
+  raw.osm.longitude as lon
 into match_rule_1_results
-from temp_table, solar.osm
-where temp_table.osm_id = solar.osm.osm_id
+from temp_table, raw.osm
+where temp_table.osm_id = raw.osm.osm_id
 and temp_table.osm_repd_id is null;
 
 drop table temp_table;

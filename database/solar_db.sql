@@ -135,7 +135,15 @@ order by raw.osm.osm_id, x.repd_id;
 alter table osm_repd_id_mapping
 alter column repd_id type int using repd_id::integer;
 
--- Create osm table
+-- Create geometry columns for geographical comparison/matching
+
+alter table raw.osm add column location geometry(Point, 4326);
+update raw.osm set location = ST_SetSRID(ST_MakePoint(longitude, latitude), 4326);
+
+alter table repd add column location geometry(Point, 4326);
+update repd set location = ST_SetSRID(ST_MakePoint(longitude, latitude), 4326);
+
+-- Create de-duplicated osm table
 
 drop table if exists osm_plantref_mapping;
 select
@@ -163,17 +171,10 @@ select
   osm_plantref_mapping.master_osm_id,
   raw.osm.tag_power,
   raw.osm.repd_id_str,
-  raw.osm.tag_start_date
+  raw.osm.tag_start_date,
+  raw.osm.location
 into osm
 from raw.osm
 left join osm_plantref_mapping on osm_plantref_mapping.osm_id = raw.osm.osm_id
 where osm_plantref_mapping.osm_id = osm_plantref_mapping.master_osm_id
 or raw.osm.plantref is null;
-
--- Create geometry columns for geographical comparison/matching
-
-alter table osm add column location geometry(Point, 4326);
-update osm set location = ST_SetSRID(ST_MakePoint(longitude, latitude), 4326);
-
-alter table repd add column location geometry(Point, 4326);
-update repd set location = ST_SetSRID(ST_MakePoint(longitude, latitude), 4326);
