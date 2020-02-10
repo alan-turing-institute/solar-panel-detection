@@ -17,7 +17,7 @@ CROSS JOIN LATERAL
      temp.osm_id,
      osm.location::geography <-> temp.location::geography as distance_meters
      FROM temp
-     where temp.objtype != 'node'
+     where temp.objtype != 'node' -- There is no point de-duplicating nodes, these are separate objects
      ORDER BY osm.location::geography <-> temp.location::geography
    LIMIT 2) AS closest_pt
 where osm.objtype != 'node'
@@ -33,4 +33,9 @@ select
   osm.longitude
 from osm_neighbours, osm
 where osm_neighbours.osm_id = osm.osm_id
+and osm.located != 'roof'
+and osm.located != 'rood'
+and osm.located != 'roofq'
+and osm.located != 'rof'
+and osm.located != 'roofs'
 order by osm_neighbours.distance_meters asc;
