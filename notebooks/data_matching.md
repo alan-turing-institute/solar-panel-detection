@@ -167,7 +167,7 @@ It's difficult to assess at this stage how many of the 5,686 REPD farms are alre
 3. De-duplicate on geography as necessary
     - Ignore nodes, because these are not farms
     - Ignore rooftop installions - also not farms
-    - We want to de-duplicate all farms, not just those that match to REPD (some may be in MV and not REPD). Perhaps the best way to do this is to list all of the farms that aren't already de-duplicated, which have non-node, non-roof, non-already-deduplicated OSMs within Xm and check manually that they are part of the same thing and then update their master_osm_id in `raw.osm` and removing all but one in `osm`
+    - We want to de-duplicate all farms, not just those that match to REPD (some may be in MV and not REPD). Perhaps the best way to do this is to list all of the farms that aren't already de-duplicated, which have non-node, non-roof, non-already-deduplicated OSMs within Xm and check manually that they are part of the same thing and then update their master_osm_id in `raw.osm` and removing all but one in `osm`. This is now done in `osm-possible-farm-duplicates.sql` <- this list may need to be manually searched through. TODO: WRITE THIS UP BETTER: When I bump up the range to 2000m, there are only 3 more than for 1000m, all of which I checked and are definitely different structures. Add this info to table and say that the 82 need to be manually searched in OSM.
 
 |  | OSM Counts|
 |---|---|

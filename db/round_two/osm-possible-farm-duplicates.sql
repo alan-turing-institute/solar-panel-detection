@@ -59,7 +59,7 @@ select
 from temp2, osm_dup
 where temp2.osm_id = osm_dup.osm_id
 and ST_Distance(osm_dup.location::geography, temp2.location::geography) < 1000 -- limit to those closer than Xm
-ORDER BY temp2.osm_id ASC;
+ORDER BY temp2.distance_meters desc;
 
 drop table temp;
 drop table temp2;
