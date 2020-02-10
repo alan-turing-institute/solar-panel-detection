@@ -157,19 +157,24 @@ For a first attempt at proximity matching OSM data entries to REPD (via distance
 Data matching round 2 (v1.0)
 =======================================
 
-OSM De-duplication
+OSM solar farm De-duplication
 ----
 
 It's difficult to assess at this stage how many of the 5,686 REPD farms are already represented in OSM, but after de-duplication of the OSM entries belonging to the same farms and subsequent matching attempts to REPD, we should then be able to also tell which (if any) REPD entries are missing from OSM entirely.
 
-1. Remove any where the plantref is not its own OSM id to deduplicate
-2. Do geo matching within OSM to find ones that are super close and check them out manually
+1. Remove any where the plantref is not its own OSM id to deduplicate - DONE
+2. Do geo matching within OSM to find ones that are super close and check them out manually - DONE
 3. De-duplicate on geography as necessary
+    - Ignore nodes, because these are not farms
+    - Ignore rooftop installions - also not farms
+    - We want to de-duplicate all farms, not just those that match to REPD (some may be in MV and not REPD). Perhaps the best way to do this is to list all of the farms that aren't already de-duplicated, which have non-node, non-roof, non-already-deduplicated OSMs within Xm and check manually that they are part of the same thing and then update their master_osm_id in `raw.osm` and removing all but one in `osm`
 
 |  | OSM Counts|
 |---|---|
 | Total no de-duplication| 126,939|
+| Not located on roof and not objtype "node"| 826 |
 | Deduplication 1) minus those with a "plantref" id that is not the same as its OSM id (links to another)|120,800 |
+| Not located on roof and not objtype "node" and not already de-duplicated 1| 117 |
 | Deduplication 2) Distance based | |
 |---|---|
 |**After Deduplication**||

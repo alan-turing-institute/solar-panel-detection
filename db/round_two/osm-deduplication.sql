@@ -27,15 +27,40 @@ drop table temp;
 
 select
   osm_neighbours.osm_id,
+  osm.master_osm_id,
   osm_neighbours.neighbour_osm_id,
   osm_neighbours.distance_meters,
   osm.latitude,
   osm.longitude
 from osm_neighbours, osm
 where osm_neighbours.osm_id = osm.osm_id
+and (osm.master_osm_id != osm.osm_id -- ignore those that already have a plantref (already de-duplicated)
+  or osm.master_osm_id is null)
 and osm.located != 'roof'
 and osm.located != 'rood'
 and osm.located != 'roofq'
 and osm.located != 'rof'
 and osm.located != 'roofs'
 order by osm_neighbours.distance_meters asc;
+
+-- Counts of objects that still may need de-duplication
+
+-- select count(*)
+-- from osm
+-- where osm.objtype != 'node'
+-- and (osm.master_osm_id != osm.osm_id -- ignore those that already have a plantref (already de-duplicated)
+--   or osm.master_osm_id is null)
+-- and osm.located != 'roof'
+-- and osm.located != 'rood'
+-- and osm.located != 'roofq'
+-- and osm.located != 'rof'
+-- and osm.located != 'roofs';
+--
+-- select count(*)
+-- from raw.osm
+-- where osm.objtype != 'node'
+-- and osm.located != 'roof'
+-- and osm.located != 'rood'
+-- and osm.located != 'roofq'
+-- and osm.located != 'rof'
+-- and osm.located != 'roofs';
