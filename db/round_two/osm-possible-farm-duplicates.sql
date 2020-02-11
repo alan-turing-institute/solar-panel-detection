@@ -3,6 +3,7 @@ drop table if exists osm_possible_farm_duplicates;
 drop table if exists temp;
 drop table if exists temp2;
 drop table if exists osm_dup;
+drop table if exists osm_farm_duplicates;
 
 select *
 into osm_dup
@@ -57,11 +58,13 @@ select
   osm_dup.longitude,
   temp2.neighbour_lat,
   temp2.neighbour_lon
+into osm_farm_duplicates
 from temp2, osm_dup
 where temp2.osm_id = osm_dup.osm_id
-and ST_Distance(osm_dup.location::geography, temp2.location::geography) < 1000 -- limit to those closer than Xm
+and ST_Distance(osm_dup.location::geography, temp2.location::geography) < 300 -- limit to those closer than Xm
 ORDER BY temp2.distance_meters desc;
 
 drop table temp;
 drop table temp2;
 drop table osm_dup;
+drop table osm_possible_farm_duplicates;
