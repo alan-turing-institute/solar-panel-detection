@@ -154,22 +154,46 @@ For a first attempt at proximity matching OSM data entries to REPD (via distance
 2. It was tempting when matching to REPD to rule out OSM "node" objects, since all of the OSM data already labeled with an REPD id are a "way" or "relation" and also to rule out objects where the location is designated "roof", since all the current labeled ones are "ground" or "surface". The proximity matching has revealed one interesting case that shows we can't be this strict. A large number of rooftop solar panels are present on an estate next to John Lennon Airport, which are <500m from the geolocation of "John Lennon Airport Scheme" in REPD. Looking at OSM, there are no solar farms nearby and the fact that it's a scheme suggests this is a correct match. A quick look through the REPD site names reveals there are a lot containing the word "Scheme", suggesting this is not an edge case. I need to think further how best to factor this in to proximity matching and how to infer the boundaries for areas of clustered "node"s that represent a single REPD entry (and not miss those at the edge of these areas or include those that are external). The capacity value in REPD will presumably apply to the cluster of solar panels taken as a whole.
 3. There are some cases I've found where REPD farms are in close proximity and so distance matching alone won't guarantee that an OSM entry gets matched to the correct one. So a next step could be to filter these ambiguous cases by installation date or other data fields from REPD/OSM. I'm not certain filtering on capacity will be helpful since most of the OSM entries with a capacity value are likely to have been taken from OSM directly (of 1,116 OSM entries with recorded capacity, 872 also had an REPD id).
 
-De-Duplicating OSM
-===========
-
-It's difficult to assess at this stage how many of the 5,686 REPD farms are already represented in OSM, but after de-duplication of the OSM entries belonging to the same farms and subsequent matching attempts to REPD, we should then be able to also tell which (if any) REPD entries are missing from OSM entirely.
-
-1. Remove any where the plantref is not its own OSM id to deduplicate
-2. Do geo matching within OSM to find ones that are super close and check them out manually
-3. De-duplicate on geography as necessary
-
 Data matching round 2 (v1.0)
 =======================================
 
-OSM De-duplication
+OSM solar farm De-duplication
 ----
 
-|  | OSM Counts |
-|---|---|
-| Total | 126,939|
-| Total minus those with a "plantref" id that is not the same as its OSM id (links to another)|120,800 |
+It's difficult to assess at this stage how many of the 5,686 REPD farms are already represented in OSM, but after de-duplication of the OSM entries belonging to the same farms and subsequent matching attempts to REPD, we should then be able to also tell which (if any) REPD entries are missing from OSM entirely.
+
+1. Remove any where the `plantref` is not its own OSM id to deduplicate - DONE
+2. Do geo matching within OSM to find ones that are super close and check them out manually - DONE
+3. De-duplicate on geography as necessary
+    - Ignore nodes, because these are not farms
+    - Ignore rooftop installations - also not farms
+    - Only worry about those not already de-duplicated with `plantref`
+    - Of the objects in the list satisfying these 3 conditions, filter those with closest object from same list within Xm and check manually that they are part of the same thing and then update their master_osm_id in `osm` table and remove all but one in `osm`.
+
+|  | OSM Counts|Notes|
+|---|---|---|
+| Total no de-duplication| 126,939||
+| Not located on roof and not objtype "node"| 826 ||
+| Deduplication 1) minus those with a "plantref" id that is not the same as its OSM id (links to another)|120,800 ||
+| Not located on roof and not objtype "node" and not already de-duplicated| 117 ||
+| ^ + has another object of this kind within 2,000m | 85 |Manually checked the 5 (85-80) and they are not the same farm|
+| ^ + has another object of this kind within 300m | 80 |Manually checking some of the furthest ones and they are part of the same large farm|
+| Deduplication 2) Distance based | ||
+|---|---|---|
+|**After Deduplication**|||
+| Total with recorded tag_start_date | 46 ||
+| Total with recorded tag_start_date and REPD id| 12 ||
+| Total with recorded tag_start_date without REPD id| 34 ||
+| Total with recorded capacity |1,102 ||
+| Total with recorded capacity and REPD id |868 ||
+| Total with recorded capacity without REPD id | 234||
+
+Match rule ideas
+-------
+
+1. Refine distance matching with newly de-duplicated OSM to REPD
+    - Add a limit to how close the 2nd closest can be so we can differentiate certain vs ambiguous
+    - Work out how to infer the boundaries for clustered node installations like John Lennon Airport Scheme
+2. Check OSM `tag_start_date` against REPD `operational`. Only 46 have these filled but "Crannaford Solar Farm" shows that these can match even when not taken from REPD (this is a known distance match, see above) and at the "Trickey Warren" REPD for instance, could we use this field to differentiate from neighbouring solar farms?
+3. Could postcode could be used as a sanity check for distance matching? This would require some kind of rough conversion of postcode to geolocation?
+4. The machine vision polygons, we can probably just use these to sanity check the OSM-REPD-FiT combined dataset towards the end, maybe by ruling out things that aren't present in the MV dataset if the OSM/REPD date is old (could have been removed)

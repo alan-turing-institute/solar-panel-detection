@@ -144,7 +144,7 @@ alter table repd add column location geometry(Point, 4326);
 update repd set location = ST_SetSRID(ST_MakePoint(longitude, latitude), 4326);
 
 -- Create de-duplicated osm table
-
+-- First de-duplicate by reducing to one row for each farm linked by "plantref"
 drop table if exists osm_plantref_mapping;
 select
   osm_id,
