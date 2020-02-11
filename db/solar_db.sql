@@ -118,7 +118,7 @@ create table fit (
 -- The subdir data/raw/ should be a symbolic link to the actual data on the shared space
 \copy repd from 'data/processed/repd-2019-09.csv' delimiter ',' csv header;
 \copy raw.osm from 'data/processed/osm.csv' delimiter ',' csv header;
-\copy machine_vision from 'data/raw/machine_vision.csv' delimiter ',' csv header;
+\copy machine_vision from 'data/processed/machine_vision.csv' delimiter ',' csv header;
 \copy fit from 'data/processed/fit-2019-09.csv' delimiter ',' csv header;
 
 -- Change floats to ints
