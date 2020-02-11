@@ -166,9 +166,9 @@ It's difficult to assess at this stage how many of the 5,686 REPD farms are alre
 2. Do geo matching within OSM to find ones that are super close and check them out manually - DONE
 3. De-duplicate on geography as necessary
     - Ignore nodes, because these are not farms
-    - Ignore rooftop installions - also not farms
+    - Ignore rooftop installations - also not farms
     - Only worry about those not already de-duplicated with `plantref`
-    - Of the objects in the list satisfying these 3 conditions, filter those with closest object from same list within Xm and check manually that they are part of the same thing and then update their master_osm_id in `raw.osm` and remove all but one in `osm`.
+    - Of the objects in the list satisfying these 3 conditions, filter those with closest object from same list within Xm and check manually that they are part of the same thing and then update their master_osm_id in `osm` table and remove all but one in `osm`.
 
 |  | OSM Counts|Notes|
 |---|---|---|
