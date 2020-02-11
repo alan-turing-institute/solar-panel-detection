@@ -1,4 +1,6 @@
--- drop table if exists osm_neighbours;
+-- This query only works after the db is created with solar_db.sql
+
+drop table if exists osm_neighbours;
 drop table if exists temp;
 
 -- the purpose of the below is to find objects that are oddly close and check if they are part of the same thing

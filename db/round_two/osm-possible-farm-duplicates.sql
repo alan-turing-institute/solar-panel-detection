@@ -1,3 +1,4 @@
+-- This query only works after the db is created with solar_db.sql
 drop table if exists osm_possible_farm_duplicates;
 drop table if exists temp;
 drop table if exists temp2;

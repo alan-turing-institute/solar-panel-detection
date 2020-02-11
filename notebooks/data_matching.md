@@ -162,28 +162,31 @@ OSM solar farm De-duplication
 
 It's difficult to assess at this stage how many of the 5,686 REPD farms are already represented in OSM, but after de-duplication of the OSM entries belonging to the same farms and subsequent matching attempts to REPD, we should then be able to also tell which (if any) REPD entries are missing from OSM entirely.
 
-1. Remove any where the plantref is not its own OSM id to deduplicate - DONE
+1. Remove any where the `plantref` is not its own OSM id to deduplicate - DONE
 2. Do geo matching within OSM to find ones that are super close and check them out manually - DONE
 3. De-duplicate on geography as necessary
     - Ignore nodes, because these are not farms
     - Ignore rooftop installions - also not farms
-    - We want to de-duplicate all farms, not just those that match to REPD (some may be in MV and not REPD). Perhaps the best way to do this is to list all of the farms that aren't already de-duplicated, which have non-node, non-roof, non-already-deduplicated OSMs within Xm and check manually that they are part of the same thing and then update their master_osm_id in `raw.osm` and removing all but one in `osm`. This is now done in `osm-possible-farm-duplicates.sql` <- this list may need to be manually searched through. TODO: WRITE THIS UP BETTER: When I bump up the range to 2000m, there are only 3 more than for 1000m, all of which I checked and are definitely different structures. Add this info to table and say that the 82 need to be manually searched in OSM.
+    - Only worry about those not already de-duplicated with `plantref`
+    - Of the objects in the list satisfying these 3 conditions, filter those with closest object from same list within Xm and check manually that they are part of the same thing and then update their master_osm_id in `raw.osm` and remove all but one in `osm`.
 
-|  | OSM Counts|
-|---|---|
-| Total no de-duplication| 126,939|
-| Not located on roof and not objtype "node"| 826 |
-| Deduplication 1) minus those with a "plantref" id that is not the same as its OSM id (links to another)|120,800 |
-| Not located on roof and not objtype "node" and not already de-duplicated 1| 117 |
-| Deduplication 2) Distance based | |
-|---|---|
-|**After Deduplication**||
-| Total with recorded tag_start_date | 46 |
-| Total with recorded tag_start_date and REPD id| 12 |
-| Total with recorded tag_start_date without REPD id| 34 |
-| Total with recorded capacity |1,102 |
-| Total with recorded capacity and REPD id |868 |
-| Total with recorded capacity without REPD id | 234|
+|  | OSM Counts|Notes|
+|---|---|---|
+| Total no de-duplication| 126,939||
+| Not located on roof and not objtype "node"| 826 ||
+| Deduplication 1) minus those with a "plantref" id that is not the same as its OSM id (links to another)|120,800 ||
+| Not located on roof and not objtype "node" and not already de-duplicated| 117 ||
+| ^ + has another object of this kind within 2,000m | 85 |Manually checked the 5 (85-80) and they are not the same farm|
+| ^ + has another object of this kind within 300m | 80 |Manually checking some of the furthest ones and they are part of the same large farm|
+| Deduplication 2) Distance based | ||
+|---|---|---|
+|**After Deduplication**|||
+| Total with recorded tag_start_date | 46 ||
+| Total with recorded tag_start_date and REPD id| 12 ||
+| Total with recorded tag_start_date without REPD id| 34 ||
+| Total with recorded capacity |1,102 ||
+| Total with recorded capacity and REPD id |868 ||
+| Total with recorded capacity without REPD id | 234||
 
 Match rule ideas
 -------
