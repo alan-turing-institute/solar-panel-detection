@@ -19,6 +19,7 @@ for index, row in machine_vision_df.iterrows():
 machine_vision_df['x'] = x
 machine_vision_df['y'] = y
 
+# TODO: if we need this in PostgreSQL/PostGIS, figure out the correct data type for table column
 machine_vision_df = machine_vision_df.drop(['geometry'], axis=1)
 
 mv_csv_str = machine_vision_df.to_csv(index=False)
