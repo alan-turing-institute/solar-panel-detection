@@ -2,16 +2,16 @@
 -- Using nearest neighbour search
 drop table if exists repd_linked_distances;
 select
-  solar.osm.osm_id,
-  solar.osm_repd_id_mapping.repd_id as repd_id_in_osm,
-  solar.repd.repd_id as closest_geo_match_from_repd_repd_id,
-  solar.repd.co_location_repd_id as closest_geo_match_from_repd_co_location_repd_id,
-  ST_Distance(solar.osm.geom::geography, solar.repd.geom::geography) as distance_meters
+  raw.osm.osm_id,
+  osm_repd_id_mapping.repd_id as repd_id_in_osm,
+  repd.repd_id as closest_geo_match_from_repd_repd_id,
+  repd.co_location_repd_id as closest_geo_match_from_repd_co_location_repd_id,
+  ST_Distance(raw.osm.location::geography,repd.location::geography) as distance_meters
 into repd_linked_distances
-from solar.osm, solar.repd, solar.osm_repd_id_mapping
-where solar.osm.osm_id = solar.osm_repd_id_mapping.osm_id
-and solar.repd.repd_id = solar.osm_repd_id_mapping.repd_id
-order by ST_Distance(solar.osm.geom::geography, solar.repd.geom::geography);
+from raw.osm,repd, osm_repd_id_mapping
+where raw.osm.osm_id = osm_repd_id_mapping.osm_id
+and repd.repd_id = osm_repd_id_mapping.repd_id
+order by ST_Distance(raw.osm.location::geography,repd.location::geography);
 
 -- Get 6 number summary
 select

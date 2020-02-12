@@ -1,9 +1,9 @@
-create schema if not exists solar;
+create schema if not exists raw;
 
 create extension if not exists postgis;
 
-drop table if exists solar.osm; -- call these raw.osm etc
-create table solar.osm (
+drop table if exists raw.osm;
+create table raw.osm (
   objtype varchar(8),
   osm_id bigint,
   username varchar(60),
@@ -22,8 +22,8 @@ create table solar.osm (
   primary key (osm_id)
 );
 
-drop table if exists solar.repd;
-create table solar.repd (
+drop table if exists repd;
+create table repd (
   old_repd_id varchar(15),
   repd_id integer,
   record_last_updated date,
@@ -31,7 +31,7 @@ create table solar.repd (
   site_name varchar(100),
   tech_type varchar(40),
   storage_type varchar(40),
-  co_location_repd_id float, -- can't make this int as csv contains NaN
+  co_location_repd_id float, -- can't make this int as csv contains NaN, but this is fixed below
   capacity varchar(8),
   chp_enabled varchar(3),
   ro_banding varchar(10),
@@ -76,8 +76,8 @@ create table solar.repd (
   primary key (repd_id)
 );
 
-drop table if exists solar.mv;
-create table solar.mv (
+drop table if exists machine_vision;
+create table machine_vision (
   area float,
   confidence char(1),
   install_date varchar(30), -- problem is that some of them don't have proper dates e.g. "<2016-06" and some have multiple separated by comma
@@ -89,8 +89,8 @@ create table solar.mv (
   primary key (latitude, longitude)
 );
 
-drop table if exists solar.fit;
-create table solar.fit (
+drop table if exists fit;
+create table fit (
   row_id int,
   extension char(1),
   postcode_stub varchar(7),
@@ -116,29 +116,65 @@ create table solar.fit (
 
 -- Upload data
 -- The subdir data/raw/ should be a symbolic link to the actual data on the shared space
-\copy solar.repd from 'data/processed/repd-2019-09.csv' delimiter ',' csv header;
-\copy solar.osm from 'data/processed/osm.csv' delimiter ',' csv header;
-\copy solar.mv from 'data/raw/machine_vision.csv' delimiter ',' csv header;
-\copy solar.fit from 'data/processed/fit-2019-09.csv' delimiter ',' csv header;
+\copy repd from 'data/processed/repd-2019-09.csv' delimiter ',' csv header;
+\copy raw.osm from 'data/processed/osm.csv' delimiter ',' csv header;
+-- \copy machine_vision from 'data/raw/machine_vision.csv' delimiter ',' csv header;
+\copy fit from 'data/processed/fit-2019-09.csv' delimiter ',' csv header;
 
 -- Change floats to ints
-alter table solar.repd
+alter table repd
 alter column co_location_repd_id type int using co_location_repd_id::integer;
 
 -- Create table that has each repd_id that an osm_id has
 
-drop table if exists solar.osm_repd_id_mapping;
-select solar.osm.osm_id, x.repd_id
-into solar.osm_repd_id_mapping
-from solar.osm, unnest(string_to_array(repd_id_str, ';')) with ordinality as x(repd_id)
-order by solar.osm.osm_id, x.repd_id;
-alter table solar.osm_repd_id_mapping
+drop table if exists osm_repd_id_mapping;
+select raw.osm.osm_id, x.repd_id
+into osm_repd_id_mapping
+from raw.osm, unnest(string_to_array(repd_id_str, ';')) with ordinality as x(repd_id)
+order by raw.osm.osm_id, x.repd_id;
+alter table osm_repd_id_mapping
 alter column repd_id type int using repd_id::integer;
 
 -- Create geometry columns for geographical comparison/matching
 
-alter table solar.osm add column geom geometry(Point, 4326);
-update solar.osm set geom = ST_SetSRID(ST_MakePoint(longitude, latitude), 4326);
+alter table raw.osm add column location geometry(Point, 4326);
+update raw.osm set location = ST_SetSRID(ST_MakePoint(longitude, latitude), 4326);
 
-alter table solar.repd add column geom geometry(Point, 4326);
-update solar.repd set geom = ST_SetSRID(ST_MakePoint(longitude, latitude), 4326);
+alter table repd add column location geometry(Point, 4326);
+update repd set location = ST_SetSRID(ST_MakePoint(longitude, latitude), 4326);
+
+-- Create de-duplicated osm table
+-- First de-duplicate by reducing to one row for each farm linked by "plantref"
+drop table if exists osm_plantref_mapping;
+select
+  osm_id,
+  (string_to_array(plantref, '/'))[2] as master_osm_id
+into osm_plantref_mapping
+from solar.osm;
+
+alter table osm_plantref_mapping
+alter column master_osm_id type bigint using master_osm_id::bigint;
+
+drop table if exists osm;
+select
+  raw.osm.objtype,
+  raw.osm.osm_id,
+  raw.osm.username,
+  raw.osm.time_created,
+  raw.osm.latitude,
+  raw.osm.longitude,
+  raw.osm.area,
+  raw.osm.capacity,
+  raw.osm.modules,
+  raw.osm.located,
+  raw.osm.orientation,
+  osm_plantref_mapping.master_osm_id,
+  raw.osm.tag_power,
+  raw.osm.repd_id_str,
+  raw.osm.tag_start_date,
+  raw.osm.location
+into osm
+from raw.osm
+left join osm_plantref_mapping on osm_plantref_mapping.osm_id = raw.osm.osm_id
+where osm_plantref_mapping.osm_id = osm_plantref_mapping.master_osm_id
+or raw.osm.plantref is null;
