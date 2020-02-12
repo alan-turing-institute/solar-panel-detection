@@ -4,6 +4,7 @@ drop table if exists temp;
 drop table if exists temp2;
 drop table if exists osm_dup;
 drop table if exists osm_farm_duplicates;
+drop table if exists osm_dedup;
 
 select *
 into osm_dup
@@ -67,4 +68,20 @@ ORDER BY temp2.distance_meters desc;
 drop table temp;
 drop table temp2;
 drop table osm_dup;
-drop table osm_possible_farm_duplicates;
+-- drop table osm_possible_farm_duplicates;
+
+-- Delete neighbour ids from osm
+SELECT *
+into osm_dedup
+from osm
+where not exists (
+  SELECT
+  FROM osm_farm_duplicates
+  where osm.osm_id = osm_farm_duplicates.neighbour_osm_id
+);
+
+drop table osm;
+select *
+into osm
+from osm_dedup;
+drop table osm_dedup;
