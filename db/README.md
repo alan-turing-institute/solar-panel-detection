@@ -15,9 +15,9 @@ To create the database for first use:
 createdb hut23-425 "Solar PV database matching"
 ```
 
-To create the database:
+To create the database, in the repo root directory:
 ```bash
-psql -f solar_db.sql hut23-425
+psql -f database/solar_db.sql hut23-425
 ```
 
 
