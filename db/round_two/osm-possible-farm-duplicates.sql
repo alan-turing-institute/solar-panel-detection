@@ -5,6 +5,7 @@ drop table if exists temp2;
 drop table if exists osm_dup;
 drop table if exists osm_farm_duplicates;
 drop table if exists osm_dedup;
+drop table if exists osm_farm_deleteables;
 
 select *
 into osm_dup
@@ -47,8 +48,7 @@ CROSS JOIN LATERAL
      raw.osm.location
      FROM temp, raw.osm
      where temp.osm_id = raw.osm.osm_id
-     ORDER BY osm_possible_farm_duplicates.location::geography <-> raw.osm.location::geography
-   LIMIT 2) AS closest_pt
+     ORDER BY osm_possible_farm_duplicates.location::geography <-> raw.osm.location::geography) AS closest_pt
 where osm_possible_farm_duplicates.osm_id != closest_pt.osm_id;
 
 select
@@ -68,17 +68,28 @@ ORDER BY temp2.distance_meters desc;
 drop table temp;
 drop table temp2;
 drop table osm_dup;
--- drop table osm_possible_farm_duplicates;
 
--- Delete neighbour ids from osm
-SELECT *
+-- Create table with
+alter table osm_farm_duplicates add column "ordered" BOOLEAN;
+update osm_farm_duplicates
+set ordered = osm_id > neighbour_osm_id;
+
+select osm_id, bool_and(ordered) as keep
+into osm_farm_deleteables
+from osm_farm_duplicates
+group by osm_id;
+
+select *
 into osm_dedup
 from osm
-where not exists (
+where not exists(
   SELECT
-  FROM osm_farm_duplicates
-  where osm.osm_id = osm_farm_duplicates.neighbour_osm_id
+  FROM osm_farm_deleteables
+  where osm.osm_id = osm_farm_deleteables.osm_id
+  and osm_farm_deleteables.keep = False
 );
+
+drop table osm_farm_deleteables;
 
 drop table osm;
 select *
