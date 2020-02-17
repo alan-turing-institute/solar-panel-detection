@@ -169,6 +169,8 @@ It's difficult to assess at this stage how many of the 5,686 REPD farms are alre
     - Ignore rooftop installations - also not farms
     - Only worry about those not already de-duplicated with `plantref`
     - Of the objects in the list satisfying these 3 conditions, filter those with closest object from same list within Xm and check manually that they are part of the same thing and then update their master_osm_id in `osm` table and remove all but one in `osm`.
+    - Also need to make sure that any capacity or area for these objects is summed
+4. Check that no information is lost when we remove Solar farm objects that have a different OSM id to that of their plantref
 
 |  | OSM Counts|Notes|
 |---|---|---|
@@ -188,12 +190,40 @@ It's difficult to assess at this stage how many of the 5,686 REPD farms are alre
 | Total with recorded capacity and REPD id |868 ||
 | Total with recorded capacity without REPD id | 234||
 
+Stats for Matching
+-----
+
+| |Count|Notes|
+|---|---|---|
+|REPD entries with "Scheme" in title | | |
+| FiT with installation type = "Domestic" | | |
+| "" Non Domestic (Commercial) | | |
+| "" Non Domestic (Industrial) | | |
+
 Match rule ideas
 -------
 
+### OSM-REPD
+
 1. Refine distance matching with newly de-duplicated OSM to REPD
+    - Re-run distance matching
     - Add a limit to how close the 2nd closest can be so we can differentiate certain vs ambiguous
-    - Work out how to infer the boundaries for clustered node installations like John Lennon Airport Scheme
+    - Work out how to infer the boundaries for clustered node installations like John Lennon Airport Scheme (match nodes separately). See how many more you get by increasing the range around the REPD coordinates and look at other examples if there are any, then devise rule.
 2. Check OSM `tag_start_date` against REPD `operational`. Only 46 have these filled but "Crannaford Solar Farm" shows that these can match even when not taken from REPD (this is a known distance match, see above) and at the "Trickey Warren" REPD for instance, could we use this field to differentiate from neighbouring solar farms?
-3. Could postcode could be used as a sanity check for distance matching? This would require some kind of rough conversion of postcode to geolocation?
-4. The machine vision polygons, we can probably just use these to sanity check the OSM-REPD-FiT combined dataset towards the end, maybe by ruling out things that aren't present in the MV dataset if the OSM/REPD date is old (could have been removed)
+3. Could postcode could be used as a sanity check for distance matching? This would require some kind of rough conversion of postcode to geolocation? This may be possible with PostGIS?
+4. Discount any OSM-REPD matches where the timestamp in OSM is older than the "operational" field in REPD
+5. Validate that matches roughly match on area by comparing OSM area to REPD area calculated roughly from capacity
+
+### OSM-MV and REPD-MV
+
+1. Proximity match OSM-MV
+2. Proximity match REPD-MV
+
+**Notes:**
+
+Machine vision dataset is apparently only solar farms. It also was trained using the OSM data!! But then the algorithm searches satellite images. Weird that only ~2,000 in this dataset.
+
+### OSM-FiT
+
+1. For ways in OSM, match to FiT based on area, which can be roughly calculated from capacity.
+2. Get rough area of installations using Postcode and LLSOA with GIS if possible and use this for proximity filtering
