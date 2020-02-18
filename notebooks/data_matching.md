@@ -172,8 +172,6 @@ It's difficult to assess at this stage how many of the 5,686 REPD farms are alre
     - Also need to make sure that any capacity or area for these objects is summed (NOTE: realistically this is not easy to do and we are not likely to use capacity for farm matching to REPD)
 4. Check that no information is lost when we remove Solar farm objects that have a different OSM id to that of their plantref
 
-I think, that by iteratively removing the nearest neighbour (within 300m) for not already duplicated OSM farms (see bullets of 3 above) we will always be left with one OSM object per farm. However, this is a problem for farms made of two objects, where they will both be removed in the first iteration.
-
 |  | OSM Counts|Notes|
 |---|---|---|
 | Total no de-duplication| 126,939||
