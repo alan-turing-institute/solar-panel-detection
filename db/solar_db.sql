@@ -219,12 +219,12 @@ CROSS JOIN LATERAL
   (SELECT
      temp.osm_id,
      osm_possible_farm_duplicates.location::geography <-> temp.location::geography as distance_meters,
-     raw.osm.latitude, -- Having these enables manual checking
-     raw.osm.longitude,
-     raw.osm.location
-     FROM temp, raw.osm
-     where temp.osm_id = raw.osm.osm_id
-     ORDER BY osm_possible_farm_duplicates.location::geography <-> raw.osm.location::geography) AS closest_pt
+     osm.latitude, -- Having these enables manual checking
+     osm.longitude,
+     osm.location
+     FROM temp, osm
+     where temp.osm_id = osm.osm_id
+     ORDER BY osm_possible_farm_duplicates.location::geography <-> osm.location::geography) AS closest_pt
 where osm_possible_farm_duplicates.osm_id != closest_pt.osm_id;
 
 select
