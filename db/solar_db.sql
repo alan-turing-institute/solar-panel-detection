@@ -204,7 +204,7 @@ select *
 into temp
 from osm_possible_farm_duplicates;
 
--- Get the nearest other entry for each in the table above, but only those
+-- Next 2 queries: Get the nearest other entry for each in the table above, but only those
 -- within a certain distance (e.g. 300m)
 select
   osm_possible_farm_duplicates.osm_id,
