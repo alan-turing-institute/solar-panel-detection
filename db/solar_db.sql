@@ -210,13 +210,11 @@ into temp
 from osm_possible_farm_duplicates;
 
 -- Get the nearest other entry for each in the table above, but only those
--- within a certain distance (e.g. 1000m)
+-- within a certain distance (e.g. 300m)
 select
   osm_possible_farm_duplicates.osm_id,
   closest_pt.osm_id as neighbour_osm_id,
   closest_pt.distance_meters,
-  closest_pt.latitude as neighbour_lat,
-  closest_pt.longitude as neighbour_lon,
   closest_pt.location
 into temp2
 from osm_possible_farm_duplicates
@@ -224,8 +222,6 @@ CROSS JOIN LATERAL
   (SELECT
      temp.osm_id,
      osm_possible_farm_duplicates.location::geography <-> temp.location::geography as distance_meters,
-     raw.osm.latitude,
-     raw.osm.longitude,
      raw.osm.location
      FROM temp, raw.osm
      where temp.osm_id = raw.osm.osm_id
@@ -235,11 +231,7 @@ where osm_possible_farm_duplicates.osm_id != closest_pt.osm_id;
 select
   temp2.osm_id,
   temp2.neighbour_osm_id,
-  temp2.distance_meters,
-  osm_dup.latitude,
-  osm_dup.longitude,
-  temp2.neighbour_lat,
-  temp2.neighbour_lon
+  temp2.distance_meters
 into osm_farm_duplicates
 from temp2, osm_dup
 where temp2.osm_id = osm_dup.osm_id
@@ -272,6 +264,7 @@ where not exists(
 
 drop table osm_farm_deleteables;
 
+-- Finally, update the osm table to be the de-duplicated version
 drop table osm;
 select *
 into osm
