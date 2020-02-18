@@ -241,6 +241,10 @@ OSM-REPD distance matching continued
 
 1. **Match Rule 9:** If the closest REPD point to an OSM point is <500m away and the OSM record already has an REPD id tagged
 
-| Match rule | REPD Site Name|REPD Site Name in OSM| OSM id |Distance (m)| Notes | Novel match find |
-|---|---|---|---|---|---|---|
-| 9 | Helland Meads | Helland Meads - resubmission |717941405 | 173 |There are quite a few other resubmissions like this, suggesting we need to de-duplicate REPD| :x: |
+| Match rule | REPD Site Name|REPD id|REPD Site Name in OSM|REPD id in OSM| OSM id |Distance (m)| Notes | Novel match find |
+|---|---|---|---|---|---|---|---|---|
+| 9 | Helland Meads |1224 |Helland Meads - resubmission |2164|717941405 | 173 |There are quite a few other resubmissions like this, suggesting we need to de-duplicate REPD| :x: |
+| 9 | Court Farm (Frome)|2316|West Woodlands|4889|7877228|384|On closer inspection, these two REPD have the exact same coordinates, so perhaps also duplicates? Perhaps we need to deduplicate those with exact coordinates?| ? |
+| 9 | Christchurch Energy|2308|Waterditch Solar Farm|5315|684035422|198|Same as above, this time coordinates are not exact match between 2 REPDs, but looking at OSM, they are clearly refering to same farm| ? |
+
+Match rule 9 clearly shows the need for de-duplication of REPD is needed before we can proceed with matching to OSM. Not doing so will affect the matching of OSM objects that aren't already tagged with an REPD id as well as those that are already.
