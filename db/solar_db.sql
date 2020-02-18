@@ -210,6 +210,8 @@ select
   osm_possible_farm_duplicates.osm_id,
   closest_pt.osm_id as neighbour_osm_id,
   closest_pt.distance_meters,
+  closest_pt.latitude as neighbour_lat, -- Having these enables manual checking
+  closest_pt.longitude as neighbour_lon,
   closest_pt.location
 into temp2
 from osm_possible_farm_duplicates
@@ -217,6 +219,8 @@ CROSS JOIN LATERAL
   (SELECT
      temp.osm_id,
      osm_possible_farm_duplicates.location::geography <-> temp.location::geography as distance_meters,
+     raw.osm.latitude, -- Having these enables manual checking
+     raw.osm.longitude,
      raw.osm.location
      FROM temp, raw.osm
      where temp.osm_id = raw.osm.osm_id
@@ -226,7 +230,11 @@ where osm_possible_farm_duplicates.osm_id != closest_pt.osm_id;
 select
   temp2.osm_id,
   temp2.neighbour_osm_id,
-  temp2.distance_meters
+  temp2.distance_meters,
+  osm.latitude, -- Having these enables manual checking
+  osm.longitude,
+  temp2.neighbour_lat, -- Having these enables manual checking
+  temp2.neighbour_lon
 into osm_farm_duplicates
 from temp2, osm
 where temp2.osm_id = osm.osm_id
