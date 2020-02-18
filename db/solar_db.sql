@@ -183,14 +183,9 @@ or raw.osm.plantref is null;
 drop table if exists osm_possible_farm_duplicates;
 drop table if exists temp;
 drop table if exists temp2;
-drop table if exists osm_dup;
 drop table if exists osm_farm_duplicates;
 drop table if exists osm_dedup;
 drop table if exists osm_farm_deleteables;
-
-select *
-into osm_dup
-from osm;
 
 select *
 into osm_possible_farm_duplicates
@@ -233,14 +228,13 @@ select
   temp2.neighbour_osm_id,
   temp2.distance_meters
 into osm_farm_duplicates
-from temp2, osm_dup
-where temp2.osm_id = osm_dup.osm_id
-and ST_Distance(osm_dup.location::geography, temp2.location::geography) < 300 -- limit to those closer than Xm
+from temp2, osm
+where temp2.osm_id = osm.osm_id
+and ST_Distance(osm.location::geography, temp2.location::geography) < 300 -- limit to those closer than Xm
 ORDER BY temp2.distance_meters desc;
 
 drop table temp;
 drop table temp2;
-drop table osm_dup;
 
 -- Remove extra objects from each farm
 alter table osm_farm_duplicates add column "ordered" BOOLEAN;
