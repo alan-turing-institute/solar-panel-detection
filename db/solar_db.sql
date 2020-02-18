@@ -80,7 +80,7 @@ drop table if exists machine_vision;
 create table machine_vision (
   area float,
   confidence char(1),
-  install_date varchar(30), -- problem is that some of them don't have proper dates e.g. "<2016-06" and some have multiple separated by comma
+  install_date date, -- problem is that some of them don't have proper dates e.g. "<2016-06" and some have multiple separated by comma
   iso_code_short char(2),
   iso_code char(6),
   attribution varchar(50),
