@@ -227,3 +227,20 @@ Machine vision dataset is apparently only solar farms. It also was trained using
 
 1. For ways in OSM, match to FiT based on area, which can be roughly calculated from capacity.
 2. Get rough area of installations using Postcode and LLSOA with GIS if possible and use this for proximity filtering
+
+OSM-REPD distance matching continued
+--------
+
+**Stats on REPD tagged OSM records:**
+
+|  | Counts |
+|---|---|
+| OSM with REPD id with closest geographical match in REPD having that repd_id | 760|
+| OSM with REPD id with closest geographical match in REPD being co-located repd_id | 3|
+| OSM with REPD id with closest geographical match in REPD being non-matching/ non-co-located| 162|
+
+1. **Match Rule 9:** If the closest REPD point to an OSM point is <500m away and the OSM record already has an REPD id tagged
+
+| Match rule | REPD Site Name|REPD Site Name in OSM| OSM id |Distance (m)| Notes | Novel match find |
+|---|---|---|---|---|---|---|
+| 9 | Helland Meads | Helland Meads - resubmission |717941405 | 173 |There are quite a few other resubmissions like this, suggesting we need to de-duplicate REPD| :x: |
