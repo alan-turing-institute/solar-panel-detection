@@ -5,11 +5,13 @@ select
   closest_pt.install_date as mv_date,
   osm.area as osm_area,
   closest_pt.area as mv_area,
-  closest_pt.distance_meters
+  closest_pt.distance_meters,
+  closest_pt.location as mv_location -- This is the primary key for mv
 into osm_mv_closest
 from osm
 CROSS JOIN LATERAL
   (SELECT
+     machine_vision.location,
      machine_vision.install_date,
      machine_vision.area,
      osm.location::geography <-> machine_vision.location::geography as distance_meters
