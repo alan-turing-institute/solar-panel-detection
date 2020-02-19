@@ -85,8 +85,7 @@ create table machine_vision (
   iso_code char(6),
   attribution varchar(50),
   longitude float,
-  latitude float,
-  primary key (latitude, longitude)
+  latitude float
 );
 
 drop table if exists fit;
@@ -145,6 +144,7 @@ update repd set location = ST_SetSRID(ST_MakePoint(longitude, latitude), 4326);
 
 alter table machine_vision add column location geometry(Point, 4326);
 update machine_vision set location = ST_SetSRID(ST_MakePoint(longitude, latitude), 4326);
+alter table machine_vision add primary key (location);
 
 -- Create de-duplicated osm table
 -- First de-duplicate by reducing to one row for each farm linked by "plantref"
