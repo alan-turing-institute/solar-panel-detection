@@ -78,6 +78,7 @@ create table repd (
 
 drop table if exists machine_vision;
 create table machine_vision (
+  mv_id int,
   area float,
   confidence char(1),
   install_date date, -- problem is that some of them don't have proper dates e.g. "<2016-06" and some have multiple separated by comma
@@ -85,7 +86,8 @@ create table machine_vision (
   iso_code char(6),
   attribution varchar(50),
   longitude float,
-  latitude float
+  latitude float,
+  primary key (mv_id)
 );
 
 drop table if exists fit;
@@ -144,7 +146,6 @@ update repd set location = ST_SetSRID(ST_MakePoint(longitude, latitude), 4326);
 
 alter table machine_vision add column location geometry(Point, 4326);
 update machine_vision set location = ST_SetSRID(ST_MakePoint(longitude, latitude), 4326);
-alter table machine_vision add primary key (location);
 
 -- Create de-duplicated osm table
 -- First de-duplicate by reducing to one row for each farm linked by "plantref"
