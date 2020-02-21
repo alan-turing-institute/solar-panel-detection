@@ -248,3 +248,16 @@ OSM-REPD distance matching continued
 | 9 | Christchurch Energy|2308|Waterditch Solar Farm|5315|684035422|198|Same as above, this time coordinates are not exact match between 2 REPDs, but looking at OSM, they are clearly refering to same farm| ? |
 
 Match rule 9 clearly shows the need for de-duplication of REPD is needed before we can proceed with matching to OSM. Not doing so will affect the matching of OSM objects that aren't already tagged with an REPD id as well as those that are already.
+
+OSM-MV matching
+------
+
+1. **Match rule MV1:** If the closest MV point to an OSM point is <500m away.
+
+How can we add anything from MV that is clearly a real thing but not in OSM (is it in REPD?) to the output dataset?
+
+*TODO:* Add more examples to this table, including ways/relations and non-rooftops. See if any nodes or rooftops are genuine matches. Come up with more advances rules e.g. area comparison (within range, not exact match)
+
+| Match rule | OSM id|MV id|Distance (m)|OSM area| MV area|OSM objtype| OSM located| Notes | Correct match find? |
+|---|---|---|---|---|---|---|---|---|---|
+|MV1|6767536119|1862|135|0|4572|node|rooftop|The actual thing that MV has spotted appears to be panels on top of B&Q Bournemouth (checked with Google Maps).|:x:|
