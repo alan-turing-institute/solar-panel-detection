@@ -253,11 +253,18 @@ OSM-MV matching
 ------
 
 1. **Match rule MV1:** If the closest MV point to an OSM point is <500m away.
-
-How can we add anything from MV that is clearly a real thing but not in OSM (is it in REPD?) to the output dataset?
-
-*TODO:* Add more examples to this table, including ways/relations and non-rooftops. See if any nodes or rooftops are genuine matches. Come up with more advances rules e.g. area comparison (within range, not exact match)
+2. **Match rule MV2:"** MV1, no nodes, area is in the same order of magnitude
 
 | Match rule | OSM id|MV id|Distance (m)|OSM area| MV area|OSM objtype| OSM located| Notes | Correct match find? |
 |---|---|---|---|---|---|---|---|---|---|
-|MV1|6767536119|1862|135|0|4572|node|rooftop|The actual thing that MV has spotted appears to be panels on top of B&Q Bournemouth (checked with Google Maps).|:x:|
+|MV1|6767536119|1862|135|0|4,572|node|roof|The actual thing that MV has spotted appears to be panels on top of B&Q Bournemouth (checked with Google Maps).|:x:|
+|MV1|721173461|1962|385|16.7|1,990|way|roof|Clearly parts of distinct installations, due to being on separate buildings on either side of an A road|:x:|
+|MV1|314886516|2164|117|165,665|141,813|way||Match for Chibson solar farm|✅|
+|MV1|2189625035|1506|72|0|52,346|node||A few matches like this where a node describes a solar plant, but there are also way(s) present more appropriate to match to|<-- yes but|
+|MV1|3209363222|1167|100|0|206,382|node||Looks like a node has been added to OSM here but no one thought to add a way with more info. The match doesn't really have any use because node has no metadata.|✅|
+
+**Matching Notes:**
+
+How can we add anything from MV that is clearly a real thing but not in OSM (is it in REPD?) to the output dataset?
+
+In general, looks like OSM nodes are unlikely to be match correctly to MV, since MV is larger installations and farms only, most of the proximity matches under 500m are where there are rooftop nodes nearby to a farm.
