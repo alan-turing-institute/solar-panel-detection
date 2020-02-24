@@ -16,6 +16,7 @@ REPD and OSM matching
 |---|---|
 | OSM total | 126,939|
 | REPD total | 5,686 |
+| REPD tech_type = 'Solar Photovoltaics' | 1,986 |
 |---|---|
 | OSM without REPD id | 126,046|
 | OSM with REPD id | 893|
@@ -195,10 +196,11 @@ Stats for Matching
 
 | |Count|Notes|
 |---|---|---|
-|REPD entries with "Scheme" in title | | |
-| FiT with installation type = "Domestic" | | |
-| "" Non Domestic (Commercial) | | |
-| "" Non Domestic (Industrial) | | |
+|REPD entries with "Scheme" in title | 5| |
+| FiT with installation type = "Domestic" | 824,989| |
+| FiT with installation type = "Community" | 3,360| |
+| FiT with installation type = "Non Domestic (Commercial)" | 32,658| |
+| FiT with installation type = "Non Domestic (Industrial)" | 2,072| |
 
 Match rule ideas
 -------
@@ -253,7 +255,7 @@ OSM-MV matching
 ------
 
 1. **Match rule MV1:** If the closest MV point to an OSM point is <500m away.
-2. **Match rule MV2:"** MV1, no nodes, area is in the same order of magnitude
+2. **Match rule MV2:** MV1, no nodes, area is in the same order of magnitude
 
 | Match rule | OSM id|MV id|Distance (m)|OSM area| MV area|OSM objtype| OSM located| Notes | Correct match find? |
 |---|---|---|---|---|---|---|---|---|---|
@@ -268,3 +270,6 @@ OSM-MV matching
 How can we add anything from MV that is clearly a real thing but not in OSM (is it in REPD?) to the output dataset?
 
 In general, looks like OSM nodes are unlikely to be match correctly to MV, since MV is larger installations and farms only, most of the proximity matches under 500m are where there are rooftop nodes nearby to a farm.
+
+OSM-FiT matching
+--------
