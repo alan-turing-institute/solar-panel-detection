@@ -1,3 +1,6 @@
+-- set date format as in fit and repd files 
+alter database "hut23-425" set datestyle to "DMY";
+
 create schema if not exists raw;
 
 create extension if not exists postgis;
