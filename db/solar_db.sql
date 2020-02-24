@@ -147,6 +147,12 @@ update repd set location = ST_SetSRID(ST_MakePoint(longitude, latitude), 4326);
 alter table machine_vision add column location geometry(Point, 4326);
 update machine_vision set location = ST_SetSRID(ST_MakePoint(longitude, latitude), 4326);
 
+-- Add roughly calculated area for FiT entries to aid matching
+-- where Solar PV have 52W/M^2 so area = capacity/52
+alter table fit add column "area" float;
+update fit
+set area = declared_net_capacity/52;
+
 -- Create de-duplicated osm table
 -- First de-duplicate by reducing to one row for each farm linked by "plantref"
 drop table if exists osm_plantref_mapping;
