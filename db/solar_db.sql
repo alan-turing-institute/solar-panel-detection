@@ -192,7 +192,6 @@ or raw.osm.plantref is null;
 -- Deduplicate further for matching by removing objects that are part of the same farm
 drop table if exists osm_possible_farm_duplicates;
 drop table if exists temp;
-drop table if exists temp2;
 drop table if exists osm_farm_duplicates;
 drop table if exists osm_dedup;
 drop table if exists osm_farm_deleteables;
@@ -223,7 +222,7 @@ select
   closest_pt.osm_id as neighbour_osm_id,
   closest_pt.distance_meters,
   closest_pt.location
-into temp2
+into osm_farm_duplicates
 from osm_possible_farm_duplicates
 CROSS JOIN LATERAL
   (SELECT
@@ -234,22 +233,10 @@ CROSS JOIN LATERAL
      FROM temp, osm
      where temp.osm_id = osm.osm_id
      ORDER BY osm_possible_farm_duplicates.location::geography <-> osm.location::geography) AS closest_pt
-where osm_possible_farm_duplicates.osm_id != closest_pt.osm_id;
-
-select
-  temp2.objtype,
-  temp2.osm_id,
-  temp2.neighbour_objtype,
-  temp2.neighbour_osm_id,
-  temp2.distance_meters
-into osm_farm_duplicates
-from temp2, osm
-where temp2.osm_id = osm.osm_id -- todo: why couldn't we just say: where distance_meters < 300 ?
-and ST_Distance(osm.location::geography, temp2.location::geography) < 300 -- limit to those closer than Xm
-ORDER BY temp2.distance_meters desc;
+where osm_possible_farm_duplicates.osm_id != closest_pt.osm_id
+and closest_pt.distance_meters < 300;
 
 drop table temp;
-drop table temp2;
 
 -- Remove extra objects from each farm
 alter table osm_farm_duplicates add column "ordered" BOOLEAN;
