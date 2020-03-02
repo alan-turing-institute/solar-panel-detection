@@ -14,6 +14,5 @@ CROSS JOIN LATERAL
      repd.site_name,
      osm.location::geography <-> repd.location::geography as distance_meters
      FROM repd
-     where repd.tech_type = 'Solar Photovoltaics'
      ORDER BY osm.location::geography <-> repd.location::geography
    LIMIT 1) AS closest_pt;

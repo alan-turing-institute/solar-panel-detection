@@ -206,14 +206,19 @@ Match rule ideas
 
 ### OSM-REPD
 
-1. Refine distance matching with newly de-duplicated OSM to REPD
-    - Re-run distance matching
-    - Add a limit to how close the 2nd closest can be so we can differentiate certain vs ambiguous
-    - Work out how to infer the boundaries for clustered node installations like John Lennon Airport Scheme (match nodes separately). See how many more you get by increasing the range around the REPD coordinates and look at other examples if there are any, then devise rule.
-2. Check OSM `tag_start_date` against REPD `operational`. Only 46 have these filled but "Crannaford Solar Farm" shows that these can match even when not taken from REPD (this is a known distance match, see above) and at the "Trickey Warren" REPD for instance, could we use this field to differentiate from neighbouring solar farms?
-3. Could postcode could be used as a sanity check for distance matching? This would require some kind of rough conversion of postcode to geolocation? This may be possible with PostGIS?
+**Core matching ideas:**
+
+1. Re-run distance matching with ways/relations
+2. Re-run distance matching for nodes, not including the REPD's with "Scheme" in the title.
+3. Run distance matching for REPD schemes: Work out how to infer the boundaries for clustered node installations like John Lennon Airport Scheme (match nodes separately). See how many more you get by increasing the range around the REPD coordinates and look at other examples if there are any, then devise rule. Only 5 "schemes".
 4. Discount any OSM-REPD matches where the timestamp in OSM is older than the "operational" field in REPD
-5. Validate that matches roughly match on area by comparing OSM area to REPD area calculated roughly from capacity
+5. Add a limit to how close the 2nd closest can be so we can differentiate certain vs ambiguous
+
+**Sanity checking:**
+
+1. Check OSM `tag_start_date` against REPD `operational`. Only 46 have these filled but "Crannaford Solar Farm" shows that these can match even when not taken from REPD (this is a known distance match, see above) and at the "Trickey Warren" REPD for instance, could we use this field to differentiate from neighbouring solar farms?
+2. Could postcode could be used as a sanity check for distance matching? This would require some kind of rough conversion of postcode to geolocation? This may be possible with PostGIS?
+3. Validate that matches roughly match on area by comparing OSM area to REPD area calculated roughly from capacity
 
 ### OSM-MV and REPD-MV
 
@@ -241,7 +246,10 @@ OSM-REPD distance matching continued
 | OSM with REPD id with closest geographical match in REPD being non-matching/ non-co-located| 162|
 
 1. **Match Rule 9:** If the closest REPD point to an OSM point is <500m away and the OSM record already has an REPD id tagged
-2. **Match Rule 10:** If the closest REPD point to an OSM point is <500m away
+2. **Match Rule 10:** If the closest REPD point to an OSM **way or relation** is <500m away
+3. **Match Rule 11:** If the closest REPD point to an OSM **node** is <500m away, excluding REPD with "Scheme" in the title
+4. **Match Rule 12:** If the closest REPD *scheme* to an OSM **node** is <500m away
+5. **Match Rule 13:** If the closest REPD *scheme* to an OSM **relation or way** is <500m away
 
 | Match rule | REPD Site Name|REPD id|REPD Site Name in OSM|REPD id in OSM| OSM id |Distance (m)| Notes | Novel match find |
 |---|---|---|---|---|---|---|---|---|
