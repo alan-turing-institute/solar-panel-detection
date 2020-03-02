@@ -217,20 +217,19 @@ from osm_possible_farm_duplicates;
 -- Next 2 queries: Get the nearest other entry for each in the table above, but only those
 -- within a certain distance (e.g. 300m)
 select
+  osm_possible_farm_duplicates.objtype,
   osm_possible_farm_duplicates.osm_id,
+  closest_pt.objtype as neighbour_objtype,
   closest_pt.osm_id as neighbour_osm_id,
   closest_pt.distance_meters,
-  closest_pt.latitude as neighbour_lat, -- Having these enables manual checking
-  closest_pt.longitude as neighbour_lon,
   closest_pt.location
 into temp2
 from osm_possible_farm_duplicates
 CROSS JOIN LATERAL
   (SELECT
+     temp.objtype,
      temp.osm_id,
      osm_possible_farm_duplicates.location::geography <-> temp.location::geography as distance_meters,
-     osm.latitude, -- Having these enables manual checking
-     osm.longitude,
      osm.location
      FROM temp, osm
      where temp.osm_id = osm.osm_id
@@ -238,16 +237,14 @@ CROSS JOIN LATERAL
 where osm_possible_farm_duplicates.osm_id != closest_pt.osm_id;
 
 select
+  temp2.objtype,
   temp2.osm_id,
+  temp2.neighbour_objtype,
   temp2.neighbour_osm_id,
-  temp2.distance_meters,
-  osm.latitude, -- Having these enables manual checking
-  osm.longitude,
-  temp2.neighbour_lat, -- Having these enables manual checking
-  temp2.neighbour_lon
+  temp2.distance_meters
 into osm_farm_duplicates
 from temp2, osm
-where temp2.osm_id = osm.osm_id
+where temp2.osm_id = osm.osm_id -- todo: why couldn't we just say: where distance_meters < 300 ?
 and ST_Distance(osm.location::geography, temp2.location::geography) < 300 -- limit to those closer than Xm
 ORDER BY temp2.distance_meters desc;
 
