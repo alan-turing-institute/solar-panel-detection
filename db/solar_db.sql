@@ -22,8 +22,8 @@ create table raw.osm (
   primary key (osm_id)
 );
 
-drop table if exists repd;
-create table repd (
+drop table if exists raw.repd;
+create table raw.repd (
   old_repd_id varchar(15),
   repd_id integer,
   record_last_updated date,
@@ -117,13 +117,13 @@ create table fit (
 
 -- Upload data
 -- The subdir data/raw/ should be a symbolic link to the actual data on the shared space
-\copy repd from 'data/processed/repd-2019-09.csv' delimiter ',' csv header;
+\copy raw.repd from 'data/processed/repd-2019-09.csv' delimiter ',' csv header;
 \copy raw.osm from 'data/processed/osm.csv' delimiter ',' csv header;
 \copy machine_vision from 'data/processed/machine_vision.csv' delimiter ',' csv header;
 \copy fit from 'data/processed/fit-2019-09.csv' delimiter ',' csv header;
 
 -- Change floats to ints
-alter table repd
+alter table raw.repd
 alter column co_location_repd_id type int using co_location_repd_id::integer;
 
 -- Create table that has each repd_id that an osm_id has
@@ -141,8 +141,8 @@ alter column repd_id type int using repd_id::integer;
 alter table raw.osm add column location geometry(Point, 4326);
 update raw.osm set location = ST_SetSRID(ST_MakePoint(longitude, latitude), 4326);
 
-alter table repd add column location geometry(Point, 4326);
-update repd set location = ST_SetSRID(ST_MakePoint(longitude, latitude), 4326);
+alter table raw.repd add column location geometry(Point, 4326);
+update raw.repd set location = ST_SetSRID(ST_MakePoint(longitude, latitude), 4326);
 
 alter table machine_vision add column location geometry(Point, 4326);
 update machine_vision set location = ST_SetSRID(ST_MakePoint(longitude, latitude), 4326);
@@ -266,3 +266,12 @@ select *
 into osm
 from osm_dedup;
 drop table osm_dedup;
+
+-- Restrict REPD to Solar PV only
+drop table if exists repd;
+select *
+into repd
+from raw.repd
+where tech_type = 'Solar Photovoltaics';
+alter table repd
+drop column tech_type;
