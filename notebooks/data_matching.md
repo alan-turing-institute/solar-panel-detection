@@ -17,6 +17,7 @@ REPD and OSM matching
 | OSM total | 126,939|
 | REPD total | 5,686 |
 | REPD tech_type = 'Solar Photovoltaics' | 1,986 |
+| ^ of which operational date not blank | 1,147 |
 |---|---|
 | OSM without REPD id | 126,046|
 | OSM with REPD id | 893|
@@ -47,8 +48,6 @@ REPD and OSM matching
 | OSM with tag_power = 'generator'| 126,022|
 | OSM with tag_power = 'plant' and REPD id| 837|
 | OSM with tag_power = 'generator' and REPD id| 56|
-|---|---|
-|OSM with
 
 - `*` OSM object types: https://wiki.openstreetmap.org/wiki/Elements
 - `**` including those within the same OSM entry and any that are not genuine REPD ids (found in REPD)
@@ -228,7 +227,7 @@ Machine vision dataset is apparently only solar farms. It also was trained using
 ### OSM-FiT
 
 1. For ways in OSM, match to FiT based on area, which can be roughly calculated from capacity.
-2. Get rough area of installations using Postcode and LLSOA with GIS if possible and use this for proximity filtering
+2. Get rough area of installations using Postcode and LLSOA with GIS if possible and use this for proximity filtering: https://postgis.net/docs/Geocode.html
 
 OSM-REPD distance matching continued
 --------
@@ -242,12 +241,13 @@ OSM-REPD distance matching continued
 | OSM with REPD id with closest geographical match in REPD being non-matching/ non-co-located| 162|
 
 1. **Match Rule 9:** If the closest REPD point to an OSM point is <500m away and the OSM record already has an REPD id tagged
+2. **Match Rule 10:** If the closest REPD point to an OSM point is <500m away
 
 | Match rule | REPD Site Name|REPD id|REPD Site Name in OSM|REPD id in OSM| OSM id |Distance (m)| Notes | Novel match find |
 |---|---|---|---|---|---|---|---|---|
 | 9 | Helland Meads |1224 |Helland Meads - resubmission |2164|717941405 | 173 |There are quite a few other resubmissions like this, suggesting we need to de-duplicate REPD| :x: |
 | 9 | Court Farm (Frome)|2316|West Woodlands|4889|7877228|384|On closer inspection, these two REPD have the exact same coordinates, so perhaps also duplicates? Perhaps we need to deduplicate those with exact coordinates?| ? |
-| 9 | Christchurch Energy|2308|Waterditch Solar Farm|5315|684035422|198|Same as above, this time coordinates are not exact match between 2 REPDs, but looking at OSM, they are clearly refering to same farm| ? |
+| 9 | Christchurch Energy|2308|Waterditch Solar Farm|5315|684035422|198|Same as above, this time coordinates are not exact match between 2 REPDs, but looking at OSM, they are clearly referring to same farm| ? |
 
 Match rule 9 clearly shows the need for de-duplication of REPD is needed before we can proceed with matching to OSM. Not doing so will affect the matching of OSM objects that aren't already tagged with an REPD id as well as those that are already.
 
