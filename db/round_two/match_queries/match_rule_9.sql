@@ -22,7 +22,7 @@ into repd_copy
 from repd;
 
 select
-  temp_table.osm_id,
+  CONCAT  (osm.objtype, '/', temp_table.osm_id) AS "osm",
   temp_table.closest_geo_match_from_repd_repd_id as repd_id,
   temp_table.closest_geo_match_from_repd_co_location_repd_id as co_repd,
   temp_table.site_name as r_name,
@@ -32,8 +32,8 @@ select
   -- osm.objtype,
   -- osm.time_created,
   -- osm.area,
-  osm.latitude as o_lat,
-  osm.longitude as o_lon,
+  -- osm.latitude as o_lat,
+  -- osm.longitude as o_lon,
   repd.latitude as r_lat,
   repd.longitude as r_lon,
   repd_copy.latitude as or_lat,
@@ -45,7 +45,8 @@ where temp_table.osm_id = osm.osm_id
 and (temp_table.closest_geo_match_from_repd_repd_id = repd.repd_id -- use this to display other repd fields
   or temp_table.closest_geo_match_from_repd_co_location_repd_id = repd.repd_id)
 and temp_table.osm_repd_id = repd_copy.repd_id -- use this do display other REPD fields for the REPD tagged in OSM
-and temp_table.osm_repd_id != temp_table.closest_geo_match_from_repd_repd_id;
+and temp_table.osm_repd_id != temp_table.closest_geo_match_from_repd_repd_id
+and repd.operational is not null;
 
 drop table temp_table;
 drop table repd_copy;

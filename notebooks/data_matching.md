@@ -251,12 +251,14 @@ WARNING: These match results will have multiple rows for some OSM ids where ther
 
 | Match rule | Result |
 |---|---|
-| 9   | 98 |
+| 9a  | 98 |
+| 9b   | 59|
 | 10a  | 602 |
 | 10b  | 374 |
 | 10c | 298 |
 
-1. **Match Rule 9:** If the closest REPD point to an OSM point is <500m away and the OSM record already has an REPD id tagged
+1. **Match Rule 9a:** If the closest REPD point to an OSM point is <500m away and the OSM record already has an REPD id tagged
+    - **Match Rule 9b:** 9a but only the REPD that are operational
 2. **Match Rule 10a:** If the closest REPD point to an OSM **way or relation** is <500m away and matched REPD was already correctly tagged in OSM
     - **Match Rule 10b:** 10a but where the REPD id in OSM was different or non-existent
     - **Match Rule 10c:** 10b but only the REPD that are operational
