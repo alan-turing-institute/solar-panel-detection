@@ -256,15 +256,17 @@ WARNING: These match results will have multiple rows for some OSM ids where ther
 | 10a  | 602 |
 | 10b  | 374 |
 | 10c | 298 |
+| 11 | 763 |
 
-1. **Match Rule 9a:** If the closest REPD point to an OSM point is <500m away and the OSM record already has an REPD id tagged
+1. **Match Rule 9a:** If the closest REPD point to an OSM point is <500m away and the OSM record already has an REPD id tagged which is different
     - **Match Rule 9b:** 9a but only the REPD that are operational
 2. **Match Rule 10a:** If the closest REPD point to an OSM **way or relation** is <500m away and matched REPD was already correctly tagged in OSM
-    - **Match Rule 10b:** 10a but where the REPD id in OSM was different or non-existent
-    - **Match Rule 10c:** 10b but only the REPD that are operational
-3. **Match Rule 11:** If the closest REPD point to an OSM **node** is <500m away, excluding REPD with "Scheme" in the title
-4. **Match Rule 12:** If the closest REPD *scheme* to an OSM **node** is <500m away
-5. **Match Rule 13:** If the closest REPD *scheme* to an OSM **relation or way** is <500m away
+    - **Match Rule 10b:** 10a but where the REPD id in OSM was different or non-existent (9a + non-existent)
+    - **Match Rule 10c:** 10b but only the REPD that are operational (9b + non-existent)
+3. **Match Rule 11:** If closest REPD point to an OSM point is that which is already tagged or the co-repd-id of the match.
+3. **Match Rule 12:** If the closest REPD point to an OSM **node** is <500m away, excluding REPD with "Scheme" in the title
+4. **Match Rule 13:** If the closest REPD *scheme* to an OSM **node** is <500m away
+5. **Match Rule 14:** If the closest REPD *scheme* to an OSM **relation or way** is <500m away
 
 | Match rule | REPD Site Name|REPD id|REPD Site Name in OSM|REPD id in OSM| OSM id |Distance (m)| Notes | Novel match find |
 |---|---|---|---|---|---|---|---|---|
@@ -299,6 +301,15 @@ OSM-FiT matching
 
 Output dataset
 --------
+
+### Accepted matches
+
+These are things we can say are definitely matches, or decide they probably are based on the assumptions in the notes in the table below:
+
+| Match rule | Count | Notes |
+|---|---|---|
+| 11 | 763 | These are doubly validated by what was included in OSM's REPD ID and proximity matching |
+
 
 The output of refined matching rules should be to add to tables that link the database tables.
 
