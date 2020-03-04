@@ -296,3 +296,20 @@ In general, looks like OSM nodes are unlikely to be match correctly to MV, since
 
 OSM-FiT matching
 --------
+
+Output dataset
+--------
+
+The output of refined matching rules should be to add to tables that link the database tables.
+
+1. REPD - REPD dedup ID table (or just add column to REPD as we have for OSM)
+2. OSM same as above
+3. Table below
+
+| REPD dedup (master) ID | OSM dedup (master) ID | MV ID |
+|---|---|---|
+|...|...|...|
+
+Add FiT afterwards if time.
+
+Also have a table that shows the uniqueness of OSM-REPD match results in case de-dedup was inadequate OR matching was inadequate via the counts. Low Priority.
