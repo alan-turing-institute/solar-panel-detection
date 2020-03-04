@@ -69,9 +69,9 @@ REPD and OSM matching
 
 |  | Counts |
 |---|---|
-| OSM with REPD id with closest geographical match in REPD having that repd_id | 765|
+| OSM with REPD id with closest geographical match in REPD having that repd_id | 760|
 | OSM with REPD id with closest geographical match in REPD being co-located repd_id | 3|
-| OSM with REPD id with closest geographical match in REPD being non-matching/ non-co-located| 165|
+| OSM with REPD id with closest geographical match in REPD being non-matching/ non-co-located| 162|
 
 **Matching results:**
 
@@ -263,7 +263,7 @@ WARNING: These match results will have multiple rows for some OSM ids where ther
 2. **Match Rule 10a:** If the closest REPD point to an OSM **way or relation** is <500m away and matched REPD was already correctly tagged in OSM
     - **Match Rule 10b:** 10a but where the REPD id in OSM was different or non-existent (9a + non-existent)
     - **Match Rule 10c:** 10b but only the REPD that are operational (9b + non-existent)
-3. **Match Rule 11:** If closest REPD point to an OSM point is that which is already tagged or the co-repd-id of the match.
+3. **Match Rule 11:** If closest REPD point to an OSM point is that which is already tagged or the co-repd-id of the match (see results, all are ways and relations).
 3. **Match Rule 12:** If the closest REPD point to an OSM **node** is <500m away, excluding REPD with "Scheme" in the title
 4. **Match Rule 13:** If the closest REPD *scheme* to an OSM **node** is <500m away
 5. **Match Rule 14:** If the closest REPD *scheme* to an OSM **relation or way** is <500m away
@@ -275,6 +275,8 @@ WARNING: These match results will have multiple rows for some OSM ids where ther
 | 9 | Christchurch Energy|2308|Waterditch Solar Farm|5315|684035422|198|Same as above, this time coordinates are not exact match between 2 REPDs, but looking at OSM, they are clearly referring to same farm| ? |
 
 Match rule 9 clearly shows the need for de-duplication of REPD is needed before we can proceed with matching to OSM. Not doing so will affect the matching of OSM objects that aren't already tagged with an REPD id as well as those that are already.
+
+Match rule 11 shows that of the correctly tagged REPD in OSM, some are up to 2.4KM away. This suggests we should have a matching distance of up to 3000m (rather than 500m, for ways and relations at least).
 
 OSM-MV matching
 ------
