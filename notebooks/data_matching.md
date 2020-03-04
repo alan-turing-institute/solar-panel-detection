@@ -211,7 +211,7 @@ Match rule ideas
 1. Re-run distance matching with ways/relations
 2. Re-run distance matching for nodes, not including the REPD's with "Scheme" in the title.
 3. Run distance matching for REPD schemes: Work out how to infer the boundaries for clustered node installations like John Lennon Airport Scheme (match nodes separately). See how many more you get by increasing the range around the REPD coordinates and look at other examples if there are any, then devise rule. Only 5 "schemes".
-4. Discount any OSM-REPD matches where the timestamp in OSM is older than the "operational" field in REPD
+4. Only consider REPD with "operational" field in REPD to avoid duplications of matches
 5. Add a limit to how close the 2nd closest can be so we can differentiate certain vs ambiguous
 
 **Sanity checking:**
@@ -245,8 +245,21 @@ OSM-REPD distance matching continued
 | OSM with REPD id with closest geographical match in REPD being co-located repd_id | 3|
 | OSM with REPD id with closest geographical match in REPD being non-matching/ non-co-located| 162|
 
+**Matching results:**
+
+WARNING: These match results will have multiple rows for some OSM ids where there was multiple REPDs already tagged in OSM. Think of them as OSM-REPD associations.
+
+| Match rule | Result |
+|---|---|
+| 9   | 98 |
+| 10a  | 602 |
+| 10b  | 374 |
+| 10c | 298 |
+
 1. **Match Rule 9:** If the closest REPD point to an OSM point is <500m away and the OSM record already has an REPD id tagged
-2. **Match Rule 10:** If the closest REPD point to an OSM **way or relation** is <500m away
+2. **Match Rule 10a:** If the closest REPD point to an OSM **way or relation** is <500m away and matched REPD was already correctly tagged in OSM
+    - **Match Rule 10b:** 10a but where the REPD id in OSM was different or non-existent
+    - **Match Rule 10c:** 10b but only the REPD that are operational
 3. **Match Rule 11:** If the closest REPD point to an OSM **node** is <500m away, excluding REPD with "Scheme" in the title
 4. **Match Rule 12:** If the closest REPD *scheme* to an OSM **node** is <500m away
 5. **Match Rule 13:** If the closest REPD *scheme* to an OSM **relation or way** is <500m away
