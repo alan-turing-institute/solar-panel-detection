@@ -31,18 +31,27 @@ select
   osm.capacity as osm_capacity,
   repd.capacity as repd_capacity,
   repd.latitude as r_lat,
-  repd.longitude as r_lon
+  repd.longitude as r_lon,
+  repd.operational
 into match_rule_10_results
 from temp_table, osm, repd
 where temp_table.osm_id = osm.osm_id
 and temp_table.closest_geo_match_from_repd_repd_id = repd.repd_id -- use this to display other repd fields
-and osm.objtype != 'node'
-and (temp_table.osm_repd_id != temp_table.closest_geo_match_from_repd_repd_id
-  or temp_table.osm_repd_id is null)-- 10b
-and repd.operational is not null; -- 10c
+and osm.objtype != 'node'; -- 10c
 
 drop table temp_table;
 
-select *
+select count(*)
 from match_rule_10_results
-order by distance_meters desc;
+where osm_repd_id = match_repd_id; -- 10a
+
+select count(*)
+from match_rule_10_results
+where (osm_repd_id!= match_repd_id
+  or osm_repd_id is null);-- 10b
+
+select count(*)
+from match_rule_10_results
+where (osm_repd_id != match_repd_id
+  or osm_repd_id is null)
+and operational is not null; -- 10c
