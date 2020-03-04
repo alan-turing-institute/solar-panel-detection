@@ -16,6 +16,8 @@ REPD and OSM matching
 |---|---|
 | OSM total | 126,939|
 | REPD total | 5,686 |
+| REPD tech_type = 'Solar Photovoltaics' | 1,986 |
+| ^ of which operational date not blank | 1,147 |
 |---|---|
 | OSM without REPD id | 126,046|
 | OSM with REPD id | 893|
@@ -46,8 +48,6 @@ REPD and OSM matching
 | OSM with tag_power = 'generator'| 126,022|
 | OSM with tag_power = 'plant' and REPD id| 837|
 | OSM with tag_power = 'generator' and REPD id| 56|
-|---|---|
-|OSM with
 
 - `*` OSM object types: https://wiki.openstreetmap.org/wiki/Elements
 - `**` including those within the same OSM entry and any that are not genuine REPD ids (found in REPD)
@@ -169,7 +169,7 @@ It's difficult to assess at this stage how many of the 5,686 REPD farms are alre
     - Ignore rooftop installations - also not farms
     - Only worry about those not already de-duplicated with `plantref`
     - Of the objects in the list satisfying these 3 conditions, filter those with closest object from same list within Xm and check manually that they are part of the same thing and then update their master_osm_id in `osm` table and remove all but one in `osm`.
-    - Also need to make sure that any capacity or area for these objects is summed
+    - Also need to make sure that any capacity or area for these objects is summed (NOTE: realistically this is not easy to do and we are not likely to use capacity for farm matching to REPD)
 4. Check that no information is lost when we remove Solar farm objects that have a different OSM id to that of their plantref
 
 |  | OSM Counts|Notes|
@@ -195,24 +195,30 @@ Stats for Matching
 
 | |Count|Notes|
 |---|---|---|
-|REPD entries with "Scheme" in title | | |
-| FiT with installation type = "Domestic" | | |
-| "" Non Domestic (Commercial) | | |
-| "" Non Domestic (Industrial) | | |
+|REPD entries with "Scheme" in title | 5| |
+| FiT with installation type = "Domestic" | 824,989| |
+| FiT with installation type = "Community" | 3,360| |
+| FiT with installation type = "Non Domestic (Commercial)" | 32,658| |
+| FiT with installation type = "Non Domestic (Industrial)" | 2,072| |
 
 Match rule ideas
 -------
 
 ### OSM-REPD
 
-1. Refine distance matching with newly de-duplicated OSM to REPD
-    - Re-run distance matching
-    - Add a limit to how close the 2nd closest can be so we can differentiate certain vs ambiguous
-    - Work out how to infer the boundaries for clustered node installations like John Lennon Airport Scheme (match nodes separately). See how many more you get by increasing the range around the REPD coordinates and look at other examples if there are any, then devise rule.
-2. Check OSM `tag_start_date` against REPD `operational`. Only 46 have these filled but "Crannaford Solar Farm" shows that these can match even when not taken from REPD (this is a known distance match, see above) and at the "Trickey Warren" REPD for instance, could we use this field to differentiate from neighbouring solar farms?
-3. Could postcode could be used as a sanity check for distance matching? This would require some kind of rough conversion of postcode to geolocation? This may be possible with PostGIS?
-4. Discount any OSM-REPD matches where the timestamp in OSM is older than the "operational" field in REPD
-5. Validate that matches roughly match on area by comparing OSM area to REPD area calculated roughly from capacity
+**Core matching ideas:**
+
+1. Re-run distance matching with ways/relations
+2. Re-run distance matching for nodes, not including the REPD's with "Scheme" in the title.
+3. Run distance matching for REPD schemes: Work out how to infer the boundaries for clustered node installations like John Lennon Airport Scheme (match nodes separately). See how many more you get by increasing the range around the REPD coordinates and look at other examples if there are any, then devise rule. Only 5 "schemes".
+4. Only consider REPD with "operational" field in REPD to avoid duplications of matches
+5. Add a limit to how close the 2nd closest can be so we can differentiate certain vs ambiguous
+
+**Sanity checking:**
+
+1. Check OSM `tag_start_date` against REPD `operational`. Only 46 have these filled but "Crannaford Solar Farm" shows that these can match even when not taken from REPD (this is a known distance match, see above) and at the "Trickey Warren" REPD for instance, could we use this field to differentiate from neighbouring solar farms?
+2. Could postcode could be used as a sanity check for distance matching? This would require some kind of rough conversion of postcode to geolocation? This may be possible with PostGIS?
+3. Validate that matches roughly match on area by comparing OSM area to REPD area calculated roughly from capacity
 
 ### OSM-MV and REPD-MV
 
@@ -226,4 +232,67 @@ Machine vision dataset is apparently only solar farms. It also was trained using
 ### OSM-FiT
 
 1. For ways in OSM, match to FiT based on area, which can be roughly calculated from capacity.
-2. Get rough area of installations using Postcode and LLSOA with GIS if possible and use this for proximity filtering
+2. Get rough area of installations using Postcode and LLSOA with GIS if possible and use this for proximity filtering: https://postgis.net/docs/Geocode.html
+
+OSM-REPD distance matching continued
+--------
+
+**Stats on REPD tagged OSM records:**
+
+|  | Counts |
+|---|---|
+| OSM with REPD id with closest geographical match in REPD having that repd_id | 760|
+| OSM with REPD id with closest geographical match in REPD being co-located repd_id | 3|
+| OSM with REPD id with closest geographical match in REPD being non-matching/ non-co-located| 162|
+
+**Matching results:**
+
+WARNING: These match results will have multiple rows for some OSM ids where there was multiple REPDs already tagged in OSM. Think of them as OSM-REPD associations.
+
+| Match rule | Result |
+|---|---|
+| 9a  | 98 |
+| 9b   | 59|
+| 10a  | 602 |
+| 10b  | 374 |
+| 10c | 298 |
+
+1. **Match Rule 9a:** If the closest REPD point to an OSM point is <500m away and the OSM record already has an REPD id tagged
+    - **Match Rule 9b:** 9a but only the REPD that are operational
+2. **Match Rule 10a:** If the closest REPD point to an OSM **way or relation** is <500m away and matched REPD was already correctly tagged in OSM
+    - **Match Rule 10b:** 10a but where the REPD id in OSM was different or non-existent
+    - **Match Rule 10c:** 10b but only the REPD that are operational
+3. **Match Rule 11:** If the closest REPD point to an OSM **node** is <500m away, excluding REPD with "Scheme" in the title
+4. **Match Rule 12:** If the closest REPD *scheme* to an OSM **node** is <500m away
+5. **Match Rule 13:** If the closest REPD *scheme* to an OSM **relation or way** is <500m away
+
+| Match rule | REPD Site Name|REPD id|REPD Site Name in OSM|REPD id in OSM| OSM id |Distance (m)| Notes | Novel match find |
+|---|---|---|---|---|---|---|---|---|
+| 9 | Helland Meads |1224 |Helland Meads - resubmission |2164|717941405 | 173 |There are quite a few other resubmissions like this, suggesting we need to de-duplicate REPD| :x: |
+| 9 | Court Farm (Frome)|2316|West Woodlands|4889|7877228|384|On closer inspection, these two REPD have the exact same coordinates, so perhaps also duplicates? Perhaps we need to deduplicate those with exact coordinates?| ? |
+| 9 | Christchurch Energy|2308|Waterditch Solar Farm|5315|684035422|198|Same as above, this time coordinates are not exact match between 2 REPDs, but looking at OSM, they are clearly referring to same farm| ? |
+
+Match rule 9 clearly shows the need for de-duplication of REPD is needed before we can proceed with matching to OSM. Not doing so will affect the matching of OSM objects that aren't already tagged with an REPD id as well as those that are already.
+
+OSM-MV matching
+------
+
+1. **Match rule MV1:** If the closest MV point to an OSM point is <500m away.
+2. **Match rule MV2:** MV1, no nodes, area is in the same order of magnitude
+
+| Match rule | OSM id|MV id|Distance (m)|OSM area| MV area|OSM objtype| OSM located| Notes | Correct match find? |
+|---|---|---|---|---|---|---|---|---|---|
+|MV1|6767536119|1862|135|0|4,572|node|roof|The actual thing that MV has spotted appears to be panels on top of B&Q Bournemouth (checked with Google Maps).|:x:|
+|MV1|721173461|1962|385|16.7|1,990|way|roof|Clearly parts of distinct installations, due to being on separate buildings on either side of an A road|:x:|
+|MV1|314886516|2164|117|165,665|141,813|way||Match for Chibson solar farm|✅|
+|MV1|2189625035|1506|72|0|52,346|node||A few matches like this where a node describes a solar plant, but there are also way(s) present more appropriate to match to|<-- yes but|
+|MV1|3209363222|1167|100|0|206,382|node||Looks like a node has been added to OSM here but no one thought to add a way with more info. The match doesn't really have any use because node has no metadata.|✅|
+
+**Matching Notes:**
+
+How can we add anything from MV that is clearly a real thing but not in OSM (is it in REPD?) to the output dataset?
+
+In general, looks like OSM nodes are unlikely to be match correctly to MV, since MV is larger installations and farms only, most of the proximity matches under 500m are where there are rooftop nodes nearby to a farm.
+
+OSM-FiT matching
+--------
