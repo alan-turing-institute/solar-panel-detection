@@ -49,7 +49,7 @@ the data used by the project in a format suitable for use by software in the
 project (for example, as `csv` files ready for upload to a database). Between
 `as_received` and `raw` there may be some non-automated transformations (eg,
 saving an Excel file as `csv`). No non-automated transformation is permitted
-after `raw`. 
+after `raw`.
 
 The following sources of data are used:
 
@@ -59,3 +59,11 @@ The following sources of data are used:
     - Osmium package [pyosmium](https://github.com/osmcode/pyosmium) - `pip install osmium`
 - [FiT](https://www.ofgem.gov.uk/environmental-programmes/fit/contacts-guidance-and-resources/public-reports-and-data-fit/installation-reports) - Report of installed PV (and other tech including wind). 100,000s entries.
 - [REPD](https://www.gov.uk/government/publications/renewable-energy-planning-database-monthly-extract) - Official UK data from the "renewable energy planning database". Large solar farms only.
+
+## Output
+
+What we should have by the end of the project is a set of scripts that will take input datasets (REPD, OSM, FiT and machine vision – each in diff format), perform data cleaning/conversion, populate a PostgreSQL database, perform grouping of data where necessary (duplicate entries in REPD, multiple solar farm components in OSM) and then match entries between the data tables, based on the matching criteria we have come up with.
+
+The result of matching will be table(s) that link the unique identifiers of the data tables. These should also link somehow to info on how each of the matches were determined (which rules they satisfied), which will be written up in documentation.
+
+The data cleaning, grouping and matching stages will all be documented as fully as possible. It should be possible for anyone to refer to this GitHub repo, follow the instructions to create the db and run matching (possibly as simple as a single make command) with either the current datasets or newer versions (e.g. more recently downloaded REPD spreadsheet) and then have the match table(s) in Postgres.
