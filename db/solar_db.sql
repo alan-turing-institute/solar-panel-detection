@@ -199,8 +199,10 @@ from osm_possible_farm_duplicates;
 select
   osm_possible_farm_duplicates.objtype,
   osm_possible_farm_duplicates.osm_id,
+  osm_possible_farm_duplicates.located,
   closest_pt.objtype as neighbour_objtype,
   closest_pt.osm_id as neighbour_osm_id,
+  closest_pt.located as neighbour_located,
   closest_pt.distance_meters,
   closest_pt.location
 into osm_farm_duplicates
@@ -209,6 +211,7 @@ CROSS JOIN LATERAL
   (SELECT
      temp.objtype,
      temp.osm_id,
+     temp.located,
      osm_possible_farm_duplicates.location::geography <-> temp.location::geography as distance_meters,
      osm.location
      FROM temp, osm
@@ -241,6 +244,9 @@ where not exists(
 
 drop table osm_farm_deleteables;
 
+-- Commented out the below, to avoid the reduced osm table overwiting the original
+-- That's no longer what we want
+-----------------------
 -- Finally, update the osm table to be the de-duplicated version
 -- drop table osm;
 -- select *
