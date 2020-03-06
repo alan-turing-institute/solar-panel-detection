@@ -12,42 +12,42 @@ REPD and OSM matching
 4. Since REPD contains things other than Solar panels, be sure to filter on Technology Type = Solar Photovoltaics
 5. Looks like most of the OSM entries with "capacity" are those taken directly from REPD (already have a tagged REPD id), so not sure how useful capacity will be for matching
 
-|  | Counts |
-|---|---|
-| OSM total | 126,939|
-| REPD total | 5,686 |
-| REPD tech_type = 'Solar Photovoltaics' | 1,986 |
-| ^ of which operational date not blank | 1,147 |
-|---|---|
-| OSM without REPD id | 126,046|
-| OSM with REPD id | 893|
-| OSM with REPD id and objtype = node `*`| 0|
-| OSM with REPD id and objtype = way `*`| 727|
-| OSM with REPD id and objtype = relation `*`|166|
-| REPD ids present in OSM `**` | 933 |
-| OSM with REPD id not in REPD | 1 (one of the OSM entries appears to have the repd_id `0`)|
-| OSM with REPD id in REPD |892 |
-|---|---|
-| Unique REPD ids in OSM | 924 |
-| REPD ids in OSM inc. duplicates | 932 |
-| REPD with id not in OSM |4,762|
-|---|---|
-| OSM with recorded capacity |1116 |
-| OSM with recorded capacity and REPD id |872 |
-| OSM with recorded capacity without REPD id | 244|
-|---|---|
-| OSM with REPD id and location = 'roof' | 0|
-| OSM with REPD id and location = 'ground' | 22|
-| OSM with REPD id and location = 'surface' | 9|
-|---|---|
-| OSM with "plantref"| 7,056|
-| OSM with "plantref" and REPD id |845 |
-| OSM with "plantref" and no REPD id | 6,211|
-|---|---|
-| OSM with tag_power = 'plant'| 917|
-| OSM with tag_power = 'generator'| 126,022|
-| OSM with tag_power = 'plant' and REPD id| 837|
-| OSM with tag_power = 'generator' and REPD id| 56|
+|                                              |                                                     Counts |
+|----------------------------------------------+------------------------------------------------------------|
+| OSM total                                    |                                                    126,939 |
+| REPD total                                   |                                                      5,686 |
+| REPD tech_type = 'Solar Photovoltaics'       |                                                      1,986 |
+| ^ of which operational date not blank        |                                                      1,147 |
+|----------------------------------------------+------------------------------------------------------------|
+| OSM without REPD id                          |                                                    126,046 |
+| OSM with REPD id                             |                                                        893 |
+| OSM with REPD id and objtype = node `*`      |                                                          0 |
+| OSM with REPD id and objtype = way `*`       |                                                        727 |
+| OSM with REPD id and objtype = relation `*`  |                                                        166 |
+| REPD ids present in OSM `**`                 |                                                        933 |
+| OSM with REPD id not in REPD                 | 1 (one of the OSM entries appears to have the repd_id `0`) |
+| OSM with REPD id in REPD                     |                                                        892 |
+|----------------------------------------------+------------------------------------------------------------|
+| Unique REPD ids in OSM                       |                                                        924 |
+| REPD ids in OSM inc. duplicates              |                                                        932 |
+| REPD with id not in OSM                      |                                                      4,762 |
+|----------------------------------------------+------------------------------------------------------------|
+| OSM with recorded capacity                   |                                                       1116 |
+| OSM with recorded capacity and REPD id       |                                                        872 |
+| OSM with recorded capacity without REPD id   |                                                        244 |
+|----------------------------------------------+------------------------------------------------------------|
+| OSM with REPD id and location = 'roof'       |                                                          0 |
+| OSM with REPD id and location = 'ground'     |                                                         22 |
+| OSM with REPD id and location = 'surface'    |                                                          9 |
+|----------------------------------------------+------------------------------------------------------------|
+| OSM with "plantref"                          |                                                      7,056 |
+| OSM with "plantref" and REPD id              |                                                        845 |
+| OSM with "plantref" and no REPD id           |                                                      6,211 |
+|----------------------------------------------+------------------------------------------------------------|
+| OSM with tag_power = 'plant'                 |                                                        917 |
+| OSM with tag_power = 'generator'             |                                                    126,022 |
+| OSM with tag_power = 'plant' and REPD id     |                                                        837 |
+| OSM with tag_power = 'generator' and REPD id |                                                         56 |
 
 - `*` OSM object types: https://wiki.openstreetmap.org/wiki/Elements
 - `**` including those within the same OSM entry and any that are not genuine REPD ids (found in REPD)
