@@ -1,5 +1,5 @@
 /*
-** Create table containing Machine Vision database
+** Create table containing Machine Vision dataset
 */
 
 \echo Creating Machine Vision table ...

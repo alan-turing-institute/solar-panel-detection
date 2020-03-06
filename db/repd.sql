@@ -1,5 +1,5 @@
 /*
-** Create table containing REPD database
+** Create table containing REPD dataset
 */
 
 \echo Creating REPD table ...

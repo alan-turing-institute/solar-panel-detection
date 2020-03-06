@@ -1,21 +1,28 @@
 # Notes on setting up the database
 
-To run postgres as a background service and restart at login:
+For more details, see `doc/database.md`.
+
+Om MacOS, with Postgres installed via homebrew, to run postgres as a background
+service and restart at login:
+
 ```bash
 brew services start postgresql
 ```
 
-To start now:
+To start postgres now:
+
 ```bash
 pg_ctl -D /usr/local/var/postgres start
 ```
 
 To create the database for first use:
+
 ```bash
 createdb hut23-425 "Solar PV database matching"
 ```
 
-To create the database, in the repo root directory:
+To populate the database:
+
 ```bash
 psql -f make-database.sql hut23-425
 ```
