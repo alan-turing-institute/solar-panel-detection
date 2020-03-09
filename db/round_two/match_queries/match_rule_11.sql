@@ -1,3 +1,7 @@
+-- Before running this query:
+-- 1. Create DB with database/solar_db.sql
+-- 2. Create osm_with_repd_id_repd_closest table with db/osm-repd/find-closest-repd-to-osm-with-repd_id.sql
+
 select
   osm_with_repd_id_repd_closest.osm_id,
   osm.objtype,

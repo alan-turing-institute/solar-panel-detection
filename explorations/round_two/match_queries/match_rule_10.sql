@@ -1,6 +1,6 @@
 -- Before running this query:
 -- 1. Create DB with database/solar_db.sql
--- 2. Create osm_repd_closest table with database/osm-repd-location-tables/find-closest-repd-to-osm-inc-no-repd_id.sql
+-- 2. Create osm_repd_closest table with db/osm-repd/find-closest-repd-to-osm.sql
 
 drop table if exists match_rule_10_results;
 drop table if exists temp_table;
