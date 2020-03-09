@@ -299,8 +299,6 @@ OSM-MV matching
 
 **Matching Notes:**
 
-How can we add anything from MV that is clearly a real thing but not in OSM (is it in REPD?) to the output dataset?
-
 In general, looks like OSM nodes are unlikely to be match correctly to MV, since MV is larger installations and farms only, most of the proximity matches under 500m are where there are rooftop nodes nearby to a farm.
 
 OSM-FiT matching
