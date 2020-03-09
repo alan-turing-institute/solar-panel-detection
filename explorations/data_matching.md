@@ -69,9 +69,9 @@ REPD and OSM matching
 
 |  | Counts |
 |---|---|
-| OSM with REPD id with closest geographical match in REPD having that repd_id | 765|
+| OSM with REPD id with closest geographical match in REPD having that repd_id | 760|
 | OSM with REPD id with closest geographical match in REPD being co-located repd_id | 3|
-| OSM with REPD id with closest geographical match in REPD being non-matching/ non-co-located| 165|
+| OSM with REPD id with closest geographical match in REPD being non-matching/ non-co-located| 162|
 
 **Matching results:**
 
@@ -206,17 +206,19 @@ Match rule ideas
 
 ### OSM-REPD
 
-**Core matching ideas:**
+**Ideal matching rules:**
 
-1. Re-run distance matching with ways/relations
-2. Re-run distance matching for nodes, not including the REPD's with "Scheme" in the title.
-3. Run distance matching for REPD schemes: Work out how to infer the boundaries for clustered node installations like John Lennon Airport Scheme (match nodes separately). See how many more you get by increasing the range around the REPD coordinates and look at other examples if there are any, then devise rule. Only 5 "schemes".
-4. Only consider REPD with "operational" field in REPD to avoid duplications of matches
-5. Add a limit to how close the 2nd closest can be so we can differentiate certain vs ambiguous
+After each match rule: Remove all members of these REPD groups from the REPD table (or a copy of it) and same for OSM, before continuing matching. Add the REPD and OSM id to the match table plus the match rule (e.g. int of 1) to the match rule column.
+
+1. The nearest neighbour in meters of OSM ways/relations to REPD entries where the REPD ID is the same as already tagged in OSM data. Accept those that are the same (regardless of distance).
+2. Nearest neighbour for remaining ways/relation group masters (master_osm_id and master_repd_id). Accept all matches that are below a distance threshold and don't exceed a capacity difference of X.
+3. Nearest neighbour for nodes, and REPD's with "Scheme" in the title, with a high distance threshold.
+4. Nearest neighbour for remaining nodes and REPD's (not just group masters), with a very low distance threshold.
 
 **Sanity checking:**
 
-1. Check OSM `tag_start_date` against REPD `operational`. Only 46 have these filled but "Crannaford Solar Farm" shows that these can match even when not taken from REPD (this is a known distance match, see above) and at the "Trickey Warren" REPD for instance, could we use this field to differentiate from neighbouring solar farms?
+1. Work out how to infer the boundaries for clustered node installations like John Lennon Airport Scheme (match nodes separately). See how many more you get by increasing the range around the REPD coordinates and look at other examples if there are any, then devise rule. Only 5 "schemes".
+2. Check OSM `tag_start_date` against REPD `operational`. Only 46 have these filled but "Crannaford Solar Farm" shows that these can match even when not taken from REPD (this is a known distance match, see above) and at the "Trickey Warren" REPD for instance, could we use this field to differentiate from neighbouring solar farms?
 2. Could postcode could be used as a sanity check for distance matching? This would require some kind of rough conversion of postcode to geolocation? This may be possible with PostGIS?
 3. Validate that matches roughly match on area by comparing OSM area to REPD area calculated roughly from capacity
 
@@ -256,15 +258,18 @@ WARNING: These match results will have multiple rows for some OSM ids where ther
 | 10a  | 602 |
 | 10b  | 374 |
 | 10c | 298 |
+| 11 | 763 |
 
-1. **Match Rule 9a:** If the closest REPD point to an OSM point is <500m away and the OSM record already has an REPD id tagged
+1. **Match Rule 9a:** If the closest REPD point to an OSM point is <500m away and the OSM record already has an REPD id tagged which is different
     - **Match Rule 9b:** 9a but only the REPD that are operational
 2. **Match Rule 10a:** If the closest REPD point to an OSM **way or relation** is <500m away and matched REPD was already correctly tagged in OSM
-    - **Match Rule 10b:** 10a but where the REPD id in OSM was different or non-existent
-    - **Match Rule 10c:** 10b but only the REPD that are operational
-3. **Match Rule 11:** If the closest REPD point to an OSM **node** is <500m away, excluding REPD with "Scheme" in the title
-4. **Match Rule 12:** If the closest REPD *scheme* to an OSM **node** is <500m away
-5. **Match Rule 13:** If the closest REPD *scheme* to an OSM **relation or way** is <500m away
+    - **Match Rule 10b:** 10a but where the REPD id in OSM was different or non-existent (9a + non-existent)
+    - **Match Rule 10c:** 10b but only the REPD that are operational (9b + non-existent)
+3. **Match Rule 11:** If closest REPD point to an OSM point is that which is already tagged or the co-repd-id of the match (see results, all are ways and relations).
+3. **Match Rule 12:** If the closest REPD point to an OSM **node** is <500m away, excluding REPD with "Scheme" in the title
+4. **Match Rule 13:** If the closest REPD *scheme* to an OSM **node** is <500m away
+    - Try this with a wider area (e.g. 2000m)
+5. **Match Rule 14:** If the closest REPD *scheme* to an OSM **relation or way** is <500m away
 
 | Match rule | REPD Site Name|REPD id|REPD Site Name in OSM|REPD id in OSM| OSM id |Distance (m)| Notes | Novel match find |
 |---|---|---|---|---|---|---|---|---|
@@ -273,6 +278,10 @@ WARNING: These match results will have multiple rows for some OSM ids where ther
 | 9 | Christchurch Energy|2308|Waterditch Solar Farm|5315|684035422|198|Same as above, this time coordinates are not exact match between 2 REPDs, but looking at OSM, they are clearly referring to same farm| ? |
 
 Match rule 9 clearly shows the need for de-duplication of REPD is needed before we can proceed with matching to OSM. Not doing so will affect the matching of OSM objects that aren't already tagged with an REPD id as well as those that are already.
+
+Match rule 10b: come back to this after REPD de-duplication done and also check against master/group id. The only other things to consider are whether to filter on capacity and whether to increase the distance threshold.
+
+Match rule 11 shows that of the correctly tagged REPD in OSM, some are up to 2.4KM away. This suggests we should have a matching distance of up to 3000m (rather than 500m, for ways and relations at least).
 
 OSM-MV matching
 ------
@@ -290,9 +299,33 @@ OSM-MV matching
 
 **Matching Notes:**
 
-How can we add anything from MV that is clearly a real thing but not in OSM (is it in REPD?) to the output dataset?
-
 In general, looks like OSM nodes are unlikely to be match correctly to MV, since MV is larger installations and farms only, most of the proximity matches under 500m are where there are rooftop nodes nearby to a farm.
 
 OSM-FiT matching
 --------
+
+Output dataset
+--------
+
+### Accepted matches
+
+TODO: update this section as per Ideal matching rules above.
+
+These are things we can say are definitely matches, or decide they probably are based on the assumptions in the notes in the table below:
+
+| Match rule | Count | Notes |
+|---|---|---|
+| 11 | 763 | These are doubly validated by what was included in OSM's REPD ID and proximity matching |
+
+
+The output of refined matching rules should be to add to tables that link the database tables.
+
+1. REPD - REPD dedup ID table (or just add column to REPD as we have for OSM)
+2. OSM same as above
+3. Table below. Anything that doesn't have a master ID, should have a master ID of itself. Caveats and multiple matches should be explained: Could also have a table that shows the uniqueness of match results in case de-dedup was inadequate OR matching was inadequate via the counts (Low Priority).
+
+| REPD dedup (master) ID | OSM dedup (master) ID | MV ID |
+|---|---|---|
+|...|...|...|
+
+Add FiT afterwards if time.
