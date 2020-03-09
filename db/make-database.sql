@@ -22,18 +22,18 @@ create extension if not exists postgis;
 
 -- 1. Create tables and load data
 
-\input osm.sql
-\input repd.sql
-\input fit.sql
-\input mv.sql
+\include osm.sql
+\include repd.sql
+\include fit.sql
+\include mv.sql
 
 -- 2. Preliminary matching
 
-\input match-osm-repd.sql
+\include match-osm-repd.sql
 
 -- 3. Deduplicate
 
-\input dedup-osm.sql
+\include dedup-osm.sql
 
 
 
