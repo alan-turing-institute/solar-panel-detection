@@ -81,3 +81,5 @@ order by distance_meters asc;
 select count(*) from repd_proximity_matches;
 select count(*) from possible_repd_duplicates;
 select count(*) from repd_duplicates;
+
+select * from repd_duplicates;
