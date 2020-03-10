@@ -2,7 +2,7 @@
 -- 1. Create DB with database/solar_db.sql
 -- 2. Create osm_repd_closest table with db/osm-repd/find-closest-repd-to-osm.sql
 
-drop table if exists match_rule_10_results;
+drop table if exists match_rule_12_results;
 drop table if exists temp_table;
 
 select
@@ -33,26 +33,14 @@ select
   repd.latitude as r_lat,
   repd.longitude as r_lon,
   repd.operational
-into match_rule_10_results
+into match_rule_12_results
 from temp_table, osm, repd
 where temp_table.osm_id = osm.osm_id
 and temp_table.closest_geo_match_from_repd_repd_id = repd.repd_id -- use this to display other repd fields
-and osm.objtype != 'node'; -- 10c
+and osm.objtype = 'node'
+and repd.site_name not like '%Scheme%';
 
 drop table temp_table;
 
-select count(*)
-from match_rule_10_results
-where osm_repd_id = match_repd_id; -- 10a
-
 select *
-from match_rule_10_results
-where (osm_repd_id!= match_repd_id
-  or osm_repd_id is null)
-order by distance_meters;-- 10b
-
--- select count(*)
--- from match_rule_10_results
--- where (osm_repd_id != match_repd_id
---   or osm_repd_id is null)
--- and operational is not null; -- 10c
+from match_rule_12_results;

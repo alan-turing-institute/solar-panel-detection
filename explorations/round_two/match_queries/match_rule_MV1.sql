@@ -1,3 +1,6 @@
+-- Before running this query:
+-- 1. Create DB with database/solar_db.sql
+-- 2. Create osm_mv_closest table with db/osm-mv/find-closest-mv-to-osm.sql
 select
   osm_mv_closest.osm_id,
   machine_vision.mv_id,
