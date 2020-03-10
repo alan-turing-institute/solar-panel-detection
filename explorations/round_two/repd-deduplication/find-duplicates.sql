@@ -78,8 +78,14 @@ where sd >= 0.2
 or distance_meters = 0;
 order by distance_meters asc;
 
-select count(*) from repd_proximity_matches;
-select count(*) from possible_repd_duplicates;
-select count(*) from repd_duplicates;
+alter table repd_duplicates
+  add column "ordered" BOOLEAN;
 
-select * from repd_duplicates;
+update repd_duplicates
+  set ordered = repd_id > neighbour_id;
+
+select repd_id, bool_and(ordered) as keep into repd_group_leaders
+  from repd_duplicates
+  group by repd_id;
+
+select * from repd_group_leaders;
