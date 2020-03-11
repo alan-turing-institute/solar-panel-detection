@@ -14,7 +14,7 @@
 
 \set cluster_distance 300
 
-drop table if exists osm;
+drop table if exists osm cascade;
 drop table if exists osm_dedup;
 
 -- The field plantref, if not null, contains a value of the form 'way/123456789'.
