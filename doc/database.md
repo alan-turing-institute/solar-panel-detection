@@ -4,10 +4,11 @@ This note documents the creation of the `hut23-425` database and the initial
 deduplication of the data.
 
 We use an "Extract-Load-Transform" methodology: Tables of the source datasets
-are first uploaded from the `data/processed` directory into the schema `raw` in
-the database, then post-processed in the database and saved as tables in the
+are first uploaded (from the `data/processed` directory) into the schema `raw`
+in the database, then post-processed in the database and saved as tables in the
 default schema. (Some tables do not require post-processing and are uploaded
-directly into the default schema.)
+directly into the default schema.) In this note, we assume that the
+pre-processing has already taken place.
 
 # 1. Database creation scripts
 
@@ -27,16 +28,18 @@ directory. To create the complete database, change to that directory and run:
 psql -f make-database.sql hut23-425
 ```
 
-This script will in turn call `osm.sql`, `repd.sql`, `fit.sql`, and `mv.sql`
-which create and populate the following tables from the respective source data
-in `../data/processed/` and add a small number of additional columns. Note that
-the schema `raw` is used as a staging area for certain tables where it is
-necessary to do some postprocessing. After postprocessing the working tables
-will be in the default schema.
+This script will in turn call `osm.sql`, `repd.sql`, `fit.sql`, `mv.sql`,
+`match-osm-repd.sql`, and `dedup-osm.sql` which create and populate the data
+tables from the respective source data in `../data/processed/` (adding a small
+number of additional columns) and then postprocessing. Note that the schema
+`raw` is used as a staging area for certain tables where it is necessary to do
+some postprocessing. After postprocessing the working tables will be in the
+default schema.
 
 - `raw.osm`: The raw OSM data.
 - `raw.repd`: The raw REPD data.
 - `repd`: The REPD data, restricted to solar PV technologies.
+- `osm`: The OSM data, de-duplicated.
 - `fit`: The FiT data. 
 - `machine_vision`: The machine vision data. 
 
@@ -79,7 +82,7 @@ identifiers.
 
 The entries in the OSM dataset were tagged (in the original data) with zero
 or more REPD identifiers. These are present in the field `repd_id_str` as a
-semicolon-separated list. The file `match-osm-repd.sql` “un-nests” these
+semicolon-separated list. The script `match-osm-repd.sql` “un-nests” these
 identifiers as a set of rows matched to the corresponding `osm_id`. 
 
 # 3. Deduplication of the OSM dataset
