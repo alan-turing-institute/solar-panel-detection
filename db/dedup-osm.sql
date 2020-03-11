@@ -92,3 +92,13 @@ select osm_id1 as osm_id, max(osm_id2) as master_osm_id
   from clusters
   group by osm_id1;
 
+/* 
+** Merge the new groupings into the osm table
+*/
+
+update osm
+  set (master_osm_id) =
+    (select master_osm_id
+     from osm_dedup
+     where osm_dedup.osm_id = osm.osm_id)
+  where master_osm_id is null;
