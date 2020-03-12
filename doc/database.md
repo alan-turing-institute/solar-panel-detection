@@ -75,7 +75,7 @@ necessarily represent a unique installation.
 
 We have added a row identifier, `mv_id`, to the pre-processed machine vision dataset. 
 
-# 2. Preliminary matching
+# 2. Preliminary matching between OSM and REPD
 
 The table `osm_repd_id_mapping(osm_id, repd_id)` maps OSM identifiers to REPD
 identifiers.
@@ -87,18 +87,51 @@ identifiers as a set of rows matched to the corresponding `osm_id`.
 
 # 3. Deduplication of the OSM dataset
 
-The OSM dataset contains many rows which refer to the same solar PV
-installation. An OSM entry `objtype` can be one of `relation`, `way`, or `node`.
-In the case of a `relation`, there may be several other entries classified as
-`way` that are actually the components of the `relation`, all of which refer to
-a single PV installation. There may also be severals `way`s that are part of the
-same installation even though there is no unifying `relation`.
+An OSM entry `objtype` can be one of `relation`, `way`, or `node`.  In the case
+of a `relation`, there may be several other entries classified as `way` that are
+actually the components of the `relation`, all of which refer to a single PV
+installation. There may also be several `way`s that are part of the same
+installation even though there is no unifying `relation`.
+
+The script `dedup-osm.sql` identifies groups of objects in the OSM data that are
+likely part of the same installation. An extra column, `master_osm_id` is added
+to the `osm` table; this column contains a unique `osm_id` for each object in
+a single cluster. (The particular `osm_id` used has no significance.)
 
 ## Using the `plantref` field
 
+Some of the OSM objects have already been tagged as being part of the same
+installation. These are indicated by an entry in the field `plantref` of the
+form `way/123456789` where the digits indicate another `osm_id`. If this field
+is non-`NULL`, the number is copied across to `osm_master_id`.
+
+## Using proximity
+
+The remainder of the script identifies pairs of installations that are within
+300 metres of each other; it then extends this relation to an equivalence
+relation and tags objects that are equivalent to each other with a common
+`master_osm_id`. (In fact, the tag is the greatest `osm_id` from the group but
+this choice is simply for convenience.)
+
+### Technical note
+
+The relation that contains paris of objects within 300m of each other is clearly
+a symmetric relation but it is not necessarily transitive. (It may be the case
+that A and B are within 300m of each other and B and C are within 300m of each
+other but A is more than 300m from C.) To extend the proximity relation to an
+equivalence relation we form the transitive closure of the proximity relation.
+
+Taking the transitive closure is acheived in SQL through the use of a "recursive
+common table expression" (recursive CTE). In the script, it is the query that
+begins “`WITH RECURSIVE ...`”. The primary use of recursive CTEs is, in fact, to
+compute transitive closures. 
 
 
+# 4. Deduplication of the REPD dataset
 
+The REPD dataset also contains objects that are close enough in proximity
+that we believe they are likely to be part of the same installation and we treat
+these in the same way as in the OSM dataset.
 
 
 
