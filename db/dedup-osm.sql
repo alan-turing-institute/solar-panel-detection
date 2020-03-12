@@ -1,110 +1,104 @@
 /*
-** Deduplicate the OSM dataset
+** Deduplicate the OSM dataset and add field `master_osm_id`
+**
+** Some OSM rows represent geographical entities that are in reality component parts 
+** of a single installation (often a solar "farm"). 
+** This script adds a field `master_osm_id` that contains a unique `osm_id` for all 
+** members of a single group.
 */
 
-\echo Deduplicating OSM dataset ...
+\echo -n Deduplicating OSM dataset ...
 
-drop table if exists osm;
+-- PARAMETERS: cluster_distance is the distance (in metres) within which we count
+-- two objects as certainly being part of the same cluster. 
 
-drop table if exists osm_possible_farm_duplicates;
-drop table if exists temp;
-drop table if exists osm_farm_duplicates;
+\set cluster_distance 300
+
+drop table if exists osm cascade;
 drop table if exists osm_dedup;
-drop table if exists osm_farm_deleteables;
 
+-- The field plantref, if not null, contains a value of the form 'way/123456789'.
+-- We extract the part after the "/", which corresponds to another osm_id.
 
-select * into osm
+select objtype,
+       osm_id,
+       username,
+       time_created,
+       latitude,
+       longitude,
+       area,
+       capacity,
+       modules,
+       located,
+       orientation,
+       cast(split_part(plantref, '/', 2) as bigint) as master_osm_id,
+       tag_power,
+       repd_id_str,
+       tag_start_date,
+       location
+  into osm
   from raw.osm;
 
--- Create master_osm_id from plantref as int
+/*
+** Deduplicate objects that are part of the same farm
+**
+** 1. Find groups of objects within 300m of each other; 
+** 2. Call these "the same" and close over this equivalence relation  
+** 3. Choose one osm_id from each equivalence class
+*/
 
-alter table osm
-  add column "master_osm_id" varchar(20);
+\echo clustering ...
+
+-- parts(osm_id1, osm_id2)
+-- All pairs of objects that are within 300m of each other
+
+create view parts as 
+with maybe_dupes(osm_id, location) as (
+  -- ignore nodes, (various misspellings of) rooftop things,
+  -- and cases where there is already a master_osm_id.
+  -- NB. "X is not true" is true if X is false or X is null 
+  select osm_id, location from osm
+  where 
+    objtype != 'node'
+    and (located in ('roof', 'rood', 'roofq', 'rof', 'roofs')) is not true
+    and master_osm_id is null
+)
+-- find objects within 300 m of each other
+select md1.osm_id as osm_id1, md2.osm_id as osm_id2
+  from maybe_dupes as md1, maybe_dupes as md2
+  where md1.osm_id != md2.osm_id
+        and md1.location::geography <-> md2.location::geography < :cluster_distance;
+
+-- clusters(osm_id1, osm_id2)
+-- Objects that can be reached through a chain of nearest-neighbour pairs
+
+create view clusters as
+with recursive clusters(osm_id1, osm_id2) as (
+    select osm_id1, osm_id2
+    from parts
+  union
+    select clusters.osm_id1 as osm_id1, parts.osm_id2 as osm_id2
+    from clusters cross join parts 
+    where clusters.osm_id2 = parts.osm_id1
+  )
+  select osm_id1, osm_id2 FROM clusters;
+
+-- osm_dedup(osm_id, master_osm_id)
+-- master_osm_id is the largest osm_id over all objects within the
+-- same cluster
+
+select osm_id1 as osm_id, max(osm_id2) as master_osm_id
+  into osm_dedup
+  from clusters
+  group by osm_id1;
+
+/* 
+** Merge the new groupings into the osm table
+*/
 
 update osm
-  set master_osm_id = (string_to_array(plantref, '/'))[2];
-
-alter table osm
-  alter column master_osm_id
-    set data type bigint
-      using cast (master_osm_id as bigint);
-
-alter table osm
-  drop column plantref;
-
--- Deduplicate further for matching by removing objects that are part of the same farm
-
-select * into osm_possible_farm_duplicates
-  from osm
-  where objtype != 'node' -- ignore nodes
-    and ((located != 'roof' -- ignore rooftop things
-                  and located != 'rood'
-                  and located != 'roofq'
-                  and located != 'rof'
-                  and located != 'roofs')
-          or located is null)
-    and master_osm_id is null; -- ignore those that already have a plantref (already de-duplicated)
-
--- Duplicate this table so we can compare it against itself:
-select * into temp
-  from osm_possible_farm_duplicates;
-
--- Next 2 queries: Get the nearest other entry for each in the table above, but only those
--- within a certain distance (e.g. 300m)
-
-select osm_possible_farm_duplicates.objtype,
-       osm_possible_farm_duplicates.osm_id,
-       osm_possible_farm_duplicates.located,
-       closest_pt.objtype as neighbour_objtype,
-       closest_pt.osm_id as neighbour_osm_id,
-       closest_pt.located as neighbour_located,
-       closest_pt.distance_meters,
-       closest_pt.location
-  into osm_farm_duplicates
-  from osm_possible_farm_duplicates
-  CROSS JOIN LATERAL
-  (SELECT temp.objtype,
-          temp.osm_id,
-          temp.located,
-          osm_possible_farm_duplicates.location::geography <-> temp.location::geography as distance_meters,
-          osm.location
-     FROM temp, osm
-     where temp.osm_id = osm.osm_id
-     ORDER BY osm_possible_farm_duplicates.location::geography <-> osm.location::geography) AS closest_pt
-  where osm_possible_farm_duplicates.osm_id != closest_pt.osm_id
-  and closest_pt.distance_meters < 300;
-
-
--- Remove extra objects from each farm
-alter table osm_farm_duplicates
-  add column "ordered" BOOLEAN;
-
-update osm_farm_duplicates
-  set ordered = osm_id > neighbour_osm_id;
-
-select osm_id, bool_and(ordered) as keep into osm_farm_deleteables
-  from osm_farm_duplicates
-  group by osm_id;
-
-select *
-  into osm_dedup
-  from osm
-  where not exists (
-    SELECT
-    FROM osm_farm_deleteables
-    where osm.osm_id = osm_farm_deleteables.osm_id
-    and osm_farm_deleteables.keep = False);
-
-drop table temp;
-drop table osm_farm_deleteables;
-
--- Commented out the below, to avoid the reduced osm table overwiting the original
--- That's no longer what we want
------------------------
--- Finally, update the osm table to be the de-duplicated version
--- drop table osm;
--- select *
--- into osm
--- from osm_dedup;
--- drop table osm_dedup;
-
+  set (master_osm_id) =
+    (select master_osm_id
+     from osm_dedup
+     where osm_dedup.osm_id = osm.osm_id)
+  where master_osm_id is null;
