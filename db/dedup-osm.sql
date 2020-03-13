@@ -52,7 +52,7 @@ select objtype,
 -- parts(osm_id1, osm_id2)
 -- All pairs of objects that are within 300m of each other
 
-create view parts as 
+create temporary view parts as 
 with maybe_dupes(osm_id, location) as (
   -- ignore nodes, (various misspellings of) rooftop things,
   -- and cases where there is already a master_osm_id.
@@ -70,9 +70,9 @@ select md1.osm_id as osm_id1, md2.osm_id as osm_id2
         and md1.location::geography <-> md2.location::geography < :cluster_distance;
 
 -- clusters(osm_id1, osm_id2)
--- Objects that can be reached through a chain of nearest-neighbour pairs
+-- Objects that can be reached through a chain of connections
 
-create view clusters as
+create temporary view clusters as
 with recursive clusters(osm_id1, osm_id2) as (
     select osm_id1, osm_id2
     from parts
