@@ -5,7 +5,7 @@
 \echo Creating REPD table ...
 
 drop table if exists raw.repd;
-drop table if exists repd;
+drop table if exists repd cascade;
 
 create table raw.repd (
   old_repd_id                    varchar(15),
