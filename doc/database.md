@@ -129,9 +129,19 @@ compute transitive closures.
 
 # 4. Deduplication of the REPD dataset
 
-The REPD dataset also contains objects that are close enough in proximity
-that we believe they are likely to be part of the same installation and we treat
-these in the same way as in the OSM dataset.
+The REPD dataset also contains objects that are close enough in both proximity
+and name that we believe they are likely to be part of the same installation.
+
+Deduplication proceeds in a similar manner to the OSM database. We use a
+slightly larger distance threshold (1380 m) but include a measure of similarity
+between the installation names using Postgres' `similarity` function. In
+addition, prior to computing the similarity of names, we “normalise” the names
+to remove certain common words (such as “farm”). 
+
+As with the OSM data, a new field, `master_repd_id` is added to the `repd` table
+that is non-`NULL` and unique for sites that are believed to be the same site.
+
+
 
 
 
