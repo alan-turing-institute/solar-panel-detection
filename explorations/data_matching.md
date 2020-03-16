@@ -312,6 +312,8 @@ OSM-FiT matching
 Output dataset
 --------
 
+*Moved this to a new doc: doc/matching.md*
+
 ### Accepted matches
 
 TODO: update this section as per Ideal matching rules above.
