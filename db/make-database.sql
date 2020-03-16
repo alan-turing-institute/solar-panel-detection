@@ -34,6 +34,6 @@ create extension if not exists postgis;
 -- 3. Deduplicate
 
 \include dedup-osm.sql
-
+\include dedup-repd.sql 
 
 
