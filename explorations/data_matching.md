@@ -258,14 +258,19 @@ WARNING: These match results will have multiple rows for some OSM ids where ther
 | 10a  | 602 |
 | 10b  | 374 |
 | 10c | 298 |
-| 11 | 763 |
+| 11 | 866 |
+
+### Before REPD/OSM de-duplicated
 
 1. **Match Rule 9a:** If the closest REPD point to an OSM point is <500m away and the OSM record already has an REPD id tagged which is different
     - **Match Rule 9b:** 9a but only the REPD that are operational
 2. **Match Rule 10a:** If the closest REPD point to an OSM **way or relation** is <500m away and matched REPD was already correctly tagged in OSM
     - **Match Rule 10b:** 10a but where the REPD id in OSM was different or non-existent (9a + non-existent)
     - **Match Rule 10c:** 10b but only the REPD that are operational (9b + non-existent)
-3. **Match Rule 11:** If closest REPD point to an OSM point is that which is already tagged or the co-repd-id of the match (see results, all are ways and relations).
+
+### After REPD/OSM de-duplicated
+
+3. **Match Rule 11:** If closest REPD point to an OSM point is that which is already tagged or the co-repd-id of the match, or the master_repd_id (see results, all are ways and relations).
 3. **Match Rule 12:** If the closest REPD point to an OSM **node** is <500m away, excluding REPD with "Scheme" in the title
 4. **Match Rule 13:** If the closest REPD *scheme* to an OSM **node** is <500m away
     - Try this with a wider area (e.g. 2000m)
