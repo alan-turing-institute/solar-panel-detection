@@ -10,6 +10,20 @@ default schema. (Some tables do not require post-processing and are uploaded
 directly into the default schema.) In this note, we assume that the
 pre-processing has already taken place.
 
+In summary, the final tables created, and row counts as of commit `0d8d38b` are:
+
+| Table                 | Row count | Dedup'd entity field | Dedup'd entity count |
+|-----------------------+-----------+----------------------+----------------------|
+| `osm`                 |    126939 | `master_osm_id`      |               119427 |
+| `repd`                |      1147 | `master_repd_id`     |                 1078 |
+| `fit`                 |    863079 |                      |                      |
+| `machine_vision`      |      2221 |                      |                      |
+| `osm_repd_id_mapping` |       933 |                      |                      |
+
+(In the above table, the deduplicated entity count is the sum of the distinct
+entries in the named column, plus the count of rows for which that column is
+`NULL`.)
+
 # 1. Database creation scripts
 
 These scripts assume the existence of a local Postgres installation containing a
@@ -46,9 +60,12 @@ default schema.
 A field, `area`, is added to the `fit` table, containing an estimate of the area
 of the solar panel(s) based on the declared net capacity.
 
-The tables `osm`, `repd`, and `mv` include a latitude and longitude for each
-installation. An additional field `location` is added to these tables containing
-these coordinates converted to a Postgis point.
+The tables `osm`, `repd`, and `machine_vision` include a latitude and longitude
+for each installation. An additional field `location` is added to these tables
+containing these coordinates converted to a Postgis point.
+
+The `repd` table has been restricted to those installations whose technology
+type is “solar Photovoltaics” and whose development status is “Operational.”
 
 ## Primary keys for the uploaded data
 
@@ -115,7 +132,7 @@ this choice is simply for convenience.)
 
 ### Technical note
 
-The relation that contains paris of objects within 300m of each other is clearly
+The relation that contains parts of objects within 300m of each other is clearly
 a symmetric relation but it is not necessarily transitive. (It may be the case
 that A and B are within 300m of each other and B and C are within 300m of each
 other but A is more than 300m from C.) To extend the proximity relation to an
