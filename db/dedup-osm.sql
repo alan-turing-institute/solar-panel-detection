@@ -49,10 +49,10 @@ select objtype,
 
 \echo clustering ...
 
--- parts(osm_id1, osm_id2)
+-- osm_parts(osm_id1, osm_id2)
 -- All pairs of objects that are within 300m of each other
 
-create temporary view parts as 
+create temporary view osm_parts as 
 with maybe_dupes(osm_id, location) as (
   -- ignore nodes, (various misspellings of) rooftop things,
   -- and cases where there is already a master_osm_id.
@@ -69,19 +69,19 @@ select md1.osm_id as osm_id1, md2.osm_id as osm_id2
   where md1.osm_id != md2.osm_id
         and md1.location::geography <-> md2.location::geography < :cluster_distance;
 
--- clusters(osm_id1, osm_id2)
+-- osm_clusters(osm_id1, osm_id2)
 -- Objects that can be reached through a chain of connections
 
-create temporary view clusters as
-with recursive clusters(osm_id1, osm_id2) as (
+create temporary view osm_clusters as
+with recursive osm_clusters(osm_id1, osm_id2) as (
     select osm_id1, osm_id2
-    from parts
+    from osm_parts
   union
-    select clusters.osm_id1 as osm_id1, parts.osm_id2 as osm_id2
-    from clusters cross join parts 
-    where clusters.osm_id2 = parts.osm_id1
+    select osm_clusters.osm_id1 as osm_id1, osm_parts.osm_id2 as osm_id2
+    from osm_clusters cross join osm_parts 
+    where osm_clusters.osm_id2 = osm_parts.osm_id1
   )
-  select osm_id1, osm_id2 FROM clusters;
+  select osm_id1, osm_id2 FROM osm_clusters;
 
 -- osm_dedup(osm_id, master_osm_id)
 -- master_osm_id is the largest osm_id over all objects within the
@@ -89,7 +89,7 @@ with recursive clusters(osm_id1, osm_id2) as (
 
 select osm_id1 as osm_id, max(osm_id2) as master_osm_id
   into osm_dedup
-  from clusters
+  from osm_clusters
   group by osm_id1;
 
 /* 

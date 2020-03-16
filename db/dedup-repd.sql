@@ -27,7 +27,7 @@ create extension if not exists pg_trgm; -- trigram matching
 \set name_distance 0.2
 
 
-create temporary view parts(repd_id1, repd_id2) as
+create temporary view repd_parts(repd_id1, repd_id2) as
 with temp(repd_id, location, reduced_site_name) as (
   -- Within `site_name` remove the following strings:
   --   solar, Solar, park, Park, farm, Farm, resubmission, (resubmission), (Resubmission),
@@ -53,19 +53,19 @@ with temp(repd_id, location, reduced_site_name) as (
            or x.location::geography <-> y.location::geography < :identical_cluster_distance);
 
 
--- clusters(repd_id1, repd_id2)
+-- repd_clusters(repd_id1, repd_id2)
 -- Objects that can be reached through a chain of connections
 
-create temporary view clusters as
-with recursive clusters(repd_id1, repd_id2) as (
+create temporary view repd_clusters as
+with recursive repd_clusters(repd_id1, repd_id2) as (
     select repd_id1, repd_id2
-    from parts
+    from repd_parts
   union
-    select clusters.repd_id1 as repd_id1, parts.repd_id2 as repd_id2
-    from clusters cross join parts 
-    where clusters.repd_id2 = parts.repd_id1
+    select repd_clusters.repd_id1 as repd_id1, repd_parts.repd_id2 as repd_id2
+    from repd_clusters cross join repd_parts 
+    where repd_clusters.repd_id2 = repd_parts.repd_id1
   )
-  select repd_id1, repd_id2 FROM clusters;
+  select repd_id1, repd_id2 FROM repd_clusters;
 
 
 -- repd_dedup(repd_id, master_repd_id)
@@ -74,7 +74,7 @@ with recursive clusters(repd_id1, repd_id2) as (
 
 create temporary view repd_dedup as 
 select repd_id1 as repd_id, max(repd_id2) as master_repd_id
-  from clusters
+  from repd_clusters
   group by repd_id1;
 
 /* 
