@@ -1,4 +1,4 @@
-/* 
+/*
 ** Solar PV database creation and data ingest
 ** March 2020
 ** Authors: Ed Chalstery and James Geddes
@@ -27,13 +27,11 @@ create extension if not exists postgis;
 \include fit.sql
 \include mv.sql
 
--- 2. Preliminary matching
+-- 2. Preliminary matching (REPD IDs already present in OSM)
 
-\include match-osm-repd.sql
+\include map-osm-repd.sql
 
 -- 3. Deduplicate
 
 \include dedup-osm.sql
-\include dedup-repd.sql 
-
-
+\include dedup-repd.sql
