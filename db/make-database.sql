@@ -35,3 +35,7 @@ create extension if not exists postgis;
 
 \include dedup-osm.sql
 \include dedup-repd.sql
+
+-- 4. Create matching table
+
+\include data-matching.sql
