@@ -36,6 +36,10 @@ create extension if not exists postgis;
 \include dedup-osm.sql
 \include dedup-repd.sql
 
--- 4. Create matching table
+-- 4. Find neighbours
+
+\include neighbour-finding.sql
+
+-- 5. Create matching table
 
 \include data-matching.sql
