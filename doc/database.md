@@ -12,17 +12,16 @@ pre-processing has already taken place.
 
 In summary, the final tables created, and row counts as of commit `0d8d38b` are:
 
-| Table                 | Row count | Dedup'd entity field | Dedup'd entity count |
-|-----------------------+-----------+----------------------+----------------------|
-| `osm`                 |    126939 | `master_osm_id`      |               119427 |
-| `repd`                |      1147 | `master_repd_id`     |                 1078 |
-| `fit`                 |    863079 |                      |                      |
-| `machine_vision`      |      2221 |                      |                      |
-| `osm_repd_id_mapping` |       933 |                      |                      |
+| Table                 | Row count | Master entity field | Master entity count |
+|-----------------------|-----------|---------------------|---------------------|
+| `osm`                 |    126,939| `master_osm_id`     |              119,427|
+| `repd`                |      1,986| `master_repd_id`    |               1,736 |
+| `fit`                 |    863,079|                     |                     |
+| `machine_vision`      |      2,221|                     |                     |
+| `osm_repd_id_mapping` |       933 |                     |                     |
 
-(In the above table, the deduplicated entity count is the sum of the distinct
-entries in the named column, plus the count of rows for which that column is
-`NULL`.)
+(In the above table, the master entity count is the number of the distinct
+entries in the named column)
 
 # 1. Database creation scripts
 
@@ -54,8 +53,8 @@ default schema.
 - `raw.repd`: The raw REPD data.
 - `repd`: The REPD data, restricted to solar PV technologies.
 - `osm`: The OSM data, de-duplicated.
-- `fit`: The FiT data. 
-- `machine_vision`: The machine vision data. 
+- `fit`: The FiT data.
+- `machine_vision`: The machine vision data.
 
 A field, `area`, is added to the `fit` table, containing an estimate of the area
 of the solar panel(s) based on the declared net capacity.
@@ -90,7 +89,7 @@ necessarily represent a unique installation.
 
 ### Machine Vision: `mv_id`
 
-We have added a row identifier, `mv_id`, to the pre-processed machine vision dataset. 
+We have added a row identifier, `mv_id`, to the pre-processed machine vision dataset.
 
 # 2. Preliminary matching between OSM and REPD
 
@@ -100,7 +99,7 @@ identifiers.
 The entries in the OSM dataset were tagged (in the original data) with zero
 or more REPD identifiers. These are present in the field `repd_id_str` as a
 semicolon-separated list. The script `match-osm-repd.sql` “un-nests” these
-identifiers as a set of rows matched to the corresponding `osm_id`. 
+identifiers as a set of rows matched to the corresponding `osm_id`.
 
 # 3. Deduplication of the OSM dataset
 
@@ -141,7 +140,7 @@ equivalence relation we form the transitive closure of the proximity relation.
 Taking the transitive closure is acheived in SQL through the use of a "recursive
 common table expression" (recursive CTE). In the script, it is the query that
 begins “`WITH RECURSIVE ...`”. The primary use of recursive CTEs is, in fact, to
-compute transitive closures. 
+compute transitive closures.
 
 
 # 4. Deduplication of the REPD dataset
@@ -153,19 +152,7 @@ Deduplication proceeds in a similar manner to the OSM database. We use a
 slightly larger distance threshold (1380 m) but include a measure of similarity
 between the installation names using Postgres' `similarity` function. In
 addition, prior to computing the similarity of names, we “normalise” the names
-to remove certain common words (such as “farm”). 
+to remove certain common words (such as “farm”).
 
 As with the OSM data, a new field, `master_repd_id` is added to the `repd` table
 that is non-`NULL` and unique for sites that are believed to be the same site.
-
-
-
-
-
-
-
-
-
-
-
-
