@@ -1,46 +1,27 @@
--- Before running this query:
--- 1. Create DB with database/solar_db.sql
--- 2. Create osm_repd_neighbours table with db/osm-repd/find-closest-repd-to-osm.sql
+--- Match rule 4 (see doc/matching.md)
+-- insert into matches
 
-drop table if exists match_rule_13_results;
-drop table if exists temp_table;
+select repd.master_repd_id,
+       osm.master_osm_id,
+       osm_repd_neighbours.distance_meters,
+       CONCAT  (osm.objtype, '/', osm.osm_id) AS "osm",
+       repd.latitude as r_lat,
+       repd.longitude as r_lon,
+       repd.site_name,
+       osm.capacity as osm_cap,
+       repd.capacity as repd_cap
 
-select
-  osm_repd_neighbours.osm_id,
-  osm_repd_id_mapping.repd_id as osm_repd_id,
-  osm_repd_neighbours.closest_geo_match_from_repd_repd_id,
-  osm_repd_neighbours.closest_geo_match_from_repd_co_location_repd_id,
-  -- osm_repd_neighbours.site_name,
-  osm_repd_neighbours.distance_meters
-into temp_table
-from osm_repd_neighbours
-left join osm_repd_id_mapping on osm_repd_neighbours.osm_id = osm_repd_id_mapping.osm_id
-where osm_repd_neighbours.distance_meters < 3000;
-
-select
-  CONCAT  (osm.objtype, '/', temp_table.osm_id) AS "osm",
-  temp_table.osm_repd_id,
-  temp_table.closest_geo_match_from_repd_repd_id as match_repd_id,
-  temp_table.closest_geo_match_from_repd_co_location_repd_id as match_co_repd,
-  repd.site_name,
-  temp_table.distance_meters,
-  -- osm.objtype,
-  -- osm.plantref,
-  -- osm.time_created,
-  -- osm.area,
-  osm.capacity as osm_capacity,
-  repd.capacity as repd_capacity,
-  repd.latitude as r_lat,
-  repd.longitude as r_lon,
-  repd.operational
-into match_rule_13_results
-from temp_table, osm, repd
-where temp_table.osm_id = osm.osm_id
-and temp_table.closest_geo_match_from_repd_repd_id = repd.repd_id -- use this to display other repd fields
-and osm.objtype = 'node'
-and repd.site_name like '%Scheme%';
-
-drop table temp_table;
-
-select *
-from match_rule_13_results;
+  from osm_repd_neighbours, osm, repd
+  where osm_repd_neighbours.osm_id = osm.osm_id
+  and osm_repd_neighbours.closest_geo_match_from_repd_repd_id = repd.repd_id
+  and osm.osm_id = osm.master_osm_id
+  and repd.repd_id = repd.master_repd_id
+  and not exists (
+    select
+    from matches
+    where matches.master_repd_id = repd.master_repd_id
+    or matches.master_osm_id = osm.master_osm_id
+  )
+  and osm.objtype = 'node'
+  and repd.site_name like '%Scheme%'
+  and osm_repd_neighbours.distance_meters < 3000;
