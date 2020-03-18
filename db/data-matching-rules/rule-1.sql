@@ -1,10 +1,10 @@
 -- Match rule 1 (see doc/matching.md)
-\echo -n Performing match rule one...
+\echo -n Performing match rule 1...
 
 drop table if exists repd_copy;
 select * into repd_copy from repd_operational;
 insert into matches
-select 1, repd_copy.master_repd_id, osm.master_osm_id
+select '1', repd_copy.master_repd_id, osm.master_osm_id
   from osm_with_existing_repd_neighbours, osm, repd_operational, repd_copy
   -- Table linking:
   where osm_with_existing_repd_neighbours.osm_id = osm.osm_id

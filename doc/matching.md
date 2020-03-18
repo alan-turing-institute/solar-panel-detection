@@ -12,7 +12,7 @@ This note documents the matching of entities between the various datasets in the
 4. Nearest REPD neighbour for OSM nodes, where REPD has "Scheme" in the title, with a distance threshold of 5KM.
 5. Repeat 4, with no distance threshold
 
-Repeat matching rules 1-5 for non-operational REPD entries
+Repeat matching rules 1-5 for non-operational REPD entries. Label these match rules 1a, 2a etc.
 
 # Matches
 
@@ -23,6 +23,11 @@ Repeat matching rules 1-5 for non-operational REPD entries
 |  3   |  88   |  913  |
 |  4   |  1,192|  2,105|
 |  5   |  68   |  2,173|
+|  1a  |  2    |  2,175|
+|  2a  |  0    |  2,175|
+|  3a  |  46   |  2,221|
+|  4a  |  893  |  3,114|
+|  5a  |  0    |  3,114|
 
 # Notes
 

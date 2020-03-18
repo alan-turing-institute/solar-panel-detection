@@ -2,7 +2,7 @@
 \echo -n Performing match rule 4...
 
 insert into matches
-select 4, repd_operational.master_repd_id, osm.master_osm_id
+select '4', repd_operational.master_repd_id, osm.master_osm_id
   from osm_repd_neighbours, osm, repd_operational
   -- Table linking:
   where osm_repd_neighbours.osm_id = osm.osm_id
