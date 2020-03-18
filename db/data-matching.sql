@@ -10,7 +10,12 @@ create table matches (
   fit_id         integer
 );
 
--- TODO: perform matching a second time, for non-operational REPD
+drop table if exists repd_operational;
+select * into repd_operational from repd where dev_status = 'Operational';
+
+drop table if exists repd_non_operational;
+select * into repd_non_operational from repd where dev_status != 'Operational';
+
 \include data-matching-rules/rule-1.sql
 \include data-matching-rules/rule-2.sql
 \include data-matching-rules/rule-3.sql
