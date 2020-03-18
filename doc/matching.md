@@ -22,7 +22,10 @@ Repeat matching rules 1-5 for non-operational REPD entries
 |  2   |  0    |  876  |
 |  3   |  89   |  965  |
 |  4   |  1,233|  2,198|
+|  5   |  140  |  2,338|
 
 # Notes
 
 Doesn't look like any of the nodes where nearest REPD is not a scheme are genuine matches. Many matches to "Goldthorpe" REPD, which made me think this could be a scheme. Unlikely though, because the operator is Aldi.
+
+Rule 4/5 are intended to distinguish between those OSM nodes that are very likely to be part of a scheme and those that are slightly less likely.

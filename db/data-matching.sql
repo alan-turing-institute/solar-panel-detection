@@ -15,3 +15,4 @@ create table matches (
 \include data-matching-rules/rule-2.sql
 \include data-matching-rules/rule-3.sql
 \include data-matching-rules/rule-4.sql
+\include data-matching-rules/rule-5.sql
