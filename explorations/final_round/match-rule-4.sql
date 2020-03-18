@@ -24,4 +24,5 @@ select repd.master_repd_id,
   )
   and osm.objtype = 'node'
   and repd.site_name like '%Scheme%'
-  and osm_repd_neighbours.distance_meters < 3000;
+  and osm_repd_neighbours.distance_meters < 5000
+  order by osm_repd_neighbours.distance_meters;
