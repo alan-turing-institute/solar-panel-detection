@@ -1,4 +1,4 @@
--- Match rule 1 (see doc/matching.md)
+-- Match rule 1a (see doc/matching.md)
 \echo -n Performing match rule 1a...
 
 drop table if exists repd_copy;
