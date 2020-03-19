@@ -1,3 +1,6 @@
+drop table if exists osm_ways_relations;
+select * into osm_ways_relations from osm  where osm.objtype != 'node';
+
 drop table if exists osm_mv_neighbours;
 select closest_pt.osm_id,
        closest_pt.tag_start_date as osm_date,
@@ -10,9 +13,11 @@ select closest_pt.osm_id,
   from machine_vision
   CROSS JOIN LATERAL
     (SELECT
-       osm.osm_id,
-       osm.tag_start_date,
-       osm.area,
-       machine_vision.location::geography <-> osm.location::geography as distance_meters
-       FROM osm
+       osm_ways_relations.osm_id,
+       osm_ways_relations.tag_start_date,
+       osm_ways_relations.area,
+       machine_vision.location::geography <-> osm_ways_relations.location::geography as distance_meters
+       FROM osm_ways_relations
      LIMIT 1) AS closest_pt;
+
+drop table osm_ways_relations;
