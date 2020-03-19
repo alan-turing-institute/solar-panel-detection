@@ -13,12 +13,11 @@ REPD and OSM matching
 5. Looks like most of the OSM entries with "capacity" are those taken directly from REPD (already have a tagged REPD id), so not sure how useful capacity will be for matching
 
 |                                              |                                                     Counts |
-|----------------------------------------------+------------------------------------------------------------|
+|----------------------------------------------|------------------------------------------------------------|
 | OSM total                                    |                                                    126,939 |
 | REPD total                                   |                                                      5,686 |
 | REPD tech_type = 'Solar Photovoltaics'       |                                                      1,986 |
 | ^ of which operational date not blank        |                                                      1,147 |
-|----------------------------------------------+------------------------------------------------------------|
 | OSM without REPD id                          |                                                    126,046 |
 | OSM with REPD id                             |                                                        893 |
 | OSM with REPD id and objtype = node `*`      |                                                          0 |
@@ -27,23 +26,18 @@ REPD and OSM matching
 | REPD ids present in OSM `**`                 |                                                        933 |
 | OSM with REPD id not in REPD                 | 1 (one of the OSM entries appears to have the repd_id `0`) |
 | OSM with REPD id in REPD                     |                                                        892 |
-|----------------------------------------------+------------------------------------------------------------|
 | Unique REPD ids in OSM                       |                                                        924 |
 | REPD ids in OSM inc. duplicates              |                                                        932 |
 | REPD with id not in OSM                      |                                                      4,762 |
-|----------------------------------------------+------------------------------------------------------------|
 | OSM with recorded capacity                   |                                                       1116 |
 | OSM with recorded capacity and REPD id       |                                                        872 |
 | OSM with recorded capacity without REPD id   |                                                        244 |
-|----------------------------------------------+------------------------------------------------------------|
 | OSM with REPD id and location = 'roof'       |                                                          0 |
 | OSM with REPD id and location = 'ground'     |                                                         22 |
 | OSM with REPD id and location = 'surface'    |                                                          9 |
-|----------------------------------------------+------------------------------------------------------------|
 | OSM with "plantref"                          |                                                      7,056 |
 | OSM with "plantref" and REPD id              |                                                        845 |
 | OSM with "plantref" and no REPD id           |                                                      6,211 |
-|----------------------------------------------+------------------------------------------------------------|
 | OSM with tag_power = 'plant'                 |                                                        917 |
 | OSM with tag_power = 'generator'             |                                                    126,022 |
 | OSM with tag_power = 'plant' and REPD id     |                                                        837 |
@@ -258,14 +252,19 @@ WARNING: These match results will have multiple rows for some OSM ids where ther
 | 10a  | 602 |
 | 10b  | 374 |
 | 10c | 298 |
-| 11 | 763 |
+| 11 | 866 |
+
+### Before REPD/OSM de-duplicated
 
 1. **Match Rule 9a:** If the closest REPD point to an OSM point is <500m away and the OSM record already has an REPD id tagged which is different
     - **Match Rule 9b:** 9a but only the REPD that are operational
 2. **Match Rule 10a:** If the closest REPD point to an OSM **way or relation** is <500m away and matched REPD was already correctly tagged in OSM
     - **Match Rule 10b:** 10a but where the REPD id in OSM was different or non-existent (9a + non-existent)
     - **Match Rule 10c:** 10b but only the REPD that are operational (9b + non-existent)
-3. **Match Rule 11:** If closest REPD point to an OSM point is that which is already tagged or the co-repd-id of the match (see results, all are ways and relations).
+
+### After REPD/OSM de-duplicated
+
+3. **Match Rule 11:** If closest REPD point to an OSM point is that which is already tagged or the co-repd-id of the match, or the master_repd_id (see results, all are ways and relations).
 3. **Match Rule 12:** If the closest REPD point to an OSM **node** is <500m away, excluding REPD with "Scheme" in the title
 4. **Match Rule 13:** If the closest REPD *scheme* to an OSM **node** is <500m away
     - Try this with a wider area (e.g. 2000m)
@@ -306,6 +305,8 @@ OSM-FiT matching
 
 Output dataset
 --------
+
+*Moved this to a new doc: doc/matching.md*
 
 ### Accepted matches
 

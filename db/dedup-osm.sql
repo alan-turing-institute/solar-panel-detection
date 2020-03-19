@@ -1,16 +1,16 @@
 /*
 ** Deduplicate the OSM dataset and add field `master_osm_id`
 **
-** Some OSM rows represent geographical entities that are in reality component parts 
-** of a single installation (often a solar "farm"). 
-** This script adds a field `master_osm_id` that contains a unique `osm_id` for all 
+** Some OSM rows represent geographical entities that are in reality component parts
+** of a single installation (often a solar "farm").
+** This script adds a field `master_osm_id` that contains a unique `osm_id` for all
 ** members of a single group.
 */
 
 \echo -n Deduplicating OSM dataset ...
 
 -- PARAMETERS: cluster_distance is the distance (in metres) within which we count
--- two objects as certainly being part of the same cluster. 
+-- two objects as certainly being part of the same cluster.
 
 \set cluster_distance 300
 
@@ -42,8 +42,8 @@ select objtype,
 /*
 ** Deduplicate objects that are part of the same farm
 **
-** 1. Find groups of objects within 300m of each other; 
-** 2. Call these "the same" and close over this equivalence relation  
+** 1. Find groups of objects within 300m of each other;
+** 2. Call these "the same" and close over this equivalence relation
 ** 3. Choose one osm_id from each equivalence class
 */
 
@@ -52,13 +52,13 @@ select objtype,
 -- osm_parts(osm_id1, osm_id2)
 -- All pairs of objects that are within 300m of each other
 
-create temporary view osm_parts as 
+create temporary view osm_parts as
 with maybe_dupes(osm_id, location) as (
   -- ignore nodes, (various misspellings of) rooftop things,
   -- and cases where there is already a master_osm_id.
-  -- NB. "X is not true" is true if X is false or X is null 
+  -- NB. "X is not true" is true if X is false or X is null
   select osm_id, location from osm
-  where 
+  where
     objtype != 'node'
     and (located in ('roof', 'rood', 'roofq', 'rof', 'roofs')) is not true
     and master_osm_id is null
@@ -78,7 +78,7 @@ with recursive osm_clusters(osm_id1, osm_id2) as (
     from osm_parts
   union
     select osm_clusters.osm_id1 as osm_id1, osm_parts.osm_id2 as osm_id2
-    from osm_clusters cross join osm_parts 
+    from osm_clusters cross join osm_parts
     where osm_clusters.osm_id2 = osm_parts.osm_id1
   )
   select osm_id1, osm_id2 FROM osm_clusters;
@@ -92,7 +92,7 @@ select osm_id1 as osm_id, max(osm_id2) as master_osm_id
   from osm_clusters
   group by osm_id1;
 
-/* 
+/*
 ** Merge the new groupings into the osm table
 */
 
@@ -101,4 +101,9 @@ update osm
     (select master_osm_id
      from osm_dedup
      where osm_dedup.osm_id = osm.osm_id)
+  where master_osm_id is null;
+
+-- Add master id identical to id for all singletons, to aid matching
+update osm
+  set master_osm_id = osm_id
   where master_osm_id is null;

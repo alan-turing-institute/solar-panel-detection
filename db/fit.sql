@@ -2,12 +2,12 @@
 ** Create table containing FIT dataset
 */
 
-\echo Creating FIT table ... 
+\echo Creating FIT table ...
 
 drop table if exists fit;
 
 create table fit (
-  row_id                int,
+  fit_id                int,
   extension             char(1),
   postcode_stub         varchar(7),
   technology            varchar(24),
@@ -40,4 +40,3 @@ alter table fit
 
 update fit
   set area = declared_net_capacity/52;
-

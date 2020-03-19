@@ -1,6 +1,6 @@
 /*
 ** Deduplicate the REPD dataset.
-** 
+**
 ** Identify individual entries as being the same solar farm if:
 ** 1. They are within a certain disance; and
 ** 2. They have a "similar" name
@@ -17,7 +17,7 @@ create extension if not exists pg_trgm; -- trigram matching
 -- PARAMETERS:
 --
 -- cluster_distance is the distance (in metres) within which we count
--- two objects as potentially being part of the same cluster. 
+-- two objects as potentially being part of the same cluster.
 --
 -- name_distance is the threshold (in trigram matching) for counting two site
 -- names as potentially representing the same site.
@@ -32,7 +32,7 @@ with temp(repd_id, location, reduced_site_name) as (
   -- Within `site_name` remove the following strings:
   --   solar, Solar, park, Park, farm, Farm, resubmission, (resubmission), (Resubmission),
   --   extension, Extension, ()
-  -- also remove ' - ' and reduce two consecutive spaces to one. 
+  -- also remove ' - ' and reduce two consecutive spaces to one.
   select repd_id,
          location,
          regexp_replace(
@@ -62,7 +62,7 @@ with recursive repd_clusters(repd_id1, repd_id2) as (
     from repd_parts
   union
     select repd_clusters.repd_id1 as repd_id1, repd_parts.repd_id2 as repd_id2
-    from repd_clusters cross join repd_parts 
+    from repd_clusters cross join repd_parts
     where repd_clusters.repd_id2 = repd_parts.repd_id1
   )
   select repd_id1, repd_id2 FROM repd_clusters;
@@ -72,12 +72,12 @@ with recursive repd_clusters(repd_id1, repd_id2) as (
 -- master_repd_id is the largest repd_id over all objects within the
 -- same cluster
 
-create temporary view repd_dedup as 
+create temporary view repd_dedup as
 select repd_id1 as repd_id, max(repd_id2) as master_repd_id
   from repd_clusters
   group by repd_id1;
 
-/* 
+/*
 ** Merge the new groupings into the repd table
 */
 
@@ -93,3 +93,7 @@ update repd
       where repd_dedup.repd_id = repd.repd_id)
     where master_repd_id is null;
 
+-- Add master id identical to id for all singletons, to aid matching
+update repd
+  set master_repd_id = repd_id
+  where master_repd_id is null;

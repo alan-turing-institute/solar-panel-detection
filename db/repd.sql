@@ -90,9 +90,7 @@ update raw.repd
 -- Restrict REPD to operational Solar PV only
 select * into repd
   from raw.repd
-  where tech_type = 'Solar Photovoltaics'
-    and dev_status = 'Operational';
+  where tech_type = 'Solar Photovoltaics';
 
 alter table repd
   drop column tech_type;
-

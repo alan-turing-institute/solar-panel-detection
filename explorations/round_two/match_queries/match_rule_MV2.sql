@@ -1,9 +1,10 @@
 -- Before running this query:
 -- 1. Create DB with database/solar_db.sql
 -- 2. Create osm_mv_closest table with ../osm-mv/find-closest-mv-to-osm.sql
-drop table if exists match_rule_mv1_results;
+drop table if exists match_rule_mv2_results;
 select
   osm_mv_closest.osm_id,
+  osm.master_osm_id,
   machine_vision.mv_id,
   osm_mv_closest.osm_date,
   osm_mv_closest.mv_date,
@@ -16,17 +17,19 @@ select
   machine_vision.longitude as mv_lon,
   osm.objtype,
   osm.located
-into match_rule_mv1_results
+into match_rule_mv2_results
 from osm_mv_closest, osm, machine_vision
 where distance_meters < 500
 and osm.osm_id = osm_mv_closest.osm_id
 and machine_vision.mv_id = osm_mv_closest.mv_id
--- and osm.objtype != 'node' -- ignore nodes
+and osm.objtype != 'node' -- ignore nodes
 -- and osm.located != 'roof' -- ignore rooftop things
 -- and osm.located != 'rood'
 -- and osm.located != 'roofq'
 -- and osm.located != 'rof'
 -- and osm.located != 'roofs'
+and (osm.osm_id != osm.master_osm_id -- ignore non-master objects
+  or osm.master_osm_id is null)
 order by distance_meters;
 
-select * from match_rule_mv1_results;
+select * from match_rule_mv2_results;
