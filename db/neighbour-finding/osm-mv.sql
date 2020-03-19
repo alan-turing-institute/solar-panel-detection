@@ -18,6 +18,7 @@ select closest_pt.osm_id,
        osm_ways_relations.area,
        machine_vision.location::geography <-> osm_ways_relations.location::geography as distance_meters
        FROM osm_ways_relations
+       ORDER BY machine_vision.location::geography <-> osm_ways_relations.location::geography
      LIMIT 1) AS closest_pt;
 
 drop table osm_ways_relations;
