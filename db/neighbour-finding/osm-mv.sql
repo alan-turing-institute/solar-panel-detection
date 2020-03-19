@@ -1,19 +1,18 @@
 drop table if exists osm_mv_neighbours;
-select osm.osm_id,
-       osm.tag_start_date as osm_date,
-       closest_pt.install_date as mv_date,
-       osm.area as osm_area,
-       closest_pt.area as mv_area,
+select closest_pt.osm_id,
+       closest_pt.tag_start_date as osm_date,
+       machine_vision.install_date as mv_date,
+       closest_pt.area as osm_area,
+       machine_vision.area as mv_area,
        closest_pt.distance_meters,
-       closest_pt.mv_id as mv_id
+       machine_vision.mv_id as mv_id
   into osm_mv_neighbours
-  from osm
+  from machine_vision
   CROSS JOIN LATERAL
     (SELECT
-       machine_vision.mv_id,
-       machine_vision.install_date,
-       machine_vision.area,
-       osm.location::geography <-> machine_vision.location::geography as distance_meters
-       FROM machine_vision
-       ORDER BY osm.location::geography <-> machine_vision.location::geography
+       osm.osm_id,
+       osm.tag_start_date,
+       osm.area,
+       machine_vision.location::geography <-> osm.location::geography as distance_meters
+       FROM osm
      LIMIT 1) AS closest_pt;
