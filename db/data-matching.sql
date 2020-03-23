@@ -32,3 +32,6 @@ select * into repd_non_operational from repd where dev_status != 'Operational';
 
 -- REPD-MV matching
 \include data-matching-rules/rule-6.sql
+
+-- OSM-MV matching
+\include data-matching-rules/rule-7.sql
