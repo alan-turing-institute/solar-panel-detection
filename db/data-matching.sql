@@ -10,6 +10,7 @@ create table matches (
   fit_id         integer
 );
 
+-- OSM-REPD matching for operational installations
 drop table if exists repd_operational;
 select * into repd_operational from repd where dev_status = 'Operational';
 
@@ -19,6 +20,7 @@ select * into repd_operational from repd where dev_status = 'Operational';
 \include data-matching-rules/rule-4.sql
 \include data-matching-rules/rule-5.sql
 
+-- OSM-REPD matching for non-operational installations
 drop table if exists repd_non_operational;
 select * into repd_non_operational from repd where dev_status != 'Operational';
 
@@ -27,3 +29,6 @@ select * into repd_non_operational from repd where dev_status != 'Operational';
 \include data-matching-rules/rule-3a.sql
 \include data-matching-rules/rule-4a.sql
 \include data-matching-rules/rule-5a.sql
+
+-- REPD-MV matching
+\include data-matching-rules/rule-6.sql

@@ -22,7 +22,7 @@ Repeat matching rules 1-5 for non-operational REPD entries. Label these match ru
 
 First, proximity match to get the nearest neighbouring OSM way/relation for every single Machine Vision object and separately, the nearest REPD for each Machine Vision Object.
 
-6. Nearest neighbour REPD to each Machine Vision object, below a distance threshold, where area is in the same order of magnitude.
+6. Nearest neighbour REPD to each Machine Vision object, below a 1000m distance threshold.
 7. Nearest neighbour OSM way/relation to each Machine Vision object, but only those that didn't already find a match with REPD (bear in mind that REPD already linked to OSM at this point).
 
 # Matches
