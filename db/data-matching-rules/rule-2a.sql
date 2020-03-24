@@ -1,4 +1,4 @@
--- Match rule 2 (see doc/matching.md)
+-- Match rule 2a (see doc/matching.md)
 \echo -n Performing match rule 2a...
 
 insert into matches
