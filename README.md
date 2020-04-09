@@ -19,16 +19,10 @@ Data sources will be from Open Street Maps, which has been tagging solar panels 
 
 ## REG Project
 
-### Goal
+### Goals
 
-Aggregate UK solar PV data into a structured format, which can be accessed.
-
-Dan Stowell says: "Plan A" is to use an instance of the OpenStreetMap (OSM) server which Damien (openclimatefix) has spun up, as the primary data warehouse. This can host the data for us in OSM's native format, while allowing us to add the extra metadata that wouldn't normally be in OSM (i.e. that from linked data sources FiT and REPD, see below).
-
-### Challenges
-
-1. Link the tagged panels in OSM to the other data sources
-2. Unsure: *Find other solar PV objects in OSM based on other data sources?*
+1. Aggregate UK solar PV data into a structured format, which can be accessed.
+2. Link the tagged panels in OSM to the other data sources
 
 ## Overview of the directory structure
 
@@ -50,39 +44,40 @@ Dan Stowell says: "Plan A" is to use an instance of the OpenStreetMap (OSM) serv
 
 Data is held in three directories: `as_received` contains the data precisely as
 downloaded from its original source and in its original format; `raw` contains
-data that has been restructured or reformatted to be suitable for use by
-software in the project (for example, as `csv` files ready for upload to a
-database). `processed` contains data that may have been processed in some way,
-such as by Python code, but is still thought of as “source” data.
+data that has been manually restructured or reformatted to be suitable for use by
+software in the project (see "Using this repo" header below). `processed` contains data that may have been processed in some way, such as by Python code, but is still thought of as “source” data.
 
 The following sources of data are used:
 
-- OpenStreetMap - [Great Britain download (Geofabrik)](https://download.geofabrik.de/europe/great-britain.html). Dan Stowell has sent a data file that includes tagged UK solar PV objects for the UK.
+- OpenStreetMap - [Great Britain download (Geofabrik)](https://download.geofabrik.de/europe/great-britain.html). @danstowell has sent a data file that includes tagged UK solar PV objects for the UK.
     - [OSM data types](https://wiki.openstreetmap.org/wiki/Elements)
     - [Solar PV tagging](https://wiki.openstreetmap.org/wiki/Tag:generator:source%3Dsolar)
-    - Osmium package [pyosmium](https://github.com/osmcode/pyosmium) - `pip install osmium`
 - [FiT](https://www.ofgem.gov.uk/environmental-programmes/fit/contacts-guidance-and-resources/public-reports-and-data-fit/installation-reports) - Report of installed PV (and other tech including wind). 100,000s entries.
 - [REPD](https://www.gov.uk/government/publications/renewable-energy-planning-database-monthly-extract) - Official UK data from the "renewable energy planning database". Large solar farms only.
+- Machine Vision dataset - supplied by Descartes labs (Oxford)
 
-## Output
+## Project outcome
 
-FIXME: Edit this section
-
-What we should have by the end of the project is a set of scripts that will take
+This repo includes a set of scripts that will take
 input datasets (REPD, OSM, FiT and machine vision – each in diff format),
 perform data cleaning/conversion, populate a PostgreSQL database, perform
-grouping of data where necessary (duplicate entries in REPD, multiple solar farm
+grouping of data where necessary (there are duplicate entries in REPD, multiple solar farm
 components in OSM) and then match entries between the data tables, based on the
 matching criteria we have come up with.
 
-The result of matching will be table(s) that link the unique identifiers of the
-data tables. These should also link somehow to info on how each of the matches
-were determined (which rules they satisfied), which will be written up in
-documentation.
+The database creation and matching scripts should work with newer versions of the source data files (in `as_received`), or at least do so with minimal changes to the data processing (see "Using this repo" below).
 
-The data cleaning, grouping and matching stages will all be documented as fully
-as possible. It should be possible for anyone to refer to this GitHub repo,
-follow the instructions to create the db and run matching (possibly as simple as
-a single make command) with either the current datasets or newer versions
-(e.g. more recently downloaded REPD spreadsheet) and then have the match
-table(s) in Postgres.
+The result of matching is a table in the database called `matches` that links the unique identifiers of the
+data tables. This also contains a column called `match_rule`, which refers to the method by which the match was determined, as documented in [doc/matching](doc/matching.md).
+
+## Using this repo
+
+1. Download the datasets described above (or obtain from @danstowell) and save them in `data/as_recieved`.
+2. Carry out manual edits to the data files, as described in [doc/preprocessing](doc/preprocessing.md) and save them in `data/raw` the names suggested by the doc.
+3. Navigate to `data/processed` and type `make` - this will create versions of the data files ready for import to PostgreSQL
+4. Make sure you have PostgreSQL on your machine, then run the command: `createdb hut23-425 "Solar PV database matching"` - this creates the empty database.
+5. Navigate to `db` and run the command `psql -f make-database.sql hut23-425` - this populates the database (see [doc/database](doc/database.md)), carries out some de-duplication of the datasets and performs the matching procedure (see [doc/matching](doc/matching.md)). Note: this may take several minutes.
+
+## External collaborators guidance
+
+From April 2020 this repo is no longer under active development, however a fork of the project is being created by [Open Climate Fix](https://github.com/openclimatefix) if you wish to open issues and pull requests there.
