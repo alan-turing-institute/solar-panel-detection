@@ -72,7 +72,7 @@ data tables. This also contains a column called `match_rule`, which refers to th
 
 ## Using this repo
 
-1. Download the datasets described above (or obtain from @danstowell) and save them in `data/as_recieved`.
+1. Download the datasets described above (or obtain from [@danstowell](https://github.com/danstowell)) and save them in `data/as_recieved`.
 2. Carry out manual edits to the data files, as described in [doc/preprocessing](doc/preprocessing.md) and save them in `data/raw` the names suggested by the doc.
 3. Navigate to `data/processed` and type `make` - this will create versions of the data files ready for import to PostgreSQL
 4. Make sure you have PostgreSQL on your machine, then run the command: `createdb hut23-425 "Solar PV database matching"` - this creates the empty database.
