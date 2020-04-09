@@ -30,7 +30,7 @@ create table fit (
   llsoa_code            varchar(20)
 );
 
-\copy fit from '../data/processed/fit-2019-09.csv' delimiter ',' csv header;
+\copy fit from '../data/processed/fit.csv' delimiter ',' csv header;
 
 -- Add roughly calculated area for FiT entries to aid matching.
 -- Solar PV has power approx. 52W / m^2

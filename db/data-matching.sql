@@ -31,6 +31,7 @@ select * into repd_non_operational from repd where dev_status != 'Operational';
 \include data-matching-rules/rule-5a.sql
 
 -- REPD-MV matching
+-- TODO: Reduce maximum matches to the number of REPD and make only one match per REPD?
 \include data-matching-rules/rule-6.sql
 
 -- OSM-MV matching

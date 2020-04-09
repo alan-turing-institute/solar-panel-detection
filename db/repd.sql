@@ -60,7 +60,7 @@ create table raw.repd (
   primary key (repd_id)
 );
 
-\copy raw.repd from '../data/processed/repd-2019-09.csv' delimiter ',' csv header;
+\copy raw.repd from '../data/processed/repd.csv' delimiter ',' csv header;
 
 
 /* -----------------------------------------------------------------------------
