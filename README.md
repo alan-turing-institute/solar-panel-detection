@@ -77,3 +77,7 @@ data tables. This also contains a column called `match_rule`, which refers to th
 3. Navigate to `data/processed` and type `make` - this will create versions of the data files ready for import to PostgreSQL
 4. Make sure you have PostgreSQL on your machine, then run the command: `createdb hut23-425 "Solar PV database matching"` - this creates the empty database.
 5. Navigate to `db` and run the command `psql -f make-database.sql hut23-425` - this populates the database (see [doc/database](doc/database.md)), carries out some de-duplication of the datasets and performs the matching procedure (see [doc/matching](doc/matching.md)). Note: this may take several minutes.
+
+## External collaborators guidance
+
+From April 2020 this repo is no longer under active development, however a fork of the project is being created by [Open Climate Fix](https://github.com/openclimatefix) if you wish to open issues and pull requests there.
