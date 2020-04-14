@@ -1,8 +1,5 @@
 # Directory structure
 
-NOTE: The subdirectories `as_received` and `raw` should be set up to be symbolic
-links to those directories on the shared drive.
-
 `as_received`
 
 : Datasets precisely in the form in which we originally got them, unchanged in
