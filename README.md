@@ -53,8 +53,8 @@ The following sources of data are used:
     - [OSM data types](https://wiki.openstreetmap.org/wiki/Elements)
     - [Solar PV tagging](https://wiki.openstreetmap.org/wiki/Tag:generator:source%3Dsolar)
 - [FiT](https://www.ofgem.gov.uk/environmental-programmes/fit/contacts-guidance-and-resources/public-reports-and-data-fit/installation-reports) - Report of installed PV (and other tech including wind). 100,000s entries.
-- [REPD](https://www.gov.uk/government/publications/renewable-energy-planning-database-monthly-extract) - Official UK data from the "renewable energy planning database". Large solar farms only.
-- Machine Vision dataset - supplied by Descartes labs (Oxford)
+- [REPD](https://www.gov.uk/government/publications/renewable-energy-planning-database-monthly-extract) - Official UK data from the "renewable energy planning database". It contains large solar farms only.
+- Machine Vision dataset - supplied by Descartes labs (Oxford), not publicly available yet.
 
 ## Project outcome
 
