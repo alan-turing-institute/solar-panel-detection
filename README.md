@@ -30,8 +30,8 @@ Data sources will be from Open Street Maps, which has been tagging solar panels 
 .
 |-- admin            -- project process and planning docs
 |-- data
-|   |-- as_received  -- symbolic link
-|   |-- raw          -- symbolic link
+|   |-- as_received  -- downloaded data files
+|   |-- raw          -- manually edited files (replace dummy data)
 |   |-- processed
 |-- db               -- database creation
 |-- doc              -- documentation
@@ -49,7 +49,7 @@ software in the project (see "Using this repo" header below). `processed` contai
 
 The following sources of data are used:
 
-- OpenStreetMap - [Great Britain download (Geofabrik)](https://download.geofabrik.de/europe/great-britain.html). @danstowell has sent a data file that includes tagged UK solar PV objects for the UK.
+- OpenStreetMap - [Great Britain download (Geofabrik)](https://download.geofabrik.de/europe/great-britain.html).
     - [OSM data types](https://wiki.openstreetmap.org/wiki/Elements)
     - [Solar PV tagging](https://wiki.openstreetmap.org/wiki/Tag:generator:source%3Dsolar)
 - [FiT](https://www.ofgem.gov.uk/environmental-programmes/fit/contacts-guidance-and-resources/public-reports-and-data-fit/installation-reports) - Report of installed PV (and other tech including wind). 100,000s entries.
@@ -65,16 +65,31 @@ grouping of data where necessary (there are duplicate entries in REPD, multiple 
 components in OSM) and then match entries between the data tables, based on the
 matching criteria we have come up with.
 
-The database creation and matching scripts should work with newer versions of the source data files (in `as_received`), or at least do so with minimal changes to the data processing (see "Using this repo" below).
+The database creation and matching scripts should work with newer versions of the source data files, or at least do so with minimal changes to the data processing (see "Using this repo" below).
 
 The result of matching is a table in the database called `matches` that links the unique identifiers of the
 data tables. This also contains a column called `match_rule`, which refers to the method by which the match was determined, as documented in [doc/matching](doc/matching.md).
 
 ## Using this repo
 
-1. Download the datasets described above (or obtain from [@danstowell](https://github.com/danstowell)) and save them in `data/as_recieved`.
-2. Carry out manual edits to the data files, as described in [doc/preprocessing](doc/preprocessing.md) and save them in `data/raw` as names suggested by the doc, replacing the default dummy data files.
+### Install requirements
+
+1. [PostgreSQL](https://www.postgresql.org/download/)
+2. Python 3 and `pip`
+3. bng-latlon package: `pip install bng_latlon`
+
+### Download and prepare data files
+
+1. Download the following data files from the internet and store locally. We recommend saving these original data files within the directory structure under `data/as_received`:
+    - OSM PBF file (GB extract): [Download](https://download.geofabrik.de/europe/great-britain-latest.osm.pbf)
+    - FiT reports: Navigate to [ofgem](https://www.ofgem.gov.uk/environmental-programmes/fit/contacts-guidance-and-resources/public-reports-and-data-fit/installation-reports) and click the link for the latest Installation Report (during the Turing project, 30 September 2019 was used), then download the main document AND subsidiary documents
+    - REPD CSV file: [Download](https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/879414/renewable-energy-planning-database-march-2020.csv) - this is always the most up to date version
+    - Machine Vision dataset: supplied by Descartes labs (Oxford), not publicly available yet.
+2. Carry out manual edits to the data files, as described in [doc/preprocessing](doc/preprocessing.md) and save them in `data/raw` under the names suggested by the doc, replacing the default dummy data files.
 3. Navigate to `data/processed` and type `make` - this will create versions of the data files ready for import to PostgreSQL
+
+### Run the database creation and data matching
+
 4. Make sure you have PostgreSQL on your machine, then run the command: `createdb hut23-425 "Solar PV database matching"` - this creates the empty database.
 5. Navigate to `db` and run the command `psql -f make-database.sql hut23-425` - this populates the database (see [doc/database](doc/database.md)), carries out some de-duplication of the datasets and performs the matching procedure (see [doc/matching](doc/matching.md)). Note: this may take several minutes.
 
