@@ -1,0 +1,4 @@
+objtype,id,user,timestamp,lat,lon,calc_area,calc_capacity,generator:solar:modules,location,orientation,plantref,tag_power,tag_repd:id,tag_start_date
+node,383729355,Dan023,2019-11-07T15:49:12Z,53.0459134,-1.4107642,0,,,roof,,,generator,,
+node,432708661,don-vip,2011-06-03T16:19:07Z,57.1487829,-6.2116834,0,,,,,,generator,,
+node,754144142,Gregory Williams,2019-09-07T05:49:05Z,51.4211837,0.8245879,0,,,roof,,,generator,,
