@@ -72,6 +72,12 @@ data tables. This also contains a column called `match_rule`, which refers to th
 
 ## Using this repo
 
+### Install requirements
+
+1. [PostgreSQL](https://www.postgresql.org/download/)
+2. Python 3 and `pip`
+3. bng-latlon package: `pip install bng_latlon`
+
 ### Download and prepare data files
 
 1. Download the following data files from the internet and store locally. We recommend saving these original data files within the directory structure under `data/as_received`:
