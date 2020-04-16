@@ -95,8 +95,8 @@ for index, row in output_df.iterrows():
     # Ignore any rows that don't have an X and Y coordinate
     if pd.notna(row['X-coordinate']) and pd.notna(row['Y-coordinate']):
         lat, lon = convert(row['X-coordinate'], row['Y-coordinate'])
-        output_df.set_value(index,'latitude', lat)
-        output_df.set_value(index,'longitude', lon)
+        output_df.at[index,'latitude'] = lat
+        output_df.at[index,'longitude'] = lon
 
 repd_csv_str = output_df.to_csv(index=False)
 
