@@ -1,12 +1,13 @@
 /*
-** Create table containing FIT dataset
+** Create table containing fit dataset
 */
 
-\echo Creating FIT table ...
+\echo Creating fit table ...
 
+drop table if exists raw.fit;
 drop table if exists fit;
 
-create table fit (
+create table raw.fit (
   fit_id                int,
   extension             char(1),
   postcode_stub         varchar(7),
@@ -30,11 +31,15 @@ create table fit (
   llsoa_code            varchar(20)
 );
 
-\copy fit from '../data/processed/fit.csv' delimiter ',' csv header;
+\copy raw.fit from '../data/processed/fit.csv' delimiter ',' csv header;
 
--- Add roughly calculated area for FiT entries to aid matching.
+-- Restrict raw.fit to Solar PV only
+select * into fit
+  from raw.fit
+  where technology = 'Photovoltaic';
+
+-- Add roughly calculated area for raw.fit entries to aid matching.
 -- Solar PV has power approx. 52W / m^2
-
 alter table fit
   add column "area" float;
 

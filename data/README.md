@@ -27,7 +27,7 @@ Latest data taken from: https://www.ofgem.gov.uk/publications-and-updates/feed-t
 
 There are hundreds of thousands of entries. Geolocation is imprecise (it's only given as postcode districts and/or LSOA districts).
 
-Includes wind and other tech as well as solar. Make sure to filter on Technology=Photovoltaic.
+Includes wind and other tech as well as solar. The database filters on Technology=Photovoltaic.
 
 ## Renewable Energy Planning Database (REPD)
 
