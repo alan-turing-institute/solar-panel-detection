@@ -74,9 +74,10 @@ data tables. This also contains a column called `match_rule`, which refers to th
 
 ### Install requirements
 
-1. [PostgreSQL](https://www.postgresql.org/download/)
-2. Python 3 and `pip`
-3. bng-latlon package: `pip install bng_latlon`
+1. Install [PostgreSQL](https://www.postgresql.org/download/)
+2. Install Python 3 and `pip`
+3. Run `pip install -r requirements.txt`
+4. Install [Osmium](https://osmcode.org/osmium-tool/)
 
 ### Download and prepare data files
 
