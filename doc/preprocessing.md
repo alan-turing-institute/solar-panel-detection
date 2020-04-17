@@ -16,9 +16,11 @@ OSM (csv)
 
 Starting file: `compile_processed_PV_objects.csv`
 
+These were the manual edits that we needed to fix typos in the uncontrolled OSM source data. Note there could be others in future OSM data releases:
+
 1. Changed "6modifiable areal unit problem" to 6 for id=6844767626 in generator:solar:modules column.
 2. Changed 14w to 14 for id=699666802 in generator:solar:modules column
-5. Save as `data/raw/osm.csv`
+3. Save as `data/raw/osm.csv`
 
 REPD
 ----
