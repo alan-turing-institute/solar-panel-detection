@@ -14,10 +14,10 @@ FiT
 OSM (csv)
 ----
 
-1. Changed scientific notation numbers to decimals
-2. Changed "6modifiable areal unit problem" to 6 for id=6844767626 in generator:solar:modules column. Similarly edited id=6844935727 and id=6844935728
-3. Changed "roofhttp://www.alpenverein.at/bk/bergauf/bergauf2019/Bergauf_4_2019/" to "roof" in location column for 100 rows
-4. Changed 14w to 14 for id=699666802 in generator:solar:modules column
+Starting file: `compile_processed_PV_objects.csv`
+
+1. Changed "6modifiable areal unit problem" to 6 for id=6844767626 in generator:solar:modules column.
+2. Changed 14w to 14 for id=699666802 in generator:solar:modules column
 5. Save as `data/raw/osm.csv`
 
 REPD
