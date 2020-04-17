@@ -1,0 +1,6 @@
+[submodule "data/processed/compile_osm_solar"]
+	path = data/processed/compile_osm_solar
+	url = https://github.com/danstowell/compile_osm_solar
+[submodule "submodules/compile_osm_solar"]
+	path = submodules/compile_osm_solar
+	url = https://github.com/danstowell/compile_osm_solar
