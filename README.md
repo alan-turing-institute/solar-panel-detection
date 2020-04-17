@@ -74,9 +74,10 @@ data tables. This also contains a column called `match_rule`, which refers to th
 
 ### Install requirements
 
-1. [PostgreSQL](https://www.postgresql.org/download/)
-2. Python 3 and `pip`
-3. bng-latlon package: `pip install bng_latlon`
+1. Install [PostgreSQL](https://www.postgresql.org/download/)
+2. Install Python 3 and `pip`
+3. Run `pip install -r requirements.txt`
+4. Install [Osmium](https://osmcode.org/osmium-tool/)
 
 ### Download and prepare data files
 
@@ -85,8 +86,9 @@ data tables. This also contains a column called `match_rule`, which refers to th
     - FiT reports: Navigate to [ofgem](https://www.ofgem.gov.uk/environmental-programmes/fit/contacts-guidance-and-resources/public-reports-and-data-fit/installation-reports) and click the link for the latest Installation Report (during the Turing project, 30 September 2019 was used), then download the main document AND subsidiary documents
     - REPD CSV file: [Download](https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/879414/renewable-energy-planning-database-march-2020.csv) - this is always the most up to date version
     - Machine Vision dataset: supplied by Descartes labs (Oxford), not publicly available yet.
-2. Carry out manual edits to the data files, as described in [doc/preprocessing](doc/preprocessing.md) and save them in `data/raw` under the names suggested by the doc, replacing the default dummy data files.
-3. Navigate to `data/processed` and type `make` - this will create versions of the data files ready for import to PostgreSQL
+2. Navigate to `submodules/compile_osm_solar` and edit the `osmsourcefpath` in `compile_osm_solar.py` so that the file path points to the OSM PBF file you downloaded. After installing the requirements in the submodule README, run `python compile_osm_solar.py`. One of the data files produced is a csv, which we use as source data. You can move this file to `data/as_received`
+3. Carry out manual edits to the data files, as described in [doc/preprocessing](doc/preprocessing.md) and save them in `data/raw` under the names suggested by the doc, replacing the default dummy data files.
+4. Navigate to `data/processed` and type `make` - this will create versions of the data files ready for import to PostgreSQL
 
 ### Run the database creation and data matching
 

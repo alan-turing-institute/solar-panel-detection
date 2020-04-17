@@ -8,7 +8,6 @@ import geopandas as gpd
 import sys
 
 machine_vision = "../raw/machine_vision.geojson"
-sys.stdin.reconfigure(encoding='iso-8859-1')
 machine_vision_df = gpd.read_file(machine_vision)
 
 def getXY(pt):
