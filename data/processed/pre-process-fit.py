@@ -6,7 +6,6 @@ import sys
 import pandas as pd
 import numpy as np
 
-sys.stdin.reconfigure(encoding='iso-8859-1')
 fit_df = pd.read_csv(sys.stdin)
 
 # Check the file has the columns we expect and order them as we expect

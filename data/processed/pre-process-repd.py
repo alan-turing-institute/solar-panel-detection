@@ -15,7 +15,6 @@ def clean_repd_csv(csv_str):
         csv_str = re.sub(rgx_match, '"', csv_str)
     return csv_str
 
-sys.stdin.reconfigure(encoding='iso-8859-1')
 repd_df = pd.read_csv(sys.stdin, skiprows=1)
 
 # Check the file has the columns we expect and order them as we expect
