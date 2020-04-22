@@ -75,7 +75,7 @@ data tables. This also contains a column called `match_rule`, which refers to th
 ### Install requirements
 
 1. Install [PostgreSQL](https://www.postgresql.org/download/)
-2. Install Python 3 and `pip`
+2. Install Python 3 (version 3.7 or later) and `pip`
 3. Run `pip install -r requirements.txt`
 4. Install [Osmium](https://osmcode.org/osmium-tool/)
 
@@ -94,6 +94,8 @@ data tables. This also contains a column called `match_rule`, which refers to th
 
 4. Make sure you have PostgreSQL on your machine, then run the command: `createdb hut23-425 "Solar PV database matching"` - this creates the empty database.
 5. Navigate to `db` and run the command `psql -f make-database.sql hut23-425` - this populates the database (see [doc/database](doc/database.md)), carries out some de-duplication of the datasets and performs the matching procedure (see [doc/matching](doc/matching.md)). Note: this may take several minutes.
+
+Note that the above commands require you to have admin rights on your PostgreSQL server. On standard Debian-based machines you could prepend the commands with `sudo -u postgres`, or you could assign privileges to your own user account.
 
 ## External collaborators guidance
 
